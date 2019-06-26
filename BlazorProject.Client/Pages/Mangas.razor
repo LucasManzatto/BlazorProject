@@ -1,0 +1,39 @@
+﻿@page "/mangas"
+@using BlazorProject.Shared.Models
+@inject HttpClient Http
+
+<h1>Mangas List</h1>
+
+@if (mangas == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Volumes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var manga in mangas)
+            {
+            <tr>
+                <td>@manga.Title</td>
+                <td>@manga.Volumes</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    Manga[] mangas;
+
+    protected override async Task OnInitAsync()
+    {
+        mangas = await Http.GetJsonAsync<Manga[]>("api/Mangas");
+    }
+}
