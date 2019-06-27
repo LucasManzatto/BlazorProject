@@ -1,4 +1,4 @@
-﻿using BlazorProject.Server.Contracts;
+﻿using BlazorProject.Server.Contracts.Repository;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

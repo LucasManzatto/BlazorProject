@@ -1,43 +1,91 @@
 ﻿using BlazorProject.Server.Contracts;
+using BlazorProject.Server.Contracts.Repository;
+using BlazorProject.Server.Controllers;
+using BlazorProject.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace BlazorProject.Server.Services
 {
-    public class ServiceBase<T> : IServiceBase<T> where T: class
+    public class ServiceBase<T> : IServiceBase<T> where T: BaseEntity
     {
-        private readonly IRepositoryBase<T> _repository;
+        private readonly ILoggerManager loggerManager;
+        private readonly IRepositoryBase<T> repository;
         public ServiceBase(IRepositoryBase<T> repository)
         {
-            _repository = repository;
+            this.repository = repository;
+            this.loggerManager = new LoggerManager();
         }
-        public Task<ActionResult<T>> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            throw new NotImplementedException();
+            var manga = await repository.GetByIdAsync(id);
+            if (manga == null)
+            {
+                return new NotFoundResult();
+            }
+            await repository.Remove(manga);
+
+            return new OkResult();
         }
 
         public async Task<T> Get(int id)
         {
-            return await _repository.GetByIdAsync(id);
+            return await repository.GetByIdAsync(id);
         }
 
         public Task<IEnumerable<T>> GetAll()
         {
-            return _repository.GetAll();
+            return repository.GetAll();
         }
 
-        public Task<ActionResult<T>> Post(T entity)
+        public async Task<IActionResult> Post(T entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await repository.Add(entity);
+            }
+            catch (DbUpdateException ex)
+            {
+                loggerManager.LogError(ex.Message);
+                if (!await repository.Exists(p => p.Id == entity.Id))
+                {
+                    return new ConflictResult();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return new CreatedResult("PostManga", entity);
         }
 
-        public Task<IActionResult> Put(int id, T entity)
+        public async Task<IActionResult> PutAsync(int id, T entity)
         {
-            throw new NotImplementedException();
+            if (id != entity.Id)
+            {
+                return new BadRequestResult();
+            }
+            try
+            {
+                await repository.Update(entity);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                loggerManager.LogError(ex.Message);
+                if (!await repository.Exists(p => p.Id == entity.Id))
+                {
+                    return new NotFoundResult();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return new NoContentResult();
         }
     }
 }

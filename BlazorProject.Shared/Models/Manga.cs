@@ -3,9 +3,8 @@ using System.Collections.Generic;
 
 namespace BlazorProject.Shared.Models
 {
-    public partial class Manga
+    public partial class Manga : BaseEntity
     {
-        public int Id { get; set; }
         public string Title { get; set; }
         public int? AuthorId { get; set; }
         public int? Volumes { get; set; }

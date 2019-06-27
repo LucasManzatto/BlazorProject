@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace BlazorProject.Server.Contracts
+namespace BlazorProject.Server.Contracts.Repository
 {
     public interface IRepositoryBase<T>
     {
