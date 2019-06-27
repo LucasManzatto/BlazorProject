@@ -1,9 +1,9 @@
 ﻿using BlazorProject.Server.Contracts;
 using NLog;
 
-namespace LoggerService
+namespace BlazorProject.Server.Controllers
 {
-    class LoggerManager : ILoggerManager
+    public class LoggerManager : ILoggerManager
     {
         private static ILogger logger = LogManager.GetCurrentClassLogger();
 

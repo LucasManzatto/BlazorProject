@@ -1,13 +1,10 @@
 ﻿using BlazorProject.Server.Contracts;
+using BlazorProject.Server.Controllers;
 using BlazorProject.Server.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BlazorProject.Server.Services
 {
@@ -38,7 +35,12 @@ namespace BlazorProject.Server.Services
         }
         public static void ConfigureRepositoryWrapper(this IServiceCollection services)
         {
-            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+            services.AddScoped<IUnityOfWork, UnityOfWork>();
+        }
+
+        public static void ConfigureLoggerService(this IServiceCollection services)
+        {
+            services.AddSingleton<ILoggerManager, LoggerManager>();
         }
     }
 }

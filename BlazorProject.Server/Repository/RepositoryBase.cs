@@ -10,36 +10,61 @@ namespace BlazorProject.Server.Repository
 {
     public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
-        protected RepositoryContext RepositoryContext { get; set; }
+        #region Fields
 
-        public RepositoryBase(RepositoryContext repositoryContext)
+        protected RepositoryContext Context;
+        private readonly DbSet<T> _dbSet;
+
+        #endregion
+
+        public RepositoryBase(RepositoryContext context)
         {
-            this.RepositoryContext = repositoryContext;
+            Context = context;
+            _dbSet = Context.Set<T>();
         }
 
-        public IQueryable<T> FindAll()
+        #region Public Methods
+
+        public Task<T> GetByIdAsync(int id) => _dbSet.FindAsync(id).AsTask();
+
+        public Task<T> FirstOrDefault(Expression<Func<T, bool>> predicate)
+            => _dbSet.FirstOrDefaultAsync(predicate);
+
+        public async Task Add(T entity)
         {
-            return this.RepositoryContext.Set<T>().AsNoTracking();
+            await _dbSet.AddAsync(entity);
+            await Context.SaveChangesAsync();
         }
 
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
+        public Task Update(T entity)
         {
-            return this.RepositoryContext.Set<T>().Where(expression).AsNoTracking();
+            // In case AsNoTracking is used
+            Context.Entry(entity).State = EntityState.Modified;
+            return Context.SaveChangesAsync();
         }
 
-        public void Create(T entity)
+        public Task Remove(T entity)
         {
-            this.RepositoryContext.Set<T>().Add(entity);
+            _dbSet.Remove(entity);
+            return Context.SaveChangesAsync();
         }
 
-        public void Update(T entity)
+        public async Task<IEnumerable<T>> GetAll()
         {
-            this.RepositoryContext.Set<T>().Update(entity);
+            return await _dbSet.ToListAsync();
         }
 
-        public void Delete(T entity)
+        public async Task<IEnumerable<T>> GetWhere(Expression<Func<T, bool>> predicate)
         {
-            this.RepositoryContext.Set<T>().Remove(entity);
+            return await _dbSet.Where(predicate).ToListAsync();
         }
+
+        public Task<int> CountAll() => _dbSet.CountAsync();
+
+        public Task<int> CountWhere(Expression<Func<T, bool>> predicate)
+            => _dbSet.CountAsync(predicate);
+
+        public Task<bool> Exists(Expression<Func<T, bool>> predicate) => _dbSet.AnyAsync(predicate);
+        #endregion
     }
 }

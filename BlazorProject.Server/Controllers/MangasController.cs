@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BlazorProject.Server;
 using BlazorProject.Shared.Models;
+using BlazorProject.Server.Contracts;
+using BlazorProject.Server.Services;
 
 namespace BlazorProject.Server.Controllers
 {
@@ -14,32 +16,29 @@ namespace BlazorProject.Server.Controllers
     [ApiController]
     public class MangasController : Controller
     {
-        private readonly RepositoryContext _context;
+        private readonly MangaService _mangaService;
+        private readonly IUnityOfWork _repository;
+        private LoggerManager _loggerManager;
 
-        public MangasController(RepositoryContext context)
+        public MangasController(IUnityOfWork unityOfWork)
         {
-            _context = context;
+            _loggerManager = new LoggerManager();
+            _repository = unityOfWork;
+            _mangaService = new MangaService(_repository.Manga);
         }
 
         // GET: api/Mangas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Manga>>> GetManga()
+        public async Task<IEnumerable<Manga>> GetManga()
         {
-            return await _context.Manga.ToListAsync();
+            return await _mangaService.GetAll();
         }
 
         // GET: api/Mangas/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Manga>> GetManga(int id)
+        public async Task<Manga> GetManga(int id)
         {
-            var manga = await _context.Manga.FindAsync(id);
-
-            if (manga == null)
-            {
-                return NotFound();
-            }
-
-            return manga;
+            return await _mangaService.Get(id);
         }
 
         // PUT: api/Mangas/5
@@ -51,15 +50,14 @@ namespace BlazorProject.Server.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(manga).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _repository.Manga.Update(manga);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
-                if (!MangaExists(id))
+                _loggerManager.LogError(ex.Message);
+                if (!await _repository.Manga.Exists(p => p.Id == manga.Id))
                 {
                     return NotFound();
                 }
@@ -68,22 +66,21 @@ namespace BlazorProject.Server.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
+           return NoContent();
         }
 
         // POST: api/Mangas
         [HttpPost]
         public async Task<ActionResult<Manga>> PostManga(Manga manga)
         {
-            _context.Manga.Add(manga);
             try
             {
-                await _context.SaveChangesAsync();
+                await _repository.Manga.Add(manga);
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
-                if (MangaExists(manga.Id))
+                _loggerManager.LogError(ex.Message);
+                if (!await _repository.Manga.Exists(p => p.Id == manga.Id))
                 {
                     return Conflict();
                 }
@@ -100,21 +97,15 @@ namespace BlazorProject.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Manga>> DeleteManga(int id)
         {
-            var manga = await _context.Manga.FindAsync(id);
+            var manga = await _repository.Manga.GetByIdAsync(id);
             if (manga == null)
             {
                 return NotFound();
             }
 
-            _context.Manga.Remove(manga);
-            await _context.SaveChangesAsync();
+            await _repository.Manga.Remove(manga);
 
             return manga;
-        }
-
-        private bool MangaExists(int id)
-        {
-            return _context.Manga.Any(e => e.Id == id);
         }
     }
 }

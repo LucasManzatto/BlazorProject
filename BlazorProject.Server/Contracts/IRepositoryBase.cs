@@ -8,10 +8,21 @@ namespace BlazorProject.Server.Contracts
 {
     public interface IRepositoryBase<T>
     {
-        IQueryable<T> FindAll();
-        IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression);
-        void Create(T entity);
-        void Update(T entity);
-        void Delete(T entity);
+        Task<T> GetByIdAsync(int id);
+        Task<T> FirstOrDefault(Expression<Func<T, bool>> predicate);
+
+        Task Add(T entity);
+        Task Update(T entity);
+        Task Remove(T entity);
+
+        //Task Exists(int id);
+
+        Task<IEnumerable<T>> GetAll();
+        Task<IEnumerable<T>> GetWhere(Expression<Func<T, bool>> predicate);
+
+        Task<int> CountAll();
+        Task<int> CountWhere(Expression<Func<T, bool>> predicate);
+
+        Task<bool> Exists(Expression<Func<T, bool>> predicate);
     }
 }

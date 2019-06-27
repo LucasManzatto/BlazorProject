@@ -1,6 +1,6 @@
 ﻿using BlazorProject.Shared.Models;
 
-namespace BlazorProject.Server.Contracts
+namespace Contracts
 {
     public interface IMangaRepository : IRepositoryBase<Manga>
     {
