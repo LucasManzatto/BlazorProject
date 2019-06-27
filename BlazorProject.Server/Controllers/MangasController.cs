@@ -24,35 +24,35 @@ namespace BlazorProject.Server.Controllers
 
         // GET: api/Mangas
         [HttpGet]
-        public async Task<IEnumerable<Manga>> GetManga()
+        public async Task<IEnumerable<Manga>> GetAll()
         {
             return await service.GetAll();
         }
 
         // GET: api/Mangas/5
         [HttpGet("{id}")]
-        public async Task<Manga> GetManga(int id)
+        public async Task<Manga> Get(int id)
         {
             return await service.Get(id);
         }
 
         // PUT: api/Mangas/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutManga(int id, Manga manga)
+        public async Task<IActionResult> Put(int id, Manga manga)
         {
             return await service.PutAsync(id, manga);
         }
 
         // POST: api/Mangas
         [HttpPost]
-        public async Task<IActionResult> PostManga(Manga manga)
+        public async Task<IActionResult> Post(Manga manga)
         {
             return await service.Post(manga);
         }
 
         // DELETE: api/Mangas/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteManga(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             return await service.Delete(id);
         }
