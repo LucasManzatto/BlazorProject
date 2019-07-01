@@ -1,5 +1,5 @@
 ﻿using BlazorProject.Server.Contracts.Repository;
-using BlazorProject.Shared.Models;
+using BlazorProject.Server.Models;
 
 namespace BlazorProject.Server.Repository
 {

@@ -1,4 +1,4 @@
-﻿using BlazorProject.Shared.Models;
+﻿using BlazorProject.Server.Models;
 
 namespace BlazorProject.Server.Contracts.Repository
 {

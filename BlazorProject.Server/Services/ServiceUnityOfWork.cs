@@ -1,10 +1,5 @@
-﻿using BlazorProject.Server.Contracts;
-using BlazorProject.Server.Contracts.Repository;
+﻿using BlazorProject.Server.Contracts.Repository;
 using BlazorProject.Server.Contracts.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BlazorProject.Server.Services
 {

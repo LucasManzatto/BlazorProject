@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BlazorProject.Shared.Models
+namespace BlazorProject.Server.Models
 {
     public abstract class BaseEntity
     {

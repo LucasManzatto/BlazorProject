@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BlazorProject.Shared.Models
+namespace BlazorProject.Server.Models
 {
     public partial class Author : BaseEntity
     {

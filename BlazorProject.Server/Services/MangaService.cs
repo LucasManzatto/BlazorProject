@@ -1,7 +1,7 @@
 ﻿using BlazorProject.Server.Contracts;
 using BlazorProject.Server.Contracts.Repository;
 using BlazorProject.Server.Contracts.Services;
-using BlazorProject.Shared.Models;
+using BlazorProject.Server.Models;
 
 
 namespace BlazorProject.Server.Services

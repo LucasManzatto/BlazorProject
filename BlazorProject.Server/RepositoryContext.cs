@@ -1,7 +1,5 @@
-﻿using System;
-using BlazorProject.Shared.Models;
+﻿using BlazorProject.Server.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace BlazorProject.Server
 {

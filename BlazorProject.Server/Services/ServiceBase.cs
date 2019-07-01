@@ -1,12 +1,10 @@
 ﻿using BlazorProject.Server.Contracts;
 using BlazorProject.Server.Contracts.Repository;
 using BlazorProject.Server.Controllers;
-using BlazorProject.Shared.Models;
+using BlazorProject.Server.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace BlazorProject.Server.Services
