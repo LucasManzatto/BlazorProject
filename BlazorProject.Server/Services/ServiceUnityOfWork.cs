@@ -5,22 +5,38 @@ namespace BlazorProject.Server.Services
 {
     public class ServiceUnityOfWork : IServiceUnityOfWork
     {
-        private readonly IRepositoryUnityOfWork _repositoryUnityOfWork;
-        private IMangaService _mangaService;
+        private readonly IRepositoryUnityOfWork unityOfWork;
+        private IMangaService mangaService;
 
         public IMangaService MangaService
         {
             get {
-                if(_mangaService == null)
+                if(mangaService == null)
                 {
-                    _mangaService = new MangaService(_repositoryUnityOfWork.Manga);
+                    mangaService = new MangaService(unityOfWork.Manga);
                 }
-                return _mangaService; }
+                return mangaService;
+            }
         }
+
+        private IPokemonsService pokemonsService;
+
+        public IPokemonsService PokemonsService
+        {
+            get
+            {
+                if (pokemonsService == null)
+                {
+                    pokemonsService = new PokemonsService(unityOfWork.Pokemons);
+                }
+                return pokemonsService;
+            }
+        }
+
 
         public ServiceUnityOfWork(IRepositoryUnityOfWork repositoryUnityOfWork)
         {
-            _repositoryUnityOfWork = repositoryUnityOfWork;
+            unityOfWork = repositoryUnityOfWork;
         }
     }
 }

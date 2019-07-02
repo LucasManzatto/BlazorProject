@@ -8,5 +8,6 @@ namespace BlazorProject.Server.Contracts.Services
     public interface IServiceUnityOfWork
     {
         IMangaService MangaService { get; }
+        IPokemonsService PokemonsService { get; }
     }
 }

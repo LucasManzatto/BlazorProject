@@ -9,6 +9,7 @@ namespace BlazorProject.Server.Contracts.Repository
     public interface IRepositoryUnityOfWork
     {
         IMangaRepository Manga { get; }
+        IPokemonsRepository Pokemons { get; }
         void Save();
     }
 }
