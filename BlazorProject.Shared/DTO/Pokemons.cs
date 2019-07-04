@@ -3,8 +3,9 @@ using System.Collections.Generic;
 
 namespace BlazorProject.Shared.DTO
 {
-    public partial class Pokemons : BaseEntity
+    public partial class Pokemons
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public int SpeciesId { get; set; }
         public int Height { get; set; }
@@ -13,6 +14,8 @@ namespace BlazorProject.Shared.DTO
         public int Position { get; set; }
         public bool IsDefault { get; set; }
 
-        public virtual Species Species { get; set; }
+        //public string SpeciesName { get; set; }
+
+        public Species Species { get; set; }
     }
 }

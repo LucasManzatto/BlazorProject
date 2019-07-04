@@ -1,6 +1,6 @@
 ﻿@page "/mangas"
 @using BlazorProject.Shared.DTO
-@inject HttpClient Http
+@*@inject HttpClient Http
 
 <h1>Mangas List</h1>
 
@@ -34,4 +34,4 @@ else
     {
         mangas = await Http.GetJsonAsync<Manga[]>("api/Mangas");
     }
-}
+}*@

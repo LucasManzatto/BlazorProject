@@ -1,19 +1,17 @@
-using BlazorProject.Server.Contracts;
 using BlazorProject.Server.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Serialization;
 using NLog;
 using System;
 using System.IO;
 using System.Linq;
+using AutoMapper;
+using BlazorProject.Server.Contracts.Services;
 
 namespace BlazorProject.Server
 {
@@ -29,11 +27,13 @@ namespace BlazorProject.Server
         public void ConfigureServices(IServiceCollection services)
         {
             //services.ConfigureCors();
+            services.AddScoped<IPokemonsService, PokemonsService>();
+            services.AddAutoMapper(typeof(Startup));
             services.ConfigureIISIntegration();
             services.ConfigureLoggerService();
             services.AddDbContext<RepositoryContext>(option => option.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=dev;Trusted_Connection=True;"));
-            services.ConfigureRepositoryWrapper();
-            services.AddMvc().AddNewtonsoftJson();
+            services.AddMvc().AddNewtonsoftJson(options => 
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddLogging();
             services.AddResponseCompression(opts =>
             {

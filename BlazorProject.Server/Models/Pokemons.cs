@@ -3,8 +3,9 @@ using System.Collections.Generic;
 
 namespace BlazorProject.Server.Models
 {
-    public partial class Pokemons : BaseEntity
+    public partial class Pokemons
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public int SpeciesId { get; set; }
         public int Height { get; set; }

@@ -1,16 +1,4 @@
-﻿DROP TABLE IF EXISTS Pokemons
-
-CREATE TABLE Pokemons(
-   id              INTEGER  NOT NULL PRIMARY KEY 
-  ,name			   VARCHAR(23) NOT NULL
-  ,species_id      INTEGER  NOT NULL
-  ,height          INTEGER  NOT NULL
-  ,weight          INTEGER  NOT NULL
-  ,base_experience INTEGER  NOT NULL
-  ,position        INTEGER  NOT NULL
-  ,is_default      BIT  NOT NULL
-);
-INSERT INTO Pokemons(id,name,species_id,height,weight,base_experience,position,is_default) VALUES (1,'bulbasaur',1,7,69,64,1,1);
+﻿INSERT INTO Pokemons(id,name,species_id,height,weight,base_experience,position,is_default) VALUES (1,'bulbasaur',1,7,69,64,1,1);
 INSERT INTO Pokemons(id,name,species_id,height,weight,base_experience,position,is_default) VALUES (2,'ivysaur',2,10,130,142,2,1);
 INSERT INTO Pokemons(id,name,species_id,height,weight,base_experience,position,is_default) VALUES (3,'venusaur',3,20,1000,236,3,1);
 INSERT INTO Pokemons(id,name,species_id,height,weight,base_experience,position,is_default) VALUES (4,'charmander',4,6,85,62,5,1);
