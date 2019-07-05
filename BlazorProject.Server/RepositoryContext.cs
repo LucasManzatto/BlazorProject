@@ -139,6 +139,10 @@ namespace BlazorProject.Server
 
                 entity.Property(e => e.GenderRate).HasColumnName("gender_rate");
 
+                entity.Property(e => e.GenerationId).HasColumnName("generation_id");
+
+                entity.Property(e => e.GrowthRateId).HasColumnName("growth_rate_id");
+
                 entity.Property(e => e.HasGenderDifferences).HasColumnName("has_gender_differences");
 
                 entity.Property(e => e.HatchCounter).HasColumnName("hatch_counter");
@@ -157,6 +161,18 @@ namespace BlazorProject.Server
                     .WithMany(p => p.InverseEvolvesFromSpecies)
                     .HasForeignKey(d => d.EvolvesFromSpeciesId)
                     .HasConstraintName("FK_Species_Evolves_From_Species");
+
+                entity.HasOne(d => d.Generation)
+                    .WithMany(p => p.Species)
+                    .HasForeignKey(d => d.GenerationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Species_Generation");
+
+                entity.HasOne(d => d.GrowthRate)
+                    .WithMany(p => p.Species)
+                    .HasForeignKey(d => d.GrowthRateId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Species_Growth_Rate");
             });
 
             OnModelCreatingPartial(modelBuilder);

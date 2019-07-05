@@ -1,17 +1,18 @@
 ﻿using BlazorProject.Server.Models;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
+using System.Linq;
 using System.Threading.Tasks;
 using DTO = BlazorProject.Shared.DTO;
 
 namespace BlazorProject.Server.Contracts.Services
 {
-    public interface IPokemonsService
+    public interface IGenerationService
     {
-        Task<List<DTO.Pokemons>> GetAll();
+        Task<List<DTO.Generation>> GetAll();
 
-        Task<Pokemons> Get(int id);
+        Task<Generation> Get(int id);
+
+        Task<List<DTO.Pokemons>> GetPokemonsByGeneration(int generationId);
     }
 }

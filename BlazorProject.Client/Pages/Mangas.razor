@@ -1,37 +1,45 @@
-﻿@page "/mangas"
+﻿@page "/pokemons"
 @using BlazorProject.Shared.DTO
-@*@inject HttpClient Http
+@using Blazorise.Components
+@using BlazorProject.Client.Shared.Models
+@inject HttpClient Http
 
-<h1>Mangas List</h1>
+<h1>Pokemons List</h1>
 
-@if (mangas == null)
+@if (dropdowns == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <TableContainer>
-        <TableHeader>
-            <TableRow>
-                <TableHeaderCell>Title</TableHeaderCell>
-                <TableHeaderCell>Volumes</TableHeaderCell>
-            </TableRow>
-        </TableHeader>
-        <TableBody>
-            @foreach (var manga in mangas)
-            {
-                <TableRow>@manga.Title</TableRow>
-                <TableRow>@manga.Volumes</TableRow>
-            }
-        </TableBody>
-    </TableContainer>
+    <div class="columns">
+        @foreach (var dropdown in dropdowns)
+        {
+            <div class="column">
+                <DropdownComponent GenNumber="@dropdown.Value" Items="@dropdown.Key" />
+            </div>
+        }
+    </div>
 }
 
 @code {
-    Manga[] mangas;
+List<KeyValuePair<List<DropdownModel>,int>> dropdowns = new List<KeyValuePair<List<DropdownModel>,int>>();
 
-    protected override async Task OnInitAsync()
+protected override async Task OnInitAsync()
+{
+    foreach (var i in Enumerable.Range(1, 7))
     {
-        mangas = await Http.GetJsonAsync<Manga[]>("api/Mangas");
+        var dropdown = new KeyValuePair<List<DropdownModel>, int>(await CreateDropdownModelData(i), i);
+        dropdowns.Add(dropdown);
     }
-}*@
+}
+
+private async Task<List<DropdownModel>> CreateDropdownModelData(int id)
+{
+    var list = await Http.GetJsonAsync<List<Pokemons>>($"api/Generation/{id}/pokemons");
+    List<DropdownModel> newList = new List<DropdownModel>();
+    list.ForEach(item =>
+        newList.Add(new DropdownModel { Id = item.Id, Text = item.Name }));
+    return newList;
+}
+}

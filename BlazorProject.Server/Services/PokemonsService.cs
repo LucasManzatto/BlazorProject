@@ -23,29 +23,14 @@ namespace BlazorProject.Server.Services
             this.mapper = mapper;
         }
 
-        public Task<IActionResult> Delete(int id)
+        public Task<Pokemons> Get(int id)
         {
-            throw new NotImplementedException();
+            return context.Pokemons.SingleAsync(p => p.Id == id);
         }
 
-        public Task<DTO.Pokemons> Get(int id)
+        public Task<List<DTO.Pokemons>> GetAll()
         {
-            return context.Pokemons.ProjectTo<DTO.Pokemons>(mapper).SingleAsync(p => p.Id == id);
-        }
-
-        public Task<List<Pokemons>> GetAll()
-        {
-            return context.Pokemons.Include(p => p.Species).ToListAsync();
-        }
-
-        public Task<IActionResult> Post(Pokemons entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IActionResult> Put(int id, Pokemons entity)
-        {
-            throw new NotImplementedException();
+            return context.Pokemons.ProjectTo<DTO.Pokemons>(mapper.ConfigurationProvider).ToListAsync();
         }
     }
 }
