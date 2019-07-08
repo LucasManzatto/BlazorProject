@@ -6,40 +6,44 @@
 
 <h1>Pokemons List</h1>
 
-@if (dropdowns == null)
+@if (dropdowns.Count == 0)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Loading..</em></p>
 }
 else
 {
-    <div class="columns">
-        @foreach (var dropdown in dropdowns)
-        {
-            <div class="column">
-                <DropdownComponent GenNumber="@dropdown.Value" Items="@dropdown.Key" />
-            </div>
-        }
+    <div class="container-fluid">
+        <div class="row">
+            @for (var genNumber = 1; genNumber <= dropdowns.Count; genNumber++)
+            {
+                <div class="col">
+                    <DropdownComponent GenNumber="@genNumber" Items="@dropdowns[genNumber-1]" />
+                </div>
+            }
+        </div>
     </div>
 }
 
 @code {
-List<KeyValuePair<List<DropdownModel>,int>> dropdowns = new List<KeyValuePair<List<DropdownModel>,int>>();
+List<List<DropdownModel>> dropdowns = new List<List<DropdownModel>>();
+int numberOfGenerations = 7;
 
 protected override async Task OnInitAsync()
 {
-    foreach (var i in Enumerable.Range(1, 7))
+    foreach (var i in Enumerable.Range(1, numberOfGenerations))
     {
-        var dropdown = new KeyValuePair<List<DropdownModel>, int>(await CreateDropdownModelData(i), i);
-        dropdowns.Add(dropdown);
+        dropdowns.Add(await CreateDropdownModelData(i));
     }
 }
 
 private async Task<List<DropdownModel>> CreateDropdownModelData(int id)
 {
     var list = await Http.GetJsonAsync<List<Pokemons>>($"api/Generation/{id}/pokemons");
+    list.ForEach(elem => elem.Name = elem.Name.First().ToString().ToUpper() + elem.Name.Substring(1));
     List<DropdownModel> newList = new List<DropdownModel>();
     list.ForEach(item =>
         newList.Add(new DropdownModel { Id = item.Id, Text = item.Name }));
     return newList;
 }
-}
+}   
+

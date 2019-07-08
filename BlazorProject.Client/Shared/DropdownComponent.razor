@@ -1,36 +1,27 @@
 ﻿@using BlazorProject.Client.Shared.Models
 
-<div class="dropdown @(IsActive ? "is-active" : "")">
-    <div class="dropdown-trigger">
-        <button @onclick="@SetActive" class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-            <span>Gen @GenNumber</span>
-            <span class="icon is-small">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-            </span>
-        </button>
-    </div>
-    <div class="dropdown-menu" id="dropdown-menu" role="menu">
-        <div class="dropdown-content">
-            @foreach (var item in Items)
-            {
-                <a href="#" class="dropdown-item">
-                    @item.Text
-                </a>
-            }
-        </div>
+<div class="btn-group dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="@GenNumber" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Generation @GenNumber
+    </button>
+    <div class="dropdown-menu" style='max-height:200px; overflow:auto;' aria-labelledby="@GenNumber">
+        @foreach (var item in Items)
+        {
+            <button class="dropdown-item" type="button">@item.Text</button>
+        }
     </div>
 </div>
 
 @code {
-public bool IsActive { get; set; } = false;
+    public bool IsActive { get; set; } = false;
 
-[Parameter]
-List<DropdownModel> Items { get; set; }
-[Parameter]
-int GenNumber { get; set; }
+    [Parameter]
+    List<DropdownModel> Items { get; set; }
+    [Parameter]
+    int GenNumber { get; set; }
 
-void SetActive()
-{
-    IsActive = !IsActive;
-}
+    void SetActive()
+    {
+        IsActive = !IsActive;
+    }
 }
