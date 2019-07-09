@@ -8,6 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!--<PackageReference Include="Blazor-Redux" Version="0.0.6" />-->
+    <PackageReference Include="Blazor.Realm" Version="0.8.3" />
+    <PackageReference Include="Blazor.Realm.ReduxDevTools" Version="0.8.3" />
     <PackageReference Include="Blazorise.Components" Version="0.7.8" />
     <PackageReference Include="Blazorise.Icons.Material" Version="0.7.8" />
     <PackageReference Include="Blazorise.Material" Version="0.7.8" />

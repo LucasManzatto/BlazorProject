@@ -29,12 +29,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Watch Include="..\**\*.scss" />
+    <Watch Include="..\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Watch Include="..\**\*.scss" />
-    <Watch Include="..\**\*.cs" />
+    <Watch Remove="Models\PokemonTypes.cs" />
+    <Watch Remove="Models\RepositoryContext.cs" />
   </ItemGroup>
 
 </Project>

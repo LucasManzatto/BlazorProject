@@ -5,12 +5,6 @@ namespace BlazorProject.Shared.DTO
 {
     public partial class Species
     {
-        public Species()
-        {
-            InverseEvolvesFromSpecies = new HashSet<Species>();
-            Pokemons = new HashSet<Pokemons>();
-        }
-
         public int Id { get; set; }
         public string Name { get; set; }
         public int? EvolvesFromSpeciesId { get; set; }
@@ -23,9 +17,5 @@ namespace BlazorProject.Shared.DTO
         public bool HasGenderDifferences { get; set; }
         public bool FormsSwitchable { get; set; }
         public int Position { get; set; }
-
-        public virtual Species EvolvesFromSpecies { get; set; }
-        public virtual ICollection<Species> InverseEvolvesFromSpecies { get; set; }
-        public virtual ICollection<Pokemons> Pokemons { get; set; }
     }
 }

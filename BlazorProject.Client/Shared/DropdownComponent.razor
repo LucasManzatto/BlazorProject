@@ -1,4 +1,8 @@
 ﻿@using BlazorProject.Client.Shared.Models
+@using BlazorProject.Shared.DTO
+@inject HttpClient Http
+@inherits RealmComponent<State>
+
 
 <div class="btn-group dropdown">
     <button class="btn btn-secondary dropdown-toggle" type="button" id="@GenNumber" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -7,7 +11,7 @@
     <div class="dropdown-menu" style='max-height:200px; overflow:auto;' aria-labelledby="@GenNumber">
         @foreach (var item in Items)
         {
-            <button class="dropdown-item" type="button">@item.Text</button>
+            <button @onclick="@(() => SetPokemon(item.Id))" class="dropdown-item" type="button">@item.Text</button>
         }
     </div>
 </div>
@@ -20,8 +24,10 @@
     [Parameter]
     int GenNumber { get; set; }
 
-    void SetActive()
+    async void SetPokemon(int pokemonId)
     {
-        IsActive = !IsActive;
+        var pokemon = await Http.GetJsonAsync<FullPokemon>($"api/Pokemons/{pokemonId}");
+        Dispatch(new Redux.Actions.Pokemon.Set(pokemon));
     }
+    
 }

@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Blazorise;
 using Blazorise.Material;
 using Blazorise.Icons.Material;
+using Blazor.Realm.ReduxDevTools.Extensions;
+using Blazor.Realm.Extensions;
+using BlazorProject.Client.Redux;
+using Blazor.Realm;
 
 namespace BlazorProject.Client
 {
@@ -10,20 +13,15 @@ namespace BlazorProject.Client
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services
-                .AddBlazorise(options =>
-                {
-                    options.ChangeTextOnKeyPress = true;
-                }) // from v0.6.0-preview4
-                .AddMaterialProviders()
-                .AddMaterialIcons();
+            services.AddRealmReduxDevToolServices();
+            services.AddRealmStore(new State(), Reducers.RootReducer);
         }
 
-        public void Configure(IComponentsApplicationBuilder app)
+        public void Configure(IComponentsApplicationBuilder app, IStoreBuilder<State> RealmStoreBuilder)
         {
-            app.
-                UseMaterialProviders()
-                .UseMaterialIcons();
+            RealmStoreBuilder.UseRealmReduxDevTools(new System.Type[]{
+                typeof(Redux.Actions.Pokemon.Dispose)
+            });
             app.AddComponent<App>("app");
         }
     }

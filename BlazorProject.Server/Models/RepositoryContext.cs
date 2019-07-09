@@ -16,11 +16,14 @@ namespace BlazorProject.Server
         {
         }
 
+        public virtual DbSet<DamageClass> DamageClass { get; set; }
         public virtual DbSet<Generation> Generation { get; set; }
         public virtual DbSet<GrowthRate> GrowthRate { get; set; }
         public virtual DbSet<MainRegion> MainRegion { get; set; }
+        public virtual DbSet<PokemonTypes> PokemonTypes { get; set; }
         public virtual DbSet<Pokemons> Pokemons { get; set; }
         public virtual DbSet<Species> Species { get; set; }
+        public virtual DbSet<Types> Types { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -33,6 +36,21 @@ namespace BlazorProject.Server
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<DamageClass>(entity =>
+            {
+                entity.ToTable("damage_class");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(8)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Generation>(entity =>
             {
                 entity.Property(e => e.Id)
@@ -65,13 +83,12 @@ namespace BlazorProject.Server
                 entity.Property(e => e.Formula)
                     .IsRequired()
                     .HasColumnName("formula")
-                    .HasMaxLength(388)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnName("name")
-                    .HasMaxLength(6)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
             });
 
@@ -88,6 +105,31 @@ namespace BlazorProject.Server
                     .HasColumnName("name")
                     .HasMaxLength(6)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<PokemonTypes>(entity =>
+            {
+                entity.ToTable("pokemon_types");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.PokemonId).HasColumnName("pokemon_id");
+
+                entity.Property(e => e.Slot).HasColumnName("slot");
+
+                entity.Property(e => e.TypeId).HasColumnName("type_id");
+
+                entity.HasOne(d => d.Pokemon)
+                    .WithMany(p => p.PokemonTypes)
+                    .HasForeignKey(d => d.PokemonId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Pokemon_Types_Pokemon");
+
+                entity.HasOne(d => d.Type)
+                    .WithMany(p => p.PokemonTypes)
+                    .HasForeignKey(d => d.TypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Pokemon_Types_Types");
             });
 
             modelBuilder.Entity<Pokemons>(entity =>
@@ -173,6 +215,36 @@ namespace BlazorProject.Server
                     .HasForeignKey(d => d.GrowthRateId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Species_Growth_Rate");
+            });
+
+            modelBuilder.Entity<Types>(entity =>
+            {
+                entity.ToTable("types");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.DamageClassId).HasColumnName("damage_class_id");
+
+                entity.Property(e => e.GenerationId).HasColumnName("generation_id");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(8)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.DamageClass)
+                    .WithMany(p => p.Types)
+                    .HasForeignKey(d => d.DamageClassId)
+                    .HasConstraintName("FK_Types_Damage_Class");
+
+                entity.HasOne(d => d.Generation)
+                    .WithMany(p => p.Types)
+                    .HasForeignKey(d => d.GenerationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Types_Generation");
             });
 
             OnModelCreatingPartial(modelBuilder);

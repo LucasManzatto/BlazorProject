@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Blazor.Hosting;
+using Microsoft.AspNetCore.Blazor;
 
 namespace BlazorProject.Client
 {

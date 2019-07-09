@@ -3,6 +3,8 @@
 @using Blazorise.Components
 @using BlazorProject.Client.Shared.Models
 @inject HttpClient Http
+@inherits RealmComponent<State>
+
 
 <h1>Pokemons List</h1>
 
@@ -21,29 +23,51 @@ else
                 </div>
             }
         </div>
+        <div class="row">
+            <div class="col-4">
+                <h2>Pokedéx Data</h2>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Pokemon: @Store.GetState().Pokemon?.Name</li>
+                    <li class="list-group-item">Dex No.: @Store.GetState().Pokemon?.Species.Position</li>
+                    <li class="list-group-item">Height: @Store.GetState().Pokemon?.Height</li>
+                    <li class="list-group-item">Weight: @Store.GetState().Pokemon?.Weight</li>
+                </ul>
+            </div>
+        </div>
+        
     </div>
 }
 
 @code {
-List<List<DropdownModel>> dropdowns = new List<List<DropdownModel>>();
-int numberOfGenerations = 7;
+    public int PokemonId { get; set; } = 0;
+    List<List<DropdownModel>> dropdowns = new List<List<DropdownModel>>();
+    int numberOfGenerations = 7;
 
-protected override async Task OnInitAsync()
-{
-    foreach (var i in Enumerable.Range(1, numberOfGenerations))
+    protected override void OnInit()
     {
-        dropdowns.Add(await CreateDropdownModelData(i));
+        base.OnInit();
+    }
+    protected override async Task OnInitAsync()
+    {
+        foreach (var i in Enumerable.Range(1, numberOfGenerations))
+        {
+            dropdowns.Add(await CreateDropdownModelData(i));
+        }
+    }
+
+    void PokemonChangedHandler(int pokemonId)
+    {
+        PokemonId = pokemonId;
+    }
+
+    private async Task<List<DropdownModel>> CreateDropdownModelData(int id)
+    {
+        var list = await Http.GetJsonAsync<List<Pokemons>>($"api/Generation/{id}/pokemons");
+        list.ForEach(elem => elem.Name = elem.Name.First().ToString().ToUpper() + elem.Name.Substring(1));
+        List<DropdownModel> newList = new List<DropdownModel>();
+        list.ForEach(item =>
+            newList.Add(new DropdownModel { Id = item.Id, Text = item.Name }));
+        return newList;
     }
 }
-
-private async Task<List<DropdownModel>> CreateDropdownModelData(int id)
-{
-    var list = await Http.GetJsonAsync<List<Pokemons>>($"api/Generation/{id}/pokemons");
-    list.ForEach(elem => elem.Name = elem.Name.First().ToString().ToUpper() + elem.Name.Substring(1));
-    List<DropdownModel> newList = new List<DropdownModel>();
-    list.ForEach(item =>
-        newList.Add(new DropdownModel { Id = item.Id, Text = item.Name }));
-    return newList;
-}
-}   
 

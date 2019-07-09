@@ -23,7 +23,7 @@ namespace BlazorProject.Server.Controllers
 
         // GET: api/Pokemons/5
         [HttpGet("{id}")]
-        public async Task<Pokemons> Get(int id, [FromServices]IPokemonsService service)
+        public async Task<DTO.FullPokemon> Get(int id, [FromServices]IPokemonsService service)
         {
             return await service.Get(id);
         }

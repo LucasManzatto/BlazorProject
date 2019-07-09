@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using BlazorProject.Server.Contracts.Services;
-using BlazorProject.Server.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DTO = BlazorProject.Shared.DTO;
 
@@ -20,17 +16,23 @@ namespace BlazorProject.Server.Services
         public PokemonsService(RepositoryContext context, IMapper mapper)
         {
             this.context = context;
-            this.mapper = mapper;
+            this.mapper = mapper; 
         }
 
-        public Task<Pokemons> Get(int id)
+        public async Task<DTO.FullPokemon> Get(int id)
         {
-            return context.Pokemons.SingleAsync(p => p.Id == id);
+            var pokemon = await context.Pokemons
+                .Include(m => m.Species)
+                .Include("PokemonTypes.Type")
+                .SingleAsync(p => p.Id == id);
+            return mapper.Map<DTO.FullPokemon>(pokemon);
         }
 
         public Task<List<DTO.Pokemons>> GetAll()
         {
-            return context.Pokemons.ProjectTo<DTO.Pokemons>(mapper.ConfigurationProvider).ToListAsync();
+            return context.Pokemons
+                .ProjectTo<DTO.Pokemons>(mapper.ConfigurationProvider)
+                .ToListAsync();
         }
     }
 }

@@ -1,4 +1,9 @@
-﻿
+﻿CREATE TABLE damage_class(
+   id              INTEGER  NOT NULL
+  ,[name]          VARCHAR(8) NOT NULL
+  ,PRIMARY KEY CLUSTERED ([id] ASC)
+);
+
 CREATE TABLE growth_rate(
    id         INTEGER  NOT NULL
   ,[name]     VARCHAR(6) NOT NULL
@@ -18,6 +23,16 @@ CREATE TABLE Generation(
   ,[name]     VARCHAR(14) NOT NULL
   ,PRIMARY KEY CLUSTERED ([id] ASC)
   ,CONSTRAINT FK_Generation_Main_Region FOREIGN KEY (main_region_id) REFERENCES main_region(id)
+);
+
+CREATE TABLE [types](
+   id              INTEGER  NOT NULL 
+  ,[name]          VARCHAR(8) NOT NULL
+  ,generation_id   INTEGER  NOT NULL
+  ,damage_class_id INTEGER
+  ,PRIMARY KEY CLUSTERED ([id] ASC)
+  ,CONSTRAINT FK_Types_Generation FOREIGN KEY (generation_id) REFERENCES Generation(id)
+  ,CONSTRAINT FK_Types_Damage_Class FOREIGN KEY (damage_class_id) REFERENCES damage_class(id)
 );
 
 CREATE TABLE Species(
@@ -52,4 +67,15 @@ CREATE TABLE Pokemons(
   ,[is_default]      BIT  NOT NULL
   ,PRIMARY KEY CLUSTERED ([id] ASC) 
   ,CONSTRAINT [FK_Pokemons_Species] FOREIGN KEY ([species_id]) REFERENCES Species(id)
+);
+
+DROP TABLE pokemon_types
+CREATE TABLE pokemon_types(
+   id		  INTEGER  identity(1,1) NOT NULL,
+   pokemon_id INTEGER  NOT NULL
+  ,[type_id]  INTEGER  NOT NULL
+  ,slot       INTEGER  NOT NULL
+  ,PRIMARY KEY CLUSTERED ([id] ASC)
+  ,CONSTRAINT FK_Pokemon_Types_Pokemon FOREIGN KEY (pokemon_id) REFERENCES Pokemons(id)
+  ,CONSTRAINT FK_Pokemon_Types_Types FOREIGN KEY ([type_id]) REFERENCES [types](id)
 );

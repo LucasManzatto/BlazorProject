@@ -12,6 +12,6 @@ namespace BlazorProject.Server.Contracts.Services
     {
         Task<List<DTO.Pokemons>> GetAll();
 
-        Task<Pokemons> Get(int id);
+        Task<DTO.FullPokemon> Get(int id);
     }
 }
