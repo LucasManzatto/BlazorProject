@@ -26,6 +26,7 @@
 
     async void SetPokemon(int pokemonId)
     {
+        
         var pokemon = await Http.GetJsonAsync<FullPokemon>($"api/Pokemons/{pokemonId}");
         Dispatch(new Redux.Actions.Pokemon.Set(pokemon));
     }

@@ -5,6 +5,15 @@
 @inject HttpClient Http
 @inherits RealmComponent<State>
 
+@{ 
+    Pokemon = @Store.GetState().Pokemon;
+    if(Pokemon != null)
+    {
+        Pokemon.Height /= 10;
+        Pokemon.Weight /= 10;
+    }
+ }
+
 
 <h1>Pokemons List</h1>
 
@@ -19,26 +28,57 @@ else
             @for (var genNumber = 1; genNumber <= dropdowns.Count; genNumber++)
             {
                 <div class="col">
-                    <DropdownComponent GenNumber="@genNumber" Items="@dropdowns[genNumber-1]" />
+                    <DropdownComponent GenNumber="@genNumber" Items="@dropdowns[genNumber - 1]" />
                 </div>
             }
         </div>
-        <div class="row">
-            <div class="col-4">
-                <h2>Pokedéx Data</h2>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Pokemon: @Store.GetState().Pokemon?.Name</li>
-                    <li class="list-group-item">Dex No.: @Store.GetState().Pokemon?.Species.Position</li>
-                    <li class="list-group-item">Height: @Store.GetState().Pokemon?.Height</li>
-                    <li class="list-group-item">Weight: @Store.GetState().Pokemon?.Weight</li>
-                </ul>
-            </div>
+        <div class="row align-items-center">
+            @if (Pokemon != null)
+            {
+                <div class="col-4">
+                    @{ var source = $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{Pokemon.Id}.png";}
+                    <img src=@source style="width:100%;height:auto;" class="img-fluid">
+                </div>
+                <div class="col-4">
+                    <h2>Pokedéx Data</h2>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td class="w-25">Pokemon:</td>
+                                <td>@Pokemon.Name</td>
+                            </tr>
+                            <tr>
+                                <td>Type:</td>
+                                <td>
+                                    @foreach (var type in Pokemon.PokemonTypes.OrderBy(o => o.Slot))
+                                    {
+                                        <button class="fire-type" style="background-color:@Utils.GetColorHex(type.Type.Name) !important" type="button">@type.Type.Name.ToUpper()</button>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Dex No.:</td>
+                                <td>@Pokemon.Position</td>
+                            </tr>
+                            <tr>
+                                <td>Height:</td>
+                                <td>@Pokemon.Height m</td>
+                            </tr>
+                            <tr>
+                                <td>Weight:</td>
+                                <td>@Pokemon.Weight kg</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        }
         </div>
-        
+
     </div>
 }
 
 @code {
+    public FullPokemon Pokemon { get; set; }
     public int PokemonId { get; set; } = 0;
     List<List<DropdownModel>> dropdowns = new List<List<DropdownModel>>();
     int numberOfGenerations = 7;

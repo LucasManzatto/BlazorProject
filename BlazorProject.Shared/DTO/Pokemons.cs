@@ -14,7 +14,7 @@ namespace BlazorProject.Shared.DTO
     {
         public FullPokemon()
         {
-            PokemonTypes = new HashSet<PokemonTypes>();
+            PokemonTypes = new List<PokemonTypes>();
         }
         public int Id { get; set; }
         public string Name { get; set; }
