@@ -37,19 +37,16 @@ CREATE TABLE [types](
 
 CREATE TABLE Species(
    id                      INTEGER  NOT NULL
-  ,[name]				   VARCHAR(12) NOT NULL
   ,generation_id           INTEGER  NOT NULL
   ,evolves_from_species_id INTEGER 
   ,evolution_chain         INTEGER  NOT NULL
   ,gender_rate             INTEGER  NOT NULL
   ,capture_rate            INTEGER  NOT NULL
   ,base_happiness          INTEGER  NOT NULL
-  ,is_baby                 BIT  NOT NULL
   ,hatch_counter           INTEGER  NOT NULL
   ,has_gender_differences  BIT  NOT NULL
   ,growth_rate_id          INTEGER  NOT NULL
   ,forms_switchable        BIT  NOT NULL
-  ,position                INTEGER  NOT NULL
   ,PRIMARY KEY CLUSTERED ([id] ASC)
   ,CONSTRAINT FK_Species_Generation FOREIGN KEY (generation_id) REFERENCES Generation(id)
   ,CONSTRAINT FK_Species_Evolves_From_Species FOREIGN KEY (evolves_from_species_id) REFERENCES Species(id)
@@ -78,4 +75,18 @@ CREATE TABLE pokemon_types(
   ,PRIMARY KEY CLUSTERED ([id] ASC)
   ,CONSTRAINT FK_Pokemon_Types_Pokemon FOREIGN KEY (pokemon_id) REFERENCES Pokemons(id)
   ,CONSTRAINT FK_Pokemon_Types_Types FOREIGN KEY ([type_id]) REFERENCES [types](id)
+);
+
+DROP TABLE pokemon_stats
+CREATE TABLE pokemon_stats(
+   id		  INTEGER  identity(1,1) NOT NULL,
+   pokemon_id INTEGER  NOT NULL
+  ,hp         INTEGER  NOT NULL
+  ,attack     INTEGER  NOT NULL
+  ,defense    INTEGER  NOT NULL
+  ,sp_attack  INTEGER  NOT NULL
+  ,sp_defense INTEGER  NOT NULL
+  ,speed      INTEGER  NOT NULL
+  ,PRIMARY KEY CLUSTERED ([id] ASC)
+  ,CONSTRAINT FK_Pokemon_Stats_Pokemon FOREIGN KEY (pokemon_id) REFERENCES Pokemons(id)
 );

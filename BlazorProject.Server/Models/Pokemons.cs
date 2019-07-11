@@ -20,6 +20,7 @@ namespace BlazorProject.Server.Models
         public bool IsDefault { get; set; }
 
         public virtual Species Species { get; set; }
+        public PokemonStats PokemonStats { get; set; }
         public virtual ICollection<PokemonTypes> PokemonTypes { get; set; }
     }
 }

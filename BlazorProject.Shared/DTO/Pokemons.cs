@@ -24,8 +24,8 @@ namespace BlazorProject.Shared.DTO
         public int BaseExperience { get; set; }
         public int Position { get; set; }
         public bool IsDefault { get; set; }
-
         public Species Species { get; set; }
+        public PokemonStats PokemonStats { get; set; }
         public ICollection<PokemonTypes> PokemonTypes { set; get; }
     }
 }

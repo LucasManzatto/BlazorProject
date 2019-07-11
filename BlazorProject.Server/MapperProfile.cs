@@ -16,6 +16,7 @@ namespace BlazorProject.Server
             CreateMap<DamageClass, DTO.DamageClass>().ReverseMap();
             CreateMap<Types, DTO.Types>().ReverseMap();
             CreateMap<PokemonTypes, DTO.PokemonTypes>().ReverseMap();
+            CreateMap<PokemonStats, DTO.PokemonStats>().ReverseMap();
         }
     }
 }

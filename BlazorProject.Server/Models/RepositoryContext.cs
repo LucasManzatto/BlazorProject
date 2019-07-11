@@ -20,6 +20,7 @@ namespace BlazorProject.Server
         public virtual DbSet<Generation> Generation { get; set; }
         public virtual DbSet<GrowthRate> GrowthRate { get; set; }
         public virtual DbSet<MainRegion> MainRegion { get; set; }
+        public virtual DbSet<PokemonStats> PokemonStats { get; set; }
         public virtual DbSet<PokemonTypes> PokemonTypes { get; set; }
         public virtual DbSet<Pokemons> Pokemons { get; set; }
         public virtual DbSet<Species> Species { get; set; }
@@ -107,6 +108,31 @@ namespace BlazorProject.Server
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<PokemonStats>(entity =>
+            {
+                entity.ToTable("pokemon_stats");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Attack).HasColumnName("attack");
+
+                entity.Property(e => e.Defense).HasColumnName("defense");
+
+                entity.Property(e => e.Hp).HasColumnName("hp");
+
+                entity.Property(e => e.PokemonId).HasColumnName("pokemon_id");
+
+                entity.Property(e => e.SpAttack).HasColumnName("sp_attack");
+
+                entity.Property(e => e.SpDefense).HasColumnName("sp_defense");
+
+                entity.Property(e => e.Speed).HasColumnName("speed");
+
+                //entity.HasOne(e => e.Pokemon)
+                //      .WithOne()
+                //      .HasForeignKey<PokemonStats>(p => p.PokemonId);
+            });
+
             modelBuilder.Entity<PokemonTypes>(entity =>
             {
                 entity.ToTable("pokemon_types");
@@ -154,7 +180,7 @@ namespace BlazorProject.Server
 
                 entity.Property(e => e.SpeciesId).HasColumnName("species_id");
 
-                entity.Property(e => e.Weight).HasColumnName("weight");
+                entity.Property(e => e.Weight).HasColumnName("weight"); 
 
                 entity.HasOne(d => d.Species)
                     .WithMany(p => p.Pokemons)
@@ -188,14 +214,6 @@ namespace BlazorProject.Server
                 entity.Property(e => e.HasGenderDifferences).HasColumnName("has_gender_differences");
 
                 entity.Property(e => e.HatchCounter).HasColumnName("hatch_counter");
-
-                entity.Property(e => e.IsBaby).HasColumnName("is_baby");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasColumnName("name")
-                    .HasMaxLength(12)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.Position).HasColumnName("position");
 

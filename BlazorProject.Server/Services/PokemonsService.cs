@@ -23,6 +23,7 @@ namespace BlazorProject.Server.Services
         {
             var pokemon = await context.Pokemons
                 .Include(m => m.Species)
+                .Include(p => p.PokemonStats)
                 .Include("PokemonTypes.Type")
                 .SingleAsync(p => p.Id == id);
             return mapper.Map<DTO.FullPokemon>(pokemon);
