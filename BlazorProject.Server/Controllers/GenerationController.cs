@@ -26,7 +26,7 @@ namespace BlazorProject.Server.Controllers
         }
         [Route("{id}/pokemons")]
         [HttpGet]
-        public async Task<List<DTO.Pokemons>> GetPokemonsByGenerationId(int id, [FromServices] IGenerationService service)
+        public async Task<List<DTO.DropdownPokemon>> GetPokemonsByGenerationId(int id, [FromServices] IGenerationService service)
         {
             return await service.GetPokemonsByGeneration(id);
         }

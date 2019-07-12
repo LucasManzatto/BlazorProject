@@ -1,0 +1,50 @@
+﻿@using BlazorProject.Client.Shared.Utils
+<tr>
+    <td style="width:16.66%" class="text-muted">@StatName</td>
+    <td style="width:8.33%">@StatValue</td>
+    <td style="width:58.33%; vertical-align:middle !important">
+        <div class="progress">
+            <div class="progress-bar " role="progressbar" style="width: @Percentage" aria-valuenow=@StatValue aria-valuemin="0" aria-valuemax=@MaxStatValue></div>
+        </div>
+    </td>
+    @{
+        if (IsHp)
+        {
+            <td style="width:8.33%">@Utils.CalculateHpStat(StatValue, 0, 0)</td>
+            <td style="width:8.33%">@Utils.CalculateHpStat(StatValue, 31, 255)</td>
+        }
+        else
+        {
+            <td style="width:8.33%">@Utils.CalculateOtherStat(StatValue, 0, 0, 0.9f)</td>
+            <td style="width:8.33%">@Utils.CalculateOtherStat(StatValue, 31, 255, 1.1f)</td>
+        }
+    }
+</tr>
+
+@code {
+        [Parameter]
+        public string StatName { get; set; }
+        [Parameter]
+        public int StatValue { get; set; }
+        [Parameter]
+        public int MaxStatValue { get; set; }
+        [Parameter]
+        public bool IsHp { get; set; } = false;
+
+        public string Percentage { get; set; }
+
+        public string BarColor { get; set; }
+
+        protected override void OnParametersSet()
+        {
+            Percentage = GetStatsPercentage(StatValue, MaxStatValue).ToString() + "%";
+            
+            base.OnParametersSet();
+        }
+
+        float GetStatsPercentage(int stats, int maxStats)
+        {
+            return (((float)stats / (float)maxStats) * 100);
+        }
+}
+

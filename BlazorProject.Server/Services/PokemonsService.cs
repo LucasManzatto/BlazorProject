@@ -29,11 +29,25 @@ namespace BlazorProject.Server.Services
             return mapper.Map<DTO.FullPokemon>(pokemon);
         }
 
-        public Task<List<DTO.Pokemons>> GetAll()
+        public Task<List<DTO.DropdownPokemon>> GetAll()
         {
             return context.Pokemons
-                .ProjectTo<DTO.Pokemons>(mapper.ConfigurationProvider)
+                .ProjectTo<DTO.DropdownPokemon>(mapper.ConfigurationProvider)
                 .ToListAsync();
+        }
+        public async Task<DTO.PokemonStats> GetMaxStats()
+        {
+            DTO.PokemonStats pokeStats = new DTO.PokemonStats
+            {
+                Id= 0,
+                Hp = await context.PokemonStats.MaxAsync(p => p.Hp),
+                Attack = await context.PokemonStats.MaxAsync(p => p.Attack),
+                Defense = await context.PokemonStats.MaxAsync(p => p.Defense),
+                SpAttack = await context.PokemonStats.MaxAsync(p => p.SpAttack),
+                SpDefense = await context.PokemonStats.MaxAsync(p => p.SpDefense),
+                Speed = await context.PokemonStats.MaxAsync(p => p.Speed),
+            };
+            return pokeStats;
         }
     }
 }

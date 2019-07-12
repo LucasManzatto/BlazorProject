@@ -13,6 +13,6 @@ namespace BlazorProject.Server.Contracts.Services
 
         Task<Generation> Get(int id);
 
-        Task<List<DTO.Pokemons>> GetPokemonsByGeneration(int generationId);
+        Task<List<DTO.DropdownPokemon>> GetPokemonsByGeneration(int generationId);
     }
 }

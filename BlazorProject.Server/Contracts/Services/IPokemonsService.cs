@@ -10,8 +10,10 @@ namespace BlazorProject.Server.Contracts.Services
 {
     public interface IPokemonsService
     {
-        Task<List<DTO.Pokemons>> GetAll();
+        Task<List<DTO.DropdownPokemon>> GetAll();
 
         Task<DTO.FullPokemon> Get(int id);
+
+        Task<DTO.PokemonStats> GetMaxStats();
     }
 }

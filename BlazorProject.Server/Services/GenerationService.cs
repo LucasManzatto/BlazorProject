@@ -31,11 +31,11 @@ namespace BlazorProject.Server.Services
             return context.Generation.ProjectTo<Shared.DTO.Generation>(mapper.ConfigurationProvider).ToListAsync();
         }
 
-        public Task<List<Shared.DTO.Pokemons>> GetPokemonsByGeneration(int generationId)
+        public Task<List<DropdownPokemon>> GetPokemonsByGeneration(int generationId)
         {
             return context.Pokemons
                 .Where(p => p.Species.GenerationId == generationId && p.IsDefault)
-                .ProjectTo<Shared.DTO.Pokemons>(mapper.ConfigurationProvider)
+                .ProjectTo<DropdownPokemon>(mapper.ConfigurationProvider)
                 .ToListAsync();
         }
     }

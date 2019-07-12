@@ -1,12 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-//using Models = BlazorProject.Server.Models;
 using BlazorProject.Server.Contracts.Services;
 using DTO = BlazorProject.Shared.DTO;
-using AutoMapper;
-using BlazorProject.Server.Models;
-//using BlazorProject.Server.Models;
 
 namespace BlazorProject.Server.Controllers
 {
@@ -16,7 +12,7 @@ namespace BlazorProject.Server.Controllers
     {
         // GET: api/Pokemons
         [HttpGet]
-        public async Task<List<DTO.Pokemons>> GetAll([FromServices]IPokemonsService service)
+        public async Task<List<DTO.DropdownPokemon>> GetAll([FromServices]IPokemonsService service)
         {
             return await service.GetAll();
         }
@@ -26,6 +22,13 @@ namespace BlazorProject.Server.Controllers
         public async Task<DTO.FullPokemon> Get(int id, [FromServices]IPokemonsService service)
         {
             return await service.Get(id);
+        }
+        // GET: api/Pokemons/maxStats
+        [HttpGet]
+        [Route("maxStats")]
+        public async Task<DTO.PokemonStats> GetMaxStats([FromServices]IPokemonsService service)
+        {
+            return await service.GetMaxStats();
         }
     }
 }
