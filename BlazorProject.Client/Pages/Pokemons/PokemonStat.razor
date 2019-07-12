@@ -4,7 +4,7 @@
     <td style="width:8.33%">@StatValue</td>
     <td style="width:58.33%; vertical-align:middle !important">
         <div class="progress">
-            <div class="progress-bar " role="progressbar" style="width: @Percentage" aria-valuenow=@StatValue aria-valuemin="0" aria-valuemax=@MaxStatValue></div>
+            <div class="progress-bar @BarColor" role="progressbar" style="width: @PercentageBarStyle" aria-valuenow=@StatValue aria-valuemin="0" aria-valuemax=@MaxStatValue></div>
         </div>
     </td>
     @{
@@ -31,14 +31,19 @@
         [Parameter]
         public bool IsHp { get; set; } = false;
 
-        public string Percentage { get; set; }
+        public float Percentage { get; set; }
+
+        public string PercentageBarStyle { get; set; }
 
         public string BarColor { get; set; }
 
         protected override void OnParametersSet()
         {
-            Percentage = GetStatsPercentage(StatValue, MaxStatValue).ToString() + "%";
-            
+            Percentage = GetStatsPercentage(StatValue, MaxStatValue);
+            PercentageBarStyle = Percentage.ToString() + "%";
+
+            BarColor = Percentage < 25 ? "bg-danger" : Percentage < 50 ? "bg-warning" : Percentage < 75 ? "bg-success" : "bg-info";
+
             base.OnParametersSet();
         }
 
