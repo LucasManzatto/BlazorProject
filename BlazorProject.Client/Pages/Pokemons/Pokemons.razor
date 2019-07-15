@@ -1,6 +1,5 @@
 ﻿@page "/pokemons"
 @using BlazorProject.Shared.DTO
-@using BlazorProject.Client.Shared.Models
 @using BlazorProject.Client.Shared.Utils
 @inject HttpClient Http
 @inherits RealmComponent<State>
@@ -9,111 +8,92 @@
     Pokemon = @Store.GetState().Pokemon;
 }
 <h1>Pokemons List</h1>
-
-@if (dropdowns.Count == 0)
-{
-    <p><em>Loading..</em></p>
-}
-else
-{
-    <div class="container-fluid">
-        <div class="row">
-            @for (var genNumber = 1; genNumber <= dropdowns.Count; genNumber++)
-            {
-                <div class="col">
-                    <DropdownComponent GenNumber="@genNumber" Items="@dropdowns[genNumber - 1]" />
-                </div>
-            }
-        </div>
-        @if (Pokemon != null)
+<div class="container-fluid">
+    <div class="row">
+        @for (var genNumber = 1; genNumber <= numberOfGenerations; genNumber++)
         {
-            <div class="row align-items-center">
-                <div class="col-4">
-                    @{ var source = $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{Pokemon.Id}.png";}
-                    <img src=@source style="width:100%;height:auto;" class="img-fluid">
-                </div>
-                <div class="col-4">
-                    <h2>Pokedéx Data</h2>
-                    <table class="table">
-                        <tbody>
-                            <tr>
-                                <td class="w-25">Pokemon:</td>
-                                <td>@Pokemon.Name</td>
-                            </tr>
-                            <tr>
-                                <td>Type:</td>
-                                <td>
-                                    @foreach (var type in Pokemon.PokemonTypes.OrderBy(o => o.Slot))
-                                    {
-                                        <button class="fire-type" style="background-color:@Utils.GetColorHex(type.Type.Name) !important" type="button">@type.Type.Name.ToUpper()</button>
-                                    }
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Dex No.:</td>
-                                <td>@Pokemon.Position</td>
-                            </tr>
-                            <tr>
-                                <td>Height:</td>
-                                <td>@Pokemon.Height m</td>
-                            </tr>
-                            <tr>
-                                <td>Weight:</td>
-                                <td>@Pokemon.Weight kg</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="row align-items-center">
-                <div class="col-6">
-                    <h2>Pokémon Stats</h2>
-                    <table class="table table-sm">
-                        <tbody>
-                            <PokemonStat StatName="HP" IsHp=true StatValue=Pokemon.PokemonStats.Hp MaxStatValue=maxStats.Hp />
-                            <PokemonStat StatName="Attack" StatValue=Pokemon.PokemonStats.Attack MaxStatValue=maxStats.Attack />
-                            <PokemonStat StatName="Defense" StatValue=Pokemon.PokemonStats.Defense MaxStatValue=maxStats.Defense />
-                            <PokemonStat StatName="Sp. Atk" StatValue=Pokemon.PokemonStats.SpAttack MaxStatValue=maxStats.SpAttack />
-                            <PokemonStat StatName="Sp. Def" StatValue=Pokemon.PokemonStats.SpDefense MaxStatValue=maxStats.SpDefense />
-                            <PokemonStat StatName="Speed" StatValue=Pokemon.PokemonStats.Speed MaxStatValue=maxStats.Speed />
-                            <tr>
-                                <td class="text-muted"><strong>Total</strong></td>
-                                <td><strong>@Pokemon.PokemonStats.Total</strong></td>
-                                <td></td>
-                                <td><strong>Min</strong></td>
-                                <td><strong>Max</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="col">
+                <GenerationDropdown GenNumber="@genNumber" />
             </div>
         }
     </div>
-}
-
-@code {
-    public FullPokemon Pokemon { get; set; }
-    PokemonStats maxStats { get; set; }
-    List<List<DropdownModel>> dropdowns = new List<List<DropdownModel>>();
-    int numberOfGenerations = 7;
-
-    protected override async Task OnInitAsync()
+    @if (Pokemon != null)
     {
-        maxStats = await Http.GetJsonAsync<PokemonStats>("api/Pokemons/maxStats");
-        foreach (var i in Enumerable.Range(1, numberOfGenerations))
+        <div class="row align-items-center">
+            <div class="col-4">
+                <PokemonImage PokemonId=@Pokemon.Id />
+            </div>
+            <div class="col-4">
+                <h2>Pokedéx Data</h2>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td class="w-25 text-muted">Pokemon:</td>
+                            <td>@(Pokemon.Name.FirstCharToUpper())</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align:middle !important" class="text-muted">Type:</td>
+                            <td>
+                                @foreach (var type in Pokemon.PokemonTypes.OrderBy(o => o.Slot))
+                                {
+                                    <button class="fire-type" style="background-color:@Utils.GetColorHex(type.Type.Name) !important" type="button">@type.Type.Name.ToUpper()</button>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Dex No.:</td>
+                            <td>@Pokemon.Position</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Height:</td>
+                            <td>@Pokemon.Height m</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Weight:</td>
+                            <td>@Pokemon.Weight kg</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-7">
+                <h2>Pokémon Stats</h2>
+                <table class="table table-sm">
+                    <tbody>
+                        <PokemonStat StatName="HP" StatValue=Pokemon.PokemonStats.Hp MaxStatValue=maxStats.Hp />
+                        <PokemonStat StatName="Attack" StatValue=Pokemon.PokemonStats.Attack MaxStatValue=maxStats.Attack />
+                        <PokemonStat StatName="Defense" StatValue=Pokemon.PokemonStats.Defense MaxStatValue=maxStats.Defense />
+                        <PokemonStat StatName="Sp. Atk" StatValue=Pokemon.PokemonStats.SpAttack MaxStatValue=maxStats.SpAttack />
+                        <PokemonStat StatName="Sp. Def" StatValue=Pokemon.PokemonStats.SpDefense MaxStatValue=maxStats.SpDefense />
+                        <PokemonStat StatName="Speed" StatValue=Pokemon.PokemonStats.Speed MaxStatValue=maxStats.Speed />
+                        <PokemonStat StatName="Total" StatValue=Pokemon.PokemonStats.Total />
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-5">
+                <h2>Type Defenses</h2>
+                <div class="row no-gutters">
+                    @foreach (var type in Colors.TypesList)
+                    {
+                        <div class="col">
+                            <button class="fire-type" style="background-color:@type.Value !important; width:40px" type="button">@type.Key.Substring(0,3)</button>
+                        </div>
+            }
+                </div>
+            </div>
+        </div>
+    }
+    </div>
+
+    @code {
+        public FullPokemon Pokemon { get; set; }
+        PokemonStats maxStats { get; set; }
+        int numberOfGenerations = 7;
+
+        protected override async Task OnInitAsync()
         {
-            dropdowns.Add(await CreateDropdownModelData(i));
+            maxStats = await Http.GetJsonAsync<PokemonStats>("api/Pokemons/maxStats");
         }
     }
-
-    private async Task<List<DropdownModel>> CreateDropdownModelData(int id)
-    {
-        var list = await Http.GetJsonAsync<List<DropdownPokemon>>($"api/Generation/{id}/pokemons");
-        list.ForEach(elem => elem.Name = elem.Name.First().ToString().ToUpper() + elem.Name.Substring(1));
-        List<DropdownModel> newList = new List<DropdownModel>();
-        list.ForEach(item =>
-            newList.Add(new DropdownModel { Id = item.Id, Text = item.Name }));
-        return newList;
-    }
-}
 

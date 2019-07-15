@@ -1,0 +1,16 @@
+﻿<img src=@SourceFull style="width:100%;height:auto;" class="img-fluid">
+
+@code {
+    public string SourceFull { get; set; }
+    public string SourceSprite { get; set; }
+    [Parameter]
+    public int PokemonId { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        var pokemonIdString = PokemonId.ToString().PadLeft(3, '0');
+        SourceFull = $"https://assets.pokemon.com/assets/cms2/img/pokedex/full/{pokemonIdString}.png";
+    }
+
+}
+

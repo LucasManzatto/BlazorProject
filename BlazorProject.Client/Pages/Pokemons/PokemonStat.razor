@@ -1,55 +1,79 @@
 ﻿@using BlazorProject.Client.Shared.Utils
 <tr>
-    <td style="width:16.66%" class="text-muted">@StatName</td>
-    <td style="width:8.33%">@StatValue</td>
+    <td class="@IsBold text-muted" style="width:16.66%">@StatName</td>
+    <td class="@IsBold" style="width:8.33%">@StatValue</td>
     <td style="width:58.33%; vertical-align:middle !important">
-        <div class="progress">
-            <div class="progress-bar @BarColor" role="progressbar" style="width: @PercentageBarStyle" aria-valuenow=@StatValue aria-valuemin="0" aria-valuemax=@MaxStatValue></div>
-        </div>
+        @if (!IsTotal)
+        {
+            <div class="progress">
+                <div class="progress-bar @BarColor"
+                     role="progressbar"
+                     style="width: @PercentageBarStyle"
+                     aria-valuenow=@StatValue
+                     aria-valuemin="0"
+                     aria-valuemax=@MaxStatValue>
+                </div>
+            </div>
+        }
     </td>
-    @{
-        if (IsHp)
-        {
-            <td style="width:8.33%">@Utils.CalculateHpStat(StatValue, 0, 0)</td>
-            <td style="width:8.33%">@Utils.CalculateHpStat(StatValue, 31, 255)</td>
-        }
-        else
-        {
-            <td style="width:8.33%">@Utils.CalculateOtherStat(StatValue, 0, 0, 0.9f)</td>
-            <td style="width:8.33%">@Utils.CalculateOtherStat(StatValue, 31, 255, 1.1f)</td>
-        }
-    }
+    <td class="@IsBold" style="width:8.33%">@MinValue</td>
+    <td class="@IsBold" style="width:8.33%">@MaxValue</td>
 </tr>
 
 @code {
-        [Parameter]
-        public string StatName { get; set; }
-        [Parameter]
-        public int StatValue { get; set; }
-        [Parameter]
-        public int MaxStatValue { get; set; }
-        [Parameter]
-        public bool IsHp { get; set; } = false;
+[Parameter]
+public string StatName { get; set; }
+[Parameter]
+public int StatValue { get; set; }
+[Parameter]
+public int MaxStatValue { get; set; }
+public bool IsHp { get; set; }
+public bool IsTotal { get; set; }
+public string IsBold { get; set; }
+public float Percentage { get; set; }
+public string PercentageBarStyle { get; set; }
+public string BarColor { get; set; }
+public string MinValue { get; set; }
+public string MaxValue { get; set; }
+protected override void OnInit()
+{
+    IsHp = StatName == "HP";
+    IsTotal = StatName == "Total";
 
-        public float Percentage { get; set; }
+    if (IsTotal)
+    {
+        MinValue = "Min";
+        MaxValue = "Max";
+        IsBold = "font-weight-bold";
+    }
+    else if (IsHp)
+    {
+        MinValue = @Utils.CalculateHpStat(StatValue, 0, 0).ToString();
+        MaxValue = @Utils.CalculateHpStat(StatValue, 31, 255).ToString();
+        IsBold = "";
+    }
+    else
+    {
+        MinValue = @Utils.CalculateOtherStat(StatValue, 0, 0, 0.9f).ToString();
+        MaxValue =  @Utils.CalculateOtherStat(StatValue, 31, 255, 1.1f).ToString();
+        IsBold = "";
+    }
+    base.OnInit();
+}
 
-        public string PercentageBarStyle { get; set; }
+protected override void OnParametersSet()
+{
+    Percentage = GetStatsPercentage(StatValue, MaxStatValue);
+    PercentageBarStyle = Percentage.ToString() + "%";
 
-        public string BarColor { get; set; }
+    BarColor = Percentage < 25 ? "bg-danger" : Percentage < 50 ? "bg-warning" : Percentage < 75 ? "bg-success" : "bg-info";
 
-        protected override void OnParametersSet()
-        {
-            Percentage = GetStatsPercentage(StatValue, MaxStatValue);
-            PercentageBarStyle = Percentage.ToString() + "%";
+    base.OnParametersSet();
+}
 
-            BarColor = Percentage < 25 ? "bg-danger" : Percentage < 50 ? "bg-warning" : Percentage < 75 ? "bg-success" : "bg-info";
-
-            base.OnParametersSet();
-        }
-
-        float GetStatsPercentage(int stats, int maxStats)
-        {
-            return (((float)stats / (float)maxStats) * 100);
-        }
+float GetStatsPercentage(int stats, int maxStats)
+{
+    return (((float)stats / (float)maxStats) * 100);
+}
 }
 

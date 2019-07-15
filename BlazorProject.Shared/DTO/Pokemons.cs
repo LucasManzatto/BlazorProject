@@ -19,13 +19,8 @@ namespace BlazorProject.Shared.DTO
         public int Id { get; set; }
         public string Name { get; set; }
         public int SpeciesId { get; set; }
-
-        private int height;
-        public int Height {
-            get { return height; }
-            set { height = value/10; }
-        }
-        public int Weight { get; set; }
+        public double Height { get; set; }
+        public double Weight { get; set; }
         public int BaseExperience { get; set; }
         public int Position { get; set; }
         public bool IsDefault { get; set; }

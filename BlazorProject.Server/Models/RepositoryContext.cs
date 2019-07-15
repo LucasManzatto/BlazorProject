@@ -128,9 +128,6 @@ namespace BlazorProject.Server
 
                 entity.Property(e => e.Speed).HasColumnName("speed");
 
-                //entity.HasOne(e => e.Pokemon)
-                //      .WithOne()
-                //      .HasForeignKey<PokemonStats>(p => p.PokemonId);
             });
 
             modelBuilder.Entity<PokemonTypes>(entity =>
@@ -180,7 +177,7 @@ namespace BlazorProject.Server
 
                 entity.Property(e => e.SpeciesId).HasColumnName("species_id");
 
-                entity.Property(e => e.Weight).HasColumnName("weight"); 
+                entity.Property(e => e.Weight).HasColumnName("weight");
 
                 entity.HasOne(d => d.Species)
                     .WithMany(p => p.Pokemons)

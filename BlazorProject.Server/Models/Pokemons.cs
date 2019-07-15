@@ -13,14 +13,14 @@ namespace BlazorProject.Server.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public int SpeciesId { get; set; }
-        public int Height { get; set; }
-        public int Weight { get; set; }
+        public double Height { get; set; }
+        public double Weight { get; set; }
         public int BaseExperience { get; set; }
         public int Position { get; set; }
         public bool IsDefault { get; set; }
 
         public virtual Species Species { get; set; }
-        public PokemonStats PokemonStats { get; set; }
+        public virtual PokemonStats PokemonStats { get; set; }
         public virtual ICollection<PokemonTypes> PokemonTypes { get; set; }
     }
 }

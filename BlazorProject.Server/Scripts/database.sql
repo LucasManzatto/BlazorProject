@@ -57,8 +57,8 @@ CREATE TABLE Pokemons(
    [id]              INTEGER  NOT NULL
   ,[name]		     VARCHAR(23) NOT NULL
   ,[species_id]      INTEGER  NOT NULL
-  ,[height]          INTEGER  NOT NULL
-  ,[weight]          INTEGER  NOT NULL
+  ,[height]          FLOAT    NOT NULL
+  ,[weight]          FLOAT    NOT NULL
   ,[base_experience] INTEGER  NOT NULL
   ,[position]        INTEGER  NOT NULL
   ,[is_default]      BIT  NOT NULL
