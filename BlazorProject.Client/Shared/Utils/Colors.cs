@@ -21,26 +21,28 @@ namespace BlazorProject.Client.Shared.Utils
         public static KeyValuePair<string, string> Rock = new KeyValuePair<string, string>("rock", "#ba6");
         public static KeyValuePair<string, string> Steel = new KeyValuePair<string, string>("steel", "#aab");
         public static KeyValuePair<string, string> Water = new KeyValuePair<string, string>("water", "#39f");
+        public static KeyValuePair<string, string> Ice = new KeyValuePair<string, string>("ice", "#6cf");
 
         public static List<KeyValuePair<string, string>> TypesList { get; set; }
             = new List<KeyValuePair<string, string>> {
-                Bug,
-                Dark,
-                Dragon,
-                Electric,
-                Fairy,
-                Fighting,
-                Fire,
-                Flying,
-                Ghost,
-                Grass,
-                Ground,
                 Normal,
+                Fire,
+                Water,
+                Electric,
+                Grass,
+                Ice,
+                Fighting,
                 Poison,
+                Ground,
+                Flying,
                 Psychic,
+                Bug,
                 Rock,
+                Ghost,
+                Dragon,
+                Dark,
                 Steel,
-                Water
+                Fairy,
             };
     }
 }

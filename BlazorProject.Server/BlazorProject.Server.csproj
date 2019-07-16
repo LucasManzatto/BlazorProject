@@ -38,4 +38,8 @@
     <Watch Remove="Models\RepositoryContext.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\newModels\" />
+  </ItemGroup>
+
 </Project>

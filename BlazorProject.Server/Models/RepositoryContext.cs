@@ -24,6 +24,7 @@ namespace BlazorProject.Server
         public virtual DbSet<PokemonTypes> PokemonTypes { get; set; }
         public virtual DbSet<Pokemons> Pokemons { get; set; }
         public virtual DbSet<Species> Species { get; set; }
+        public virtual DbSet<TypeEfficacy> TypeEfficacy { get; set; }
         public virtual DbSet<Types> Types { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -179,11 +180,11 @@ namespace BlazorProject.Server
 
                 entity.Property(e => e.Weight).HasColumnName("weight");
 
-                entity.HasOne(d => d.Species)
-                    .WithMany(p => p.Pokemons)
-                    .HasForeignKey(d => d.SpeciesId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Pokemons_Species");
+                //entity.HasOne(d => d.Species)
+                //    .WithMany(p => p.Pokemons)
+                //    .HasForeignKey(d => d.SpeciesId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("FK_Pokemons_Species");
             });
 
             modelBuilder.Entity<Species>(entity =>
@@ -230,6 +231,19 @@ namespace BlazorProject.Server
                     .HasForeignKey(d => d.GrowthRateId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Species_Growth_Rate");
+            });
+
+            modelBuilder.Entity<TypeEfficacy>(entity =>
+            {
+                entity.ToTable("type_efficacy");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.DamageFactor).HasColumnName("damage_factor");
+
+                entity.Property(e => e.DamageTypeId).HasColumnName("damage_type_id");
+
+                entity.Property(e => e.TargetTypeId).HasColumnName("target_type_id");
             });
 
             modelBuilder.Entity<Types>(entity =>

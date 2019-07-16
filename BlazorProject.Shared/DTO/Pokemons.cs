@@ -27,5 +27,6 @@ namespace BlazorProject.Shared.DTO
         public Species Species { get; set; }
         public PokemonStats PokemonStats { get; set; }
         public ICollection<PokemonTypes> PokemonTypes { set; get; }
+        public ICollection<TypeEfficacy> PokemonTypeEfficacy { set; get; }
     }
 }

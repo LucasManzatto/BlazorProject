@@ -6,6 +6,7 @@
 
 @{
     Pokemon = @Store.GetState().Pokemon;
+    Console.WriteLine(Pokemon);
 }
 <h1>Pokemons List</h1>
 <div class="container-fluid">
@@ -36,7 +37,7 @@
                             <td>
                                 @foreach (var type in Pokemon.PokemonTypes.OrderBy(o => o.Slot))
                                 {
-                                    <button class="fire-type" style="background-color:@Utils.GetColorHex(type.Type.Name) !important" type="button">@type.Type.Name.ToUpper()</button>
+                                    <button class="pokemon-type" style="background-color:@Utils.GetColorHex(type.Type.Name) !important" type="button">@type.Type.Name.ToUpper()</button>
                                 }
                             </td>
                         </tr>
@@ -56,7 +57,7 @@
                 </table>
             </div>
         </div>
-        <div class="row align-items-center">
+        <div class="row">
             <div class="col-7">
                 <h2>Pokémon Stats</h2>
                 <table class="table table-sm">
@@ -73,13 +74,24 @@
             </div>
             <div class="col-5">
                 <h2>Type Defenses</h2>
-                <div class="row no-gutters">
-                    @foreach (var type in Colors.TypesList)
-                    {
-                        <div class="col">
-                            <button class="fire-type" style="background-color:@type.Value !important; width:40px" type="button">@type.Key.Substring(0,3)</button>
+                <div class="row justify-content-center">
+                    <div class="col-9">
+                        <div class="row no-gutters">
+                            @foreach ((KeyValuePair<string, string> type, Int32 index) in Colors.TypesList.Select((type, index) => (type, index)))
+                            {
+                            <div class="col">
+                                <button class="pokemon-type" style="background-color:@type.Value; width:40px" type="button">@type.Key.Substring(0, 3)</button>
+                                <button class="pokemon-type"
+                                        style="background-color:forestgreen; 
+                                        width:40px" 
+                                        disabled 
+                                        type="button">
+                                    @(Pokemon.PokemonTypeEfficacy.ElementAt(index).DamageType.Type.Name)
+                                </button>
+                            </div>
+                            }
                         </div>
-            }
+                    </div>
                 </div>
             </div>
         </div>
