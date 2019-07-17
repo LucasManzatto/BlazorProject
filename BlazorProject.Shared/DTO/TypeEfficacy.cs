@@ -8,7 +8,7 @@ namespace BlazorProject.Shared.DTO
         public int TargetTypeId { get; set; }
         public int DamageFactor { get; set; }
 
-        public virtual PokemonTypes DamageType { get; set; }
-        public virtual PokemonTypes TargetType { get; set; }
+        public virtual Types DamageType { get; set; }
+        public virtual Types TargetType { get; set; }
     }
 }

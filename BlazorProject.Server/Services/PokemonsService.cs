@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using BlazorProject.Server.Contracts.Services;
+using BlazorProject.Server.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,14 +29,11 @@ namespace BlazorProject.Server.Services
                 .SingleAsync(p => p.Id == id);
             var fullPokemonDTO = mapper.Map<DTO.FullPokemon>(pokemon);
 
-            //var typeEfficacies = await context.TypeEfficacy
-            //    .Where(p => pokemon.PokemonTypes.Select(s => s.TypeId).Contains(p.TargetType.TypeId))
-            //    .Include("TargetType.Type")
-            //    .Include("DamageType.Type")
-            //    .ToListAsync();
-
             var typeEfficacies = await context.TypeEfficacy
-                .Where(p => p.TargetTypeId == pokemon.PokemonTypes.ElementAt(0).Type.Id).ToListAsync();
+                .Include(p => p.TargetType)
+                .Include(p => p.DamageType)
+                .Where(p => pokemon.PokemonTypes.Select(s => s.TypeId).Contains(p.TargetTypeId))
+                .ToListAsync();
 
             fullPokemonDTO.PokemonTypeEfficacy = mapper.Map<List<DTO.TypeEfficacy>>(typeEfficacies);
 

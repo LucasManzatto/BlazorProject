@@ -91,12 +91,13 @@ CREATE TABLE pokemon_stats(
   ,CONSTRAINT FK_Pokemon_Stats_Pokemon FOREIGN KEY (pokemon_id) REFERENCES Pokemons(id)
 );
 
+DROP TABLE type_efficacy
 CREATE TABLE type_efficacy(
 	id		      INTEGER  identity(1,1) NOT NULL
   ,damage_type_id INTEGER  NOT NULL
   ,target_type_id INTEGER  NOT NULL
   ,damage_factor  INTEGER  NOT NULL
   ,PRIMARY KEY CLUSTERED ([id] ASC)
-  ,CONSTRAINT FK_Damage_Type_Type FOREIGN KEY (damage_type_id) REFERENCES pokemon_types(id)
-  ,CONSTRAINT FK_Target_Type_Type FOREIGN KEY (target_type_id) REFERENCES pokemon_types(id)
+  ,CONSTRAINT FK_Damage_Type_Type FOREIGN KEY (damage_type_id) REFERENCES [types](id)
+  ,CONSTRAINT FK_Target_Type_Type FOREIGN KEY (target_type_id) REFERENCES [types](id)
 );

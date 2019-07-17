@@ -8,8 +8,10 @@
     Pokemon = @Store.GetState().Pokemon;
     Console.WriteLine(Pokemon);
 }
-<h1>Pokemons List</h1>
 <div class="container-fluid">
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Pokémon</a>
+    </nav>
     <div class="row">
         @for (var genNumber = 1; genNumber <= numberOfGenerations; genNumber++)
         {
@@ -73,39 +75,20 @@
                 </table>
             </div>
             <div class="col-5">
-                <h2>Type Defenses</h2>
-                <div class="row justify-content-center">
-                    <div class="col-9">
-                        <div class="row no-gutters">
-                            @foreach ((KeyValuePair<string, string> type, Int32 index) in Colors.TypesList.Select((type, index) => (type, index)))
-                            {
-                            <div class="col">
-                                <button class="pokemon-type" style="background-color:@type.Value; width:40px" type="button">@type.Key.Substring(0, 3)</button>
-                                <button class="pokemon-type"
-                                        style="background-color:forestgreen; 
-                                        width:40px" 
-                                        disabled 
-                                        type="button">
-                                    @(Pokemon.PokemonTypeEfficacy.ElementAt(index).DamageType.Type.Name)
-                                </button>
-                            </div>
-                            }
-                        </div>
-                    </div>
-                </div>
+                <TypeDefenses TypeEfficacies=@Pokemon.PokemonTypeEfficacy />
             </div>
         </div>
     }
-    </div>
+</div>
 
-    @code {
-        public FullPokemon Pokemon { get; set; }
-        PokemonStats maxStats { get; set; }
-        int numberOfGenerations = 7;
+@code {
+    public FullPokemon Pokemon { get; set; }
+    PokemonStats maxStats { get; set; }
+    int numberOfGenerations = 7;
 
-        protected override async Task OnInitAsync()
-        {
-            maxStats = await Http.GetJsonAsync<PokemonStats>("api/Pokemons/maxStats");
-        }
+    protected override async Task OnInitAsync()
+    {
+        maxStats = await Http.GetJsonAsync<PokemonStats>("api/Pokemons/maxStats");
     }
+}
 
