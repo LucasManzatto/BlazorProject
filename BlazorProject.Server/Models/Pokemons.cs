@@ -9,6 +9,7 @@ namespace BlazorProject.Server.Models
         public Pokemons()
         {
             PokemonTypes = new HashSet<PokemonTypes>();
+            PokemonAbilities = new HashSet<PokemonAbilities>();
         }
 
         public int Id { get; set; }
@@ -23,5 +24,6 @@ namespace BlazorProject.Server.Models
         public virtual Species Species { get; set; }
         public virtual PokemonStats PokemonStats { get; set; }
         public virtual ICollection<PokemonTypes> PokemonTypes { get; set; }
+        public virtual ICollection<PokemonAbilities> PokemonAbilities { get; set; }
     }
 }

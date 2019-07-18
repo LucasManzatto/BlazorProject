@@ -16,10 +16,13 @@ namespace BlazorProject.Server
         {
         }
 
+        public virtual DbSet<Abilities> Abilities { get; set; }
+        public virtual DbSet<AbilitiesProse> AbilitiesProse { get; set; }
         public virtual DbSet<DamageClass> DamageClass { get; set; }
         public virtual DbSet<Generation> Generation { get; set; }
         public virtual DbSet<GrowthRate> GrowthRate { get; set; }
         public virtual DbSet<MainRegion> MainRegion { get; set; }
+        public virtual DbSet<PokemonAbilities> PokemonAbilities { get; set; }
         public virtual DbSet<PokemonStats> PokemonStats { get; set; }
         public virtual DbSet<PokemonTypes> PokemonTypes { get; set; }
         public virtual DbSet<Pokemons> Pokemons { get; set; }
@@ -38,6 +41,57 @@ namespace BlazorProject.Server
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<Abilities>(entity =>
+            {
+                entity.ToTable("abilities");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Effect)
+                    .HasColumnName("effect")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.GenerationId).HasColumnName("generation_id");
+
+                entity.Property(e => e.IsMainSeries).HasColumnName("is_main_series");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(16)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ShortEffect)
+                    .HasColumnName("short_effect")
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<AbilitiesProse>(entity =>
+            {
+                entity.ToTable("abilities_prose");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.AbilityId).HasColumnName("ability_id");
+
+                entity.Property(e => e.Effect)
+                    .IsRequired()
+                    .HasColumnName("effect")
+                    .HasMaxLength(2071)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LocalLanguageId).HasColumnName("local_language_id");
+
+                entity.Property(e => e.ShortEffect)
+                    .IsRequired()
+                    .HasColumnName("short_effect")
+                    .HasMaxLength(320)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<DamageClass>(entity =>
             {
                 entity.ToTable("damage_class");
@@ -129,6 +183,21 @@ namespace BlazorProject.Server
 
                 entity.Property(e => e.Speed).HasColumnName("speed");
 
+            });
+
+            modelBuilder.Entity<PokemonAbilities>(entity =>
+            {
+                entity.ToTable("pokemon_abilities");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.AbilityId).HasColumnName("ability_id");
+
+                entity.Property(e => e.IsHidden).HasColumnName("is_hidden");
+
+                entity.Property(e => e.PokemonId).HasColumnName("pokemon_id");
+
+                entity.Property(e => e.Slot).HasColumnName("slot");
             });
 
             modelBuilder.Entity<PokemonTypes>(entity =>

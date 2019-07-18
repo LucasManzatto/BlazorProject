@@ -16,5 +16,9 @@ namespace BlazorProject.Client.Shared
                 default: return input.First().ToString().ToUpper() + input.Substring(1);
             }
         }
+        public static bool Contains(this string source, string toCheck, StringComparison comp)
+        {
+            return source != null && toCheck != null && source.IndexOf(toCheck, comp) >= 0;
+        }
     }
 }

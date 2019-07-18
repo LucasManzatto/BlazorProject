@@ -2,63 +2,20 @@
 @using BlazorProject.Shared.DTO
 @inject HttpClient Http
 @inherits RealmComponent<State>
-@SearchInput
-
-<input class="form-control" type="text" placeholder="Gen 1" @oninput="@(ui => SearchInput = (string)ui.Value)" />
-@if (SearchInput.Length > 0)
+<input class="form-control" type="text" value=@SearchInput placeholder="Gen @GenNumber" @onfocus="@(() => ShowDropdown=true)" @oninput="@(ui => SearchInput = (string)ui.Value)" />
+@if (ShowDropdown && Items.Count > 0)
 {
-    <div style='max-height:200px; overflow:auto;' aria-labelledby="@GenNumber">
-        @{
-            if (Items.Count == 0)
-            {
-                <div>Loading...</div>
-            }
-            else
-            {
-                foreach (var item in Items)
-                {
-                    <button @onclick="@(() => SetPokemon(item.Id))"
-                            class="dropdown-item"
-                            type="button">
-                        @item.Text
-                    </button>
-                }
-            }
+    <div class="dropdown-menu" style='max-height:200px; overflow:auto; left:initial; display:inline;' aria-labelledby="@GenNumber">
+        @foreach (var item in FilteredItems(SearchInput))
+        {
+            <button @onclick="@(() => SetPokemon(item))"
+                    class="dropdown-item"
+                    type="button">
+                @item.Text
+            </button>
         }
     </div>
 }
-@*<div class="btn-group dropdown">
-    <button class="btn btn-secondary dropdown-toggle"
-            type="button" id="@GenNumber"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false">
-        Generation @GenNumber
-    </button>
-    @if (SearchInput.Length > 0)
-    {
-        <div class="dropdown-menu" style='max-height:200px; overflow:auto;' aria-labelledby="@GenNumber">
-            @{
-                if (Items.Count == 0)
-                {
-                    <div>Loading...</div>
-                }
-                else
-                {
-                    foreach (var item in Items)
-                    {
-                        <button @onclick="@(() => SetPokemon(item.Id))"
-                                class="dropdown-item"
-                                type="button">
-                            @item.Text
-                        </button>
-                    }
-                }
-            }
-        </div>
-    }
-
-</div>*@
 
 @code {
     List<DropdownModel> Items { get; set; } = new List<DropdownModel>();
@@ -66,14 +23,18 @@
     int GenNumber { get; set; }
     public string SearchInput { get; set; } = "";
 
+    private bool ShowDropdown { get; set; } = false;
+
     protected async override Task OnInitAsync()
     {
         Items = await CreateDropdownModelData(GenNumber);
     }
 
-    async void SetPokemon(int pokemonId)
+    async void SetPokemon(DropdownModel item)
     {
-        var pokemon = await Http.GetJsonAsync<FullPokemon>($"api/Pokemons/{pokemonId}");
+        ShowDropdown = false;
+        SearchInput = item.Text;
+        var pokemon = await Http.GetJsonAsync<FullPokemon>($"api/Pokemons/{item.Id}");
         Dispatch(new Redux.Actions.Pokemon.Set(pokemon));
     }
 
@@ -88,6 +49,10 @@
     private void Filter()
     {
 
+    }
+    private List<DropdownModel> FilteredItems(string input)
+    {
+        return Items.FindAll(p => p.Text.ToUpperInvariant().Contains(SearchInput.ToUpperInvariant()));
     }
 
 }

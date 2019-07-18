@@ -12,7 +12,7 @@
     <nav class="navbar navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Pokémon</a>
     </nav>
-    <div class="row">
+    <div class="row mt-2">
         @for (var genNumber = 1; genNumber <= numberOfGenerations; genNumber++)
         {
             <div class="col">
@@ -46,6 +46,15 @@
                         <tr>
                             <td class="text-muted">Dex No.:</td>
                             <td>@Pokemon.Position</td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align:middle !important" class="text-muted">Abilities:</td>
+                            <td>
+                                @foreach (var ability in Pokemon.PokemonAbilities.ToList())
+                                {
+                                    <p style="margin-bottom:0">@ability.Ability.Name.FirstCharToUpper()</p>
+                                }
+                            </td>
                         </tr>
                         <tr>
                             <td class="text-muted">Height:</td>

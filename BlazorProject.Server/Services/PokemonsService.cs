@@ -27,6 +27,15 @@ namespace BlazorProject.Server.Services
                 .Include(p => p.PokemonStats)
                 .Include("PokemonTypes.Type")
                 .SingleAsync(p => p.Id == id);
+
+            var pokemonAbilities = await context.PokemonAbilities
+                .Include(p => p.Ability)
+                .ThenInclude(p => p.AbilitiesProse)
+                .Where(p => p.PokemonId == pokemon.Id)
+                .ToListAsync();
+
+            pokemon.PokemonAbilities = pokemonAbilities;
+
             var fullPokemonDTO = mapper.Map<DTO.FullPokemon>(pokemon);
 
             var typeEfficacies = await context.TypeEfficacy

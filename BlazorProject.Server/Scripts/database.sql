@@ -101,3 +101,22 @@ CREATE TABLE type_efficacy(
   ,CONSTRAINT FK_Damage_Type_Type FOREIGN KEY (damage_type_id) REFERENCES [types](id)
   ,CONSTRAINT FK_Target_Type_Type FOREIGN KEY (target_type_id) REFERENCES [types](id)
 );
+
+CREATE TABLE abilities(
+   id             INTEGER  NOT NULL
+  ,[name]     VARCHAR(16) NOT NULL
+  ,generation_id  INTEGER  NOT NULL
+  ,[description] VARCHAR(MAX) NOT NULL
+  ,is_main_series BIT  NOT NULL
+  ,PRIMARY KEY CLUSTERED ([id] ASC)
+  ,CONSTRAINT FK_Abilities FOREIGN KEY (generation_id) REFERENCES Generation(id)
+);
+
+CREATE TABLE abilities_prose(
+   id             INTEGER  NOT NULL,
+   ability_id        INTEGER  NOT NULL
+  ,local_language_id INTEGER  NOT NULL
+  ,short_effect      VARCHAR(320) NOT NULL
+  ,effect            VARCHAR(2071) NOT NULL
+  ,PRIMARY KEY CLUSTERED ([id] ASC)
+);
