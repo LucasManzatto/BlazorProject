@@ -1,15 +1,33 @@
-﻿<img src=@SourceFull style="width:100%;height:auto;" class="img-fluid">
+﻿@if (PokemonId != 0)
+{
+    <img src=@Source style="width:100%;height:auto;" class="img-fluid">
+}
+else
+{
+    <img src=@Source class="img-fluid">
+}
 
 @code {
-    public string SourceFull { get; set; }
-    public string SourceSprite { get; set; }
+    public string Source { get; set; }
     [Parameter]
-    public int PokemonId { get; set; }
+    public int PokemonId { get; set; } = 0;
+    [Parameter]
+    public string PokemonName { get; set; } = "";
+    [Parameter]
+    public bool IsSprite { get; set; } = false;
 
     protected override void OnParametersSet()
     {
-        var pokemonIdString = PokemonId.ToString().PadLeft(3, '0');
-        SourceFull = $"https://assets.pokemon.com/assets/cms2/img/pokedex/full/{pokemonIdString}.png";
+        if (PokemonId != 0)
+        {
+            //Always need to be 3 digits (1 -> 001, 01 -> 001)
+            var pokemonIdString = PokemonId.ToString().PadLeft(3, '0');
+            Source = $"https://assets.pokemon.com/assets/cms2/img/pokedex/full/{pokemonIdString}.png";
+        }
+        else
+        {
+            Source = $"http://www.pokestadium.com/sprites/xy/{PokemonName}.gif";
+        }
     }
 
 }

@@ -7,7 +7,6 @@ namespace BlazorProject.Shared.DTO
     {
         public int Id { get; set; }
         public int AbilityId { get; set; }
-        public int LocalLanguageId { get; set; }
         public string ShortEffect { get; set; }
         public string Effect { get; set; }
 

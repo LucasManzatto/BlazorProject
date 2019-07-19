@@ -2,7 +2,12 @@
 @using BlazorProject.Shared.DTO
 @inject HttpClient Http
 @inherits RealmComponent<State>
-<input class="form-control" type="text" value=@SearchInput placeholder="Gen @GenNumber" @onfocus="@(() => ShowDropdown=true)" @oninput="@(ui => SearchInput = (string)ui.Value)" />
+<input class="form-control"
+       type="text"
+       value=@SearchInput 
+       placeholder=@(Items.Count > 0 ? "Gen " + GenNumber : "Loading...")
+       @onfocus="@(() => ShowDropdown=true)" 
+       @oninput="@(ui => SearchInput = (string)ui.Value)" />
 @if (ShowDropdown && Items.Count > 0)
 {
     <div class="dropdown-menu" style='max-height:200px; overflow:auto; left:initial; display:inline;' aria-labelledby="@GenNumber">

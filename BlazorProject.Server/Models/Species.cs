@@ -11,6 +11,8 @@ namespace BlazorProject.Server.Models
             Pokemons = new HashSet<Pokemons>();
         }
 
+        // TODO: Precisa colocar de novo o campo IsBaby para a evolution chain ficar certa nos casos 
+        // de evoluções que vieram em outras gerações, como o pichu
         public int Id { get; set; }
         public int GenerationId { get; set; }
         public int? EvolvesFromSpeciesId { get; set; }

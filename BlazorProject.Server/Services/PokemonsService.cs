@@ -34,15 +34,15 @@ namespace BlazorProject.Server.Services
                 .Where(p => p.PokemonId == pokemon.Id)
                 .ToListAsync();
 
-            pokemon.PokemonAbilities = pokemonAbilities;
-
-            var fullPokemonDTO = mapper.Map<DTO.FullPokemon>(pokemon);
-
             var typeEfficacies = await context.TypeEfficacy
                 .Include(p => p.TargetType)
                 .Include(p => p.DamageType)
                 .Where(p => pokemon.PokemonTypes.Select(s => s.TypeId).Contains(p.TargetTypeId))
                 .ToListAsync();
+
+            pokemon.PokemonAbilities = pokemonAbilities;
+
+            var fullPokemonDTO = mapper.Map<DTO.FullPokemon>(pokemon);
 
             fullPokemonDTO.PokemonTypeEfficacy = mapper.Map<List<DTO.TypeEfficacy>>(typeEfficacies);
 
@@ -55,6 +55,16 @@ namespace BlazorProject.Server.Services
                 .ProjectTo<DTO.DropdownPokemon>(mapper.ConfigurationProvider)
                 .ToListAsync();
         }
+
+        public async Task<List<DTO.DropdownPokemon>> GetEvolutionChain(int id)
+        {
+            var pokemonSpecies = await context.Species.FindAsync(id);
+            return await context.Pokemons
+                .Where(p => p.Species.EvolutionChain == pokemonSpecies.EvolutionChain && p.IsDefault)
+                .ProjectTo<DTO.DropdownPokemon>(mapper.ConfigurationProvider)
+                .ToListAsync();
+        }
+
         public async Task<DTO.PokemonStats> GetMaxStats()
         {
             DTO.PokemonStats pokeStats = new DTO.PokemonStats

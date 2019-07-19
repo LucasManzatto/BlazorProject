@@ -23,6 +23,12 @@ namespace BlazorProject.Server.Controllers
         {
             return await service.Get(id);
         }
+        // GET: api/Pokemons/5/evolutionChain
+        [HttpGet("{id}/evolutionChain")]
+        public async Task<List<DTO.DropdownPokemon>> GetEvolutionChain(int id, [FromServices]IPokemonsService service)
+        {
+            return await service.GetEvolutionChain(id);
+        }
         // GET: api/Pokemons/maxStats
         [HttpGet]
         [Route("maxStats")]

@@ -83,8 +83,6 @@ namespace BlazorProject.Server
                     .HasMaxLength(2071)
                     .IsUnicode(false);
 
-                entity.Property(e => e.LocalLanguageId).HasColumnName("local_language_id");
-
                 entity.Property(e => e.ShortEffect)
                     .IsRequired()
                     .HasColumnName("short_effect")

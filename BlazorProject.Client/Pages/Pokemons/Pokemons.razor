@@ -1,99 +1,150 @@
 ﻿@page "/pokemons"
 @using BlazorProject.Shared.DTO
 @using BlazorProject.Client.Shared.Utils
+@using System.Text.RegularExpressions;
 @inject HttpClient Http
 @inherits RealmComponent<State>
 
-@{
-    Pokemon = @Store.GetState().Pokemon;
-    Console.WriteLine(Pokemon);
+
+@{ 
+    Pokemon = Store.GetState().Pokemon;
 }
-<div class="container-fluid">
-    <nav class="navbar navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Pokémon</a>
-    </nav>
-    <div class="row mt-2">
-        @for (var genNumber = 1; genNumber <= numberOfGenerations; genNumber++)
+    <div class="container-fluid">
+        <nav class="navbar navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">Pokémon</a>
+        </nav>
+        <div class="row mt-2">
+            @for (var genNumber = 1; genNumber <= numberOfGenerations; genNumber++)
+            {
+                <div class="col">
+                    <GenerationDropdown GenNumber="@genNumber" />
+                </div>
+            }
+        </div>
+        @if (Pokemon != null)
         {
-            <div class="col">
-                <GenerationDropdown GenNumber="@genNumber" />
+            <div class="row align-items-center">
+                <div class="col-4">
+                    <PokemonImage PokemonId=@Pokemon.Id />
+                </div>
+                <div class="col-8">
+                    <h2 class="text-center">Pokedéx Data</h2>
+                    <div class="row">
+                        <div class="col-6">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td class="w-25 text-muted">Pokemon:</td>
+                                        <td>@(Pokemon.Name.FirstCharToUpper())</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="vertical-align:middle !important" class="text-muted">Type:</td>
+                                        <td>
+                                            @foreach (var type in Pokemon.PokemonTypes.OrderBy(o => o.Slot))
+                                            {
+                                                <button class="pokemon-type" style="background-color:@Utils.GetColorHex(type.Type.Name) !important" type="button">@type.Type.Name.ToUpper()</button>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Dex No.:</td>
+                                        <td>@Pokemon.Position</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="vertical-align:middle !important" class="text-muted">Abilities:</td>
+                                        <td>
+                                            @foreach (var pokemonAbility in Pokemon.PokemonAbilities.ToList())
+                                            {
+                                                pokemonAbility.Ability.AbilitiesProse.ShortEffect = Regex.Replace(pokemonAbility.Ability.AbilitiesProse.ShortEffect, @"(\{.*?\})", String.Empty);
+                                                pokemonAbility.Ability.AbilitiesProse.ShortEffect = Regex.Replace(pokemonAbility.Ability.AbilitiesProse.ShortEffect, @"(\[*\]*)", String.Empty);
+
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="tooltipCustom">
+                                                            @if (pokemonAbility.IsHidden)
+                                                            {
+                                                                <small>@pokemonAbility.Ability.Name.FirstCharToUpper() @(pokemonAbility.IsHidden ? "(Hidden)" : "")</small>
+                                                            }
+                                                            else
+                                                            {
+                                                                @pokemonAbility.Ability.Name.FirstCharToUpper()
+                                                            }
+                                                            <span class="tooltiptext">@pokemonAbility.Ability.AbilitiesProse.ShortEffect</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Height:</td>
+                                        <td>@Pokemon.Height m</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Weight:</td>
+                                        <td>@Pokemon.Weight kg</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-6">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-muted" style="width:35%">Base Exp.:</td>
+                                        <td>@Pokemon.BaseExperience</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Capture Rate:</td>
+                                        <td>@Pokemon.Species.CaptureRate</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Base Happiness:</td>
+                                        <td>@Pokemon.Species.BaseHappiness</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-muted">Hatch Counter:</td>
+                                        <td>
+                                            <span>
+                                                @Pokemon.Species.HatchCounter <span class="text-muted">(@(Pokemon.Species.HatchCounter * 257) steps)</span>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <div class="row">
+                <div class="col-7">
+                    <h2>Pokémon Stats</h2>
+                    <table class="table table-sm">
+                        <tbody>
+                            <PokemonStat StatName="HP" StatValue=Pokemon.PokemonStats.Hp MaxStatValue=maxStats.Hp />
+                            <PokemonStat StatName="Attack" StatValue=Pokemon.PokemonStats.Attack MaxStatValue=maxStats.Attack />
+                            <PokemonStat StatName="Defense" StatValue=Pokemon.PokemonStats.Defense MaxStatValue=maxStats.Defense />
+                            <PokemonStat StatName="Sp. Atk" StatValue=Pokemon.PokemonStats.SpAttack MaxStatValue=maxStats.SpAttack />
+                            <PokemonStat StatName="Sp. Def" StatValue=Pokemon.PokemonStats.SpDefense MaxStatValue=maxStats.SpDefense />
+                            <PokemonStat StatName="Speed" StatValue=Pokemon.PokemonStats.Speed MaxStatValue=maxStats.Speed />
+                            <PokemonStat StatName="Total" StatValue=Pokemon.PokemonStats.Total />
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-5">
+                    <TypeDefenses TypeEfficacies=@Pokemon.PokemonTypeEfficacy />
+                </div>
+            </div>
+            <EvolutionChain PokemonId=@Pokemon.Id />
         }
     </div>
-    @if (Pokemon != null)
-    {
-        <div class="row align-items-center">
-            <div class="col-4">
-                <PokemonImage PokemonId=@Pokemon.Id />
-            </div>
-            <div class="col-4">
-                <h2>Pokedéx Data</h2>
-                <table class="table">
-                    <tbody>
-                        <tr>
-                            <td class="w-25 text-muted">Pokemon:</td>
-                            <td>@(Pokemon.Name.FirstCharToUpper())</td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align:middle !important" class="text-muted">Type:</td>
-                            <td>
-                                @foreach (var type in Pokemon.PokemonTypes.OrderBy(o => o.Slot))
-                                {
-                                    <button class="pokemon-type" style="background-color:@Utils.GetColorHex(type.Type.Name) !important" type="button">@type.Type.Name.ToUpper()</button>
-                                }
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted">Dex No.:</td>
-                            <td>@Pokemon.Position</td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align:middle !important" class="text-muted">Abilities:</td>
-                            <td>
-                                @foreach (var ability in Pokemon.PokemonAbilities.ToList())
-                                {
-                                    <p style="margin-bottom:0">@ability.Ability.Name.FirstCharToUpper()</p>
-                                }
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted">Height:</td>
-                            <td>@Pokemon.Height m</td>
-                        </tr>
-                        <tr>
-                            <td class="text-muted">Weight:</td>
-                            <td>@Pokemon.Weight kg</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-7">
-                <h2>Pokémon Stats</h2>
-                <table class="table table-sm">
-                    <tbody>
-                        <PokemonStat StatName="HP" StatValue=Pokemon.PokemonStats.Hp MaxStatValue=maxStats.Hp />
-                        <PokemonStat StatName="Attack" StatValue=Pokemon.PokemonStats.Attack MaxStatValue=maxStats.Attack />
-                        <PokemonStat StatName="Defense" StatValue=Pokemon.PokemonStats.Defense MaxStatValue=maxStats.Defense />
-                        <PokemonStat StatName="Sp. Atk" StatValue=Pokemon.PokemonStats.SpAttack MaxStatValue=maxStats.SpAttack />
-                        <PokemonStat StatName="Sp. Def" StatValue=Pokemon.PokemonStats.SpDefense MaxStatValue=maxStats.SpDefense />
-                        <PokemonStat StatName="Speed" StatValue=Pokemon.PokemonStats.Speed MaxStatValue=maxStats.Speed />
-                        <PokemonStat StatName="Total" StatValue=Pokemon.PokemonStats.Total />
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-5">
-                <TypeDefenses TypeEfficacies=@Pokemon.PokemonTypeEfficacy />
-            </div>
-        </div>
-    }
-</div>
 
 @code {
+    [Parameter]
     public FullPokemon Pokemon { get; set; }
     PokemonStats maxStats { get; set; }
     int numberOfGenerations = 7;
+    int Opacity { get; set; } = 0;
 
     protected override async Task OnInitAsync()
     {

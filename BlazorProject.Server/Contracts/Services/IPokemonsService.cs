@@ -15,5 +15,7 @@ namespace BlazorProject.Server.Contracts.Services
         Task<DTO.FullPokemon> Get(int id);
 
         Task<DTO.PokemonStats> GetMaxStats();
+
+        Task<List<DTO.DropdownPokemon>> GetEvolutionChain(int id);
     }
 }
