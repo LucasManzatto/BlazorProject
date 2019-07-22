@@ -21,19 +21,19 @@ namespace BlazorProject.Server.Services
             this.mapper = mapper;
         }
 
-        public Task<Models.Generation> Get(int id)
+        public async Task<Models.Generation> Get(int id)
         {
-            return context.Generation.FindAsync(id).AsTask();
+            return await context.Generation.FindAsync(id).AsTask();
         }
 
-        public Task<List<Shared.DTO.Generation>> GetAll()
+        public async Task<List<Shared.DTO.Generation>> GetAll()
         {
-            return context.Generation.ProjectTo<Shared.DTO.Generation>(mapper.ConfigurationProvider).ToListAsync();
+            return await context.Generation.ProjectTo<Shared.DTO.Generation>(mapper.ConfigurationProvider).ToListAsync();
         }
 
-        public Task<List<DropdownPokemon>> GetPokemonsByGeneration(int generationId)
+        public async Task<List<DropdownPokemon>> GetPokemonsByGeneration(int generationId)
         {
-            return context.Pokemons
+            return await context.Pokemons
                 .Where(p => p.Species.GenerationId == generationId && p.IsDefault)
                 .ProjectTo<DropdownPokemon>(mapper.ConfigurationProvider)
                 .ToListAsync();

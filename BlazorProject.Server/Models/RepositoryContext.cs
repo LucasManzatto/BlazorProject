@@ -19,10 +19,20 @@ namespace BlazorProject.Server
         public virtual DbSet<Abilities> Abilities { get; set; }
         public virtual DbSet<AbilitiesProse> AbilitiesProse { get; set; }
         public virtual DbSet<DamageClass> DamageClass { get; set; }
+        public virtual DbSet<EvolutionTriggers> EvolutionTriggers { get; set; }
         public virtual DbSet<Generation> Generation { get; set; }
         public virtual DbSet<GrowthRate> GrowthRate { get; set; }
+        public virtual DbSet<ItemCategories> ItemCategories { get; set; }
+        public virtual DbSet<ItemFlingEffects> ItemFlingEffects { get; set; }
+        public virtual DbSet<ItemPockets> ItemPockets { get; set; }
+        public virtual DbSet<Items> Items { get; set; }
+        public virtual DbSet<Locations> Locations { get; set; }
         public virtual DbSet<MainRegion> MainRegion { get; set; }
+        public virtual DbSet<MoveEffects> MoveEffects { get; set; }
+        public virtual DbSet<MoveTargets> MoveTargets { get; set; }
+        public virtual DbSet<Moves> Moves { get; set; }
         public virtual DbSet<PokemonAbilities> PokemonAbilities { get; set; }
+        public virtual DbSet<PokemonEvolution> PokemonEvolution { get; set; }
         public virtual DbSet<PokemonStats> PokemonStats { get; set; }
         public virtual DbSet<PokemonTypes> PokemonTypes { get; set; }
         public virtual DbSet<Pokemons> Pokemons { get; set; }
@@ -341,6 +351,322 @@ namespace BlazorProject.Server
                     .HasForeignKey(d => d.GenerationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Types_Generation");
+            });
+
+            modelBuilder.Entity<EvolutionTriggers>(entity =>
+            {
+                entity.ToTable("evolution_triggers");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(32)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ItemCategories>(entity =>
+            {
+                entity.ToTable("item_categories");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.ItemPocketId).HasColumnName("item_pocket_id");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(16)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ItemFlingEffects>(entity =>
+            {
+                entity.ToTable("item_fling_effects");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(12)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ItemPockets>(entity =>
+            {
+                entity.ToTable("item_pockets");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(9)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Items>(entity =>
+            {
+                entity.ToTable("items");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Cost).HasColumnName("cost");
+
+                entity.Property(e => e.FlingPower).HasColumnName("fling_power");
+
+                entity.Property(e => e.ItemCategoryId).HasColumnName("item_category_id");
+
+                entity.Property(e => e.ItemFlingEffectId).HasColumnName("item_fling_effect_id");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(31)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Locations>(entity =>
+            {
+                entity.ToTable("locations");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.MainRegionId).HasColumnName("main_region_id");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(32)
+                    .IsUnicode(false);
+
+                //entity.HasOne(d => d.MainRegion)
+                //    .WithMany(p => p.Locations)
+                //    .HasForeignKey(d => d.MainRegionId)
+                //    .HasConstraintName("FK_Locations_Main_Region");
+            });
+
+            modelBuilder.Entity<MainRegion>(entity =>
+            {
+                entity.ToTable("main_region");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(6)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<MoveEffects>(entity =>
+            {
+                entity.ToTable("move_effects");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Effect)
+                    .IsRequired()
+                    .HasColumnName("effect")
+                    .HasMaxLength(4103)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ShortEffect)
+                    .IsRequired()
+                    .HasColumnName("short_effect")
+                    .HasMaxLength(148)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<MoveTargets>(entity =>
+            {
+                entity.ToTable("move_targets");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(25)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Moves>(entity =>
+            {
+                entity.ToTable("moves");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Accuracy).HasColumnName("accuracy");
+
+                entity.Property(e => e.DamageClassId).HasColumnName("damage_class_id");
+
+                entity.Property(e => e.GenerationId).HasColumnName("generation_id");
+
+                entity.Property(e => e.MoveEffectChance).HasColumnName("move_effect_chance");
+
+                entity.Property(e => e.MoveEffectId).HasColumnName("move_effect_id");
+
+                entity.Property(e => e.MoveTargetId).HasColumnName("move_target_id");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(32)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Power).HasColumnName("power");
+
+                entity.Property(e => e.Pp).HasColumnName("pp");
+
+                entity.Property(e => e.Priority).HasColumnName("priority");
+
+                entity.Property(e => e.TypeId).HasColumnName("type_id");
+            });
+
+            modelBuilder.Entity<PokemonAbilities>(entity =>
+            {
+                entity.ToTable("pokemon_abilities");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.AbilityId).HasColumnName("ability_id");
+
+                entity.Property(e => e.IsHidden).HasColumnName("is_hidden");
+
+                entity.Property(e => e.PokemonId).HasColumnName("pokemon_id");
+
+                entity.Property(e => e.Slot).HasColumnName("slot");
+
+                entity.HasOne(d => d.Pokemon)
+                    .WithMany(p => p.PokemonAbilities)
+                    .HasForeignKey(d => d.PokemonId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Pokemon_Abilities_Pokemon");
+            });
+
+            modelBuilder.Entity<PokemonEvolution>(entity =>
+            {
+                entity.ToTable("pokemon_evolution");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.EvolutionTriggerId).HasColumnName("evolution_trigger_id");
+
+                entity.Property(e => e.EvolvedSpeciesId).HasColumnName("evolved_species_id");
+
+                entity.Property(e => e.Gender).HasColumnName("gender");
+
+                entity.Property(e => e.HeldItemId).HasColumnName("held_item_id");
+
+                entity.Property(e => e.KnownMoveId).HasColumnName("known_move_id");
+
+                entity.Property(e => e.KnownMoveTypeId).HasColumnName("known_move_type_id");
+
+                entity.Property(e => e.LocationId).HasColumnName("location_id");
+
+                entity.Property(e => e.MinimumAffection).HasColumnName("minimum_affection");
+
+                entity.Property(e => e.MinimumBeauty).HasColumnName("minimum_beauty");
+
+                entity.Property(e => e.MinimumHappiness).HasColumnName("minimum_happiness");
+
+                entity.Property(e => e.MinimumLevel).HasColumnName("minimum_level");
+
+                entity.Property(e => e.NeedsOverworldRain).HasColumnName("needs_overworld_rain");
+
+                entity.Property(e => e.PartySpeciesId).HasColumnName("party_species_id");
+
+                entity.Property(e => e.PartyTypeId).HasColumnName("party_type_id");
+
+                entity.Property(e => e.RelativePhysicalStats).HasColumnName("relative_physical_stats");
+
+                entity.Property(e => e.TimeOfDay)
+                    .HasColumnName("time_of_day")
+                    .HasMaxLength(5)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TradeSpeciesId).HasColumnName("trade_species_id");
+
+                entity.Property(e => e.TriggerItemId).HasColumnName("trigger_item_id");
+
+                entity.Property(e => e.TurnUpsideDown).HasColumnName("turn_upside_down");
+
+                //entity.HasOne(d => d.EvolutionTrigger)
+                //    .WithMany(p => p.PokemonEvolution)
+                //    .HasForeignKey(d => d.EvolutionTriggerId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("FK_Pokemon_Evolution_Evolved_Trigger");
+
+                //entity.HasOne(d => d.EvolvedSpecies)
+                //    .WithMany(p => p.PokemonEvolutionEvolvedSpecies)
+                //    .HasForeignKey(d => d.EvolvedSpeciesId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("FK_Pokemon_Evolution_Evolved_Species");
+
+                //entity.HasOne(d => d.HeldItem)
+                //    .WithMany(p => p.PokemonEvolutionHeldItem)
+                //    .HasForeignKey(d => d.HeldItemId)
+                //    .HasConstraintName("FK_Pokemon_Evolution_Held_Item");
+
+                //entity.HasOne(d => d.KnownMove)
+                //    .WithMany(p => p.PokemonEvolution)
+                //    .HasForeignKey(d => d.KnownMoveId)
+                //    .HasConstraintName("FK_Pokemon_Evolution_Know_Move");
+
+                //entity.HasOne(d => d.KnownMoveType)
+                //    .WithMany(p => p.PokemonEvolutionKnownMoveType)
+                //    .HasForeignKey(d => d.KnownMoveTypeId)
+                //    .HasConstraintName("FK_Pokemon_Evolution_Know_Move_Type");
+
+                //entity.HasOne(d => d.Location)
+                //    .WithMany(p => p.PokemonEvolution)
+                //    .HasForeignKey(d => d.LocationId)
+                //    .HasConstraintName("FK_Pokemon_Evolution_Location");
+
+                //entity.HasOne(d => d.PartySpecies)
+                //    .WithMany(p => p.PokemonEvolutionPartySpecies)
+                //    .HasForeignKey(d => d.PartySpeciesId)
+                //    .HasConstraintName("FK_Pokemon_Evolution_Party_Species");
+
+                //entity.HasOne(d => d.PartyType)
+                //    .WithMany(p => p.PokemonEvolutionPartyType)
+                //    .HasForeignKey(d => d.PartyTypeId)
+                //    .HasConstraintName("FK_Pokemon_Evolution_Party_Type");
+
+                //entity.HasOne(d => d.TradeSpecies)
+                //    .WithMany(p => p.PokemonEvolutionTradeSpecies)
+                //    .HasForeignKey(d => d.TradeSpeciesId)
+                //    .HasConstraintName("FK_Pokemon_Evolution_Trade_Species");
+
+                //entity.HasOne(d => d.TriggerItem)
+                //    .WithMany(p => p.PokemonEvolutionTriggerItem)
+                //    .HasForeignKey(d => d.TriggerItemId)
+                //    .HasConstraintName("FK_Pokemon_Evolution_Trigger_Item");
             });
 
             OnModelCreatingPartial(modelBuilder);

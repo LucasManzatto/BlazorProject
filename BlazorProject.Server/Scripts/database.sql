@@ -118,5 +118,119 @@ CREATE TABLE abilities_prose(
   ,local_language_id INTEGER  NOT NULL
   ,short_effect      VARCHAR(320) NOT NULL
   ,effect            VARCHAR(2071) NOT NULL
+
+);
+
+CREATE TABLE locations(
+   id         INTEGER  NOT NULL
+  ,main_region_id  INTEGER 
+  ,[name]       VARCHAR(32) NOT NULL
   ,PRIMARY KEY CLUSTERED ([id] ASC)
+  ,CONSTRAINT FK_Locations_Main_Region FOREIGN KEY (main_region_id) REFERENCES main_region(id)
+);
+
+CREATE TABLE evolution_triggers(
+	id         INTEGER  NOT NULL
+	,[name]       VARCHAR(32) NOT NULL
+	,PRIMARY KEY CLUSTERED ([id] ASC)
+);
+
+CREATE TABLE item_pockets(
+   id         INTEGER  NOT NULL 
+  ,name       VARCHAR(9) NOT NULL
+  ,PRIMARY KEY CLUSTERED ([id] ASC)
+);
+
+CREATE TABLE item_categories(
+   id         INTEGER  NOT NULL
+  ,item_pocket_id  INTEGER  NOT NULL
+  ,name       VARCHAR(16) NOT NULL
+  ,PRIMARY KEY CLUSTERED ([id] ASC)
+  ,CONSTRAINT FK_Item_Categories_Item_Pocket FOREIGN KEY (item_pocket_id) REFERENCES item_pockets(id)
+);
+
+CREATE TABLE item_fling_effects(
+   id         INTEGER  NOT NULL
+  ,name       VARCHAR(12) NOT NULL
+    ,PRIMARY KEY CLUSTERED ([id] ASC)
+);
+
+CREATE TABLE items(
+   id              INTEGER  NOT NULL
+  ,name            VARCHAR(31) NOT NULL
+  ,item_category_id INTEGER  NOT NULL
+  ,cost            INTEGER  NOT NULL
+  ,fling_power     INTEGER 
+  ,item_fling_effect_id INTEGER 
+  ,PRIMARY KEY CLUSTERED ([id] ASC)
+  ,CONSTRAINT FK_Items_Item_Category FOREIGN KEY (item_category_id) REFERENCES item_categories(id)
+  ,CONSTRAINT FK_Items_Item_Fling_Effect FOREIGN KEY (item_fling_effect_id) REFERENCES item_fling_effects(id)
+);
+
+CREATE TABLE move_effects(
+   id                INTEGER  NOT NULL 
+  ,short_effect      VARCHAR(148) NOT NULL
+  ,effect            VARCHAR(4103) NOT NULL
+  ,PRIMARY KEY CLUSTERED ([id] ASC)
+);
+
+CREATE TABLE move_targets(
+   id         INTEGER  NOT NULL
+  ,name       VARCHAR(25) NOT NULL
+  ,PRIMARY KEY CLUSTERED ([id] ASC)
+);
+
+CREATE TABLE moves(
+   id                      INTEGER  NOT NULL
+  ,[name]                  VARCHAR(32) NOT NULL
+  ,generation_id           INTEGER  NOT NULL
+  ,[type_id]               INTEGER  NOT NULL
+  ,[power]                 INTEGER 
+  ,pp                      INTEGER 
+  ,accuracy                INTEGER 
+  ,[priority]              INTEGER  NOT NULL
+  ,move_target_id               INTEGER  NOT NULL
+  ,damage_class_id         INTEGER  NOT NULL
+  ,move_effect_id               INTEGER  NOT NULL
+  ,move_effect_chance           INTEGER
+  ,PRIMARY KEY CLUSTERED ([id] ASC)
+  ,CONSTRAINT FK_Moves_Generation FOREIGN KEY (generation_id) REFERENCES generation(id)
+  ,CONSTRAINT FK_Moves_Type FOREIGN KEY ([type_id]) REFERENCES [types](id)
+  ,CONSTRAINT FK_Moves_Move_Target FOREIGN KEY (move_target_id) REFERENCES move_targets(id)
+  ,CONSTRAINT FK_Moves_Damage_Class FOREIGN KEY (damage_class_id) REFERENCES damage_class(id)
+  ,CONSTRAINT FK_Moves_Move_Effect FOREIGN KEY (move_effect_id) REFERENCES move_effects(id)
+);
+
+CREATE TABLE pokemon_evolution(
+   id                      INTEGER  NOT NULL
+  ,evolved_species_id      INTEGER  NOT NULL
+  ,evolution_trigger_id    INTEGER  NOT NULL
+  ,trigger_item_id         INTEGER 
+  ,minimum_level           INTEGER 
+  ,gender                  INTEGER 
+  ,location_id             INTEGER 
+  ,held_item_id            INTEGER 
+  ,time_of_day             VARCHAR(5)
+  ,known_move_id           INTEGER 
+  ,known_move_type_id      INTEGER 
+  ,minimum_happiness       INTEGER 
+  ,minimum_beauty          INTEGER 
+  ,minimum_affection       INTEGER 
+  ,relative_physical_stats INTEGER 
+  ,party_species_id        INTEGER 
+  ,party_type_id           INTEGER 
+  ,trade_species_id        INTEGER 
+  ,needs_overworld_rain    BIT  NOT NULL
+  ,turn_upside_down        BIT  NOT NULL
+  ,PRIMARY KEY CLUSTERED ([id] ASC)
+  ,CONSTRAINT FK_Pokemon_Evolution_Evolved_Species FOREIGN KEY (evolved_species_id) REFERENCES species(id)
+  ,CONSTRAINT FK_Pokemon_Evolution_Evolved_Trigger FOREIGN KEY (evolution_trigger_id) REFERENCES evolution_triggers(id)
+  ,CONSTRAINT FK_Pokemon_Evolution_Trigger_Item FOREIGN KEY (trigger_item_id) REFERENCES items(id)
+  ,CONSTRAINT FK_Pokemon_Evolution_Location FOREIGN KEY (location_id) REFERENCES locations(id)
+  ,CONSTRAINT FK_Pokemon_Evolution_Held_Item FOREIGN KEY (held_item_id) REFERENCES items(id)
+  ,CONSTRAINT FK_Pokemon_Evolution_Know_Move FOREIGN KEY (known_move_id) REFERENCES moves(id)
+  ,CONSTRAINT FK_Pokemon_Evolution_Know_Move_Type FOREIGN KEY (known_move_type_id) REFERENCES [types](id)
+  ,CONSTRAINT FK_Pokemon_Evolution_Party_Species FOREIGN KEY (party_species_id) REFERENCES species(id)
+  ,CONSTRAINT FK_Pokemon_Evolution_Party_Type FOREIGN KEY (party_type_id) REFERENCES [types](id)
+  ,CONSTRAINT FK_Pokemon_Evolution_Trade_Species FOREIGN KEY (trade_species_id) REFERENCES species(id)
 );

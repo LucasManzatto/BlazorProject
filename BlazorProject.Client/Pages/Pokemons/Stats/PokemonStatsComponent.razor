@@ -1,0 +1,24 @@
+﻿@using BlazorProject.Shared.DTO
+@inject HttpClient Http
+
+<h2>Pokémon Stats</h2>
+<table class="table table-sm">
+    <tbody>
+        <PokemonSingleStat StatName="HP" StatValue=Stats.Hp MaxStatValue=MaxStats.Hp />
+        <PokemonSingleStat StatName="Attack" StatValue=Stats.Attack MaxStatValue=MaxStats.Attack />
+        <PokemonSingleStat StatName="Defense" StatValue=Stats.Defense MaxStatValue=MaxStats.Defense />
+        <PokemonSingleStat StatName="Sp. Atk" StatValue=Stats.SpAttack MaxStatValue=MaxStats.SpAttack />
+        <PokemonSingleStat StatName="Sp. Def" StatValue=Stats.SpDefense MaxStatValue=MaxStats.SpDefense />
+        <PokemonSingleStat StatName="Speed" StatValue=Stats.Speed MaxStatValue=MaxStats.Speed />
+        <PokemonSingleStat StatName="Total" StatValue=Stats.Total />
+    </tbody>
+</table>
+
+
+@code {
+    [Parameter]
+    public PokemonStats Stats { get; set; }
+    [Parameter]
+    private PokemonStats MaxStats { get; set; }
+}
+

@@ -10,6 +10,14 @@ namespace BlazorProject.Shared.DTO
         public string SpeciesGenerationName { get; set; }
     }
 
+    public partial class EvolutionChainPokemon
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string SpeciesGenerationName { get; set; }
+        public string EvolutionCondition { get; set; }
+    }
+
     public partial class FullPokemon
     {
         public FullPokemon()

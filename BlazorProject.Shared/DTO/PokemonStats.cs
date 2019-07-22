@@ -15,5 +15,10 @@
         {
             get { return Hp + Attack + Defense + SpAttack + SpDefense + Speed; }
         }
+
+        public override string ToString()
+        {
+            return $"HP: {Hp} , Total:{Total}";
+        }
     }
 }

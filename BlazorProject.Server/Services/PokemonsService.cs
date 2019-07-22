@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using BlazorProject.Server.Contracts.Services;
 using BlazorProject.Server.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -56,13 +57,33 @@ namespace BlazorProject.Server.Services
                 .ToListAsync();
         }
 
-        public async Task<List<DTO.DropdownPokemon>> GetEvolutionChain(int id)
+        //TODO: Ordenar a evolution chain corretamente e pegar a evolution condition corretas
+        public async Task<List<DTO.EvolutionChainPokemon>> GetEvolutionChain(int id)
         {
             var pokemonSpecies = await context.Species.FindAsync(id);
-            return await context.Pokemons
+
+            var evolutionChain = await context.Pokemons
                 .Where(p => p.Species.EvolutionChain == pokemonSpecies.EvolutionChain && p.IsDefault)
-                .ProjectTo<DTO.DropdownPokemon>(mapper.ConfigurationProvider)
+                .ProjectTo<DTO.EvolutionChainPokemon>(mapper.ConfigurationProvider)
                 .ToListAsync();
+
+            var pokemonEvolutionList = await context.PokemonEvolution
+                .Include(p => p.EvolutionTrigger)
+                .Where(p => evolutionChain.Select(s => s.Id).Contains(p.Id))
+                .ToListAsync();
+
+            evolutionChain.ForEach(chain => 
+                chain.EvolutionCondition = CreateEvolutionConditionString(pokemonEvolutionList.First(p => p.Id == chain.Id)));
+            return evolutionChain;
+        }
+
+        private string CreateEvolutionConditionString(PokemonEvolution pokemonEvolution)
+        {
+            if(pokemonEvolution.EvolutionTrigger.Id == 1)
+            {
+                return $"Level {pokemonEvolution.MinimumLevel}";
+            }
+            return "Not Implemented";
         }
 
         public async Task<DTO.PokemonStats> GetMaxStats()

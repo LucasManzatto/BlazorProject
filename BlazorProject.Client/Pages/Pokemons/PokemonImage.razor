@@ -1,34 +1,61 @@
-﻿@if (PokemonId != 0)
+﻿@if (IsSprite)
 {
-    <img src=@Source style="width:100%;height:auto;" class="img-fluid">
+    <img @onerror=@ChangeSrc src=@Source class="img-fluid" />
 }
 else
 {
-    <img src=@Source class="img-fluid">
+    <img src=@Source style="width:100%;height:auto;" class="img-fluid">
 }
 
 @code {
-    public string Source { get; set; }
-    [Parameter]
-    public int PokemonId { get; set; } = 0;
-    [Parameter]
-    public string PokemonName { get; set; } = "";
-    [Parameter]
-    public bool IsSprite { get; set; } = false;
+public string Source { get; set; }
+[Parameter]
+public int PokemonId { get; set; } = 0;
+[Parameter]
+public string PokemonName { get; set; } = "";
+[Parameter]
+public bool IsSprite { get; set; } = false;
+[Parameter]
+public string Gen { get; set; } = "";
 
-    protected override void OnParametersSet()
+private Dictionary<int, string> EdgeCases { get; set; }
+
+protected override void OnInit()
+{
+    EdgeCases = new Dictionary<int, string>();
+    EdgeCases.Add(803, "https://pokemon-trainer.com/attachments/sprusulm803-1-gif.2949/");
+    EdgeCases.Add(804, "https://pokemon-trainer.com/attachments/sprusulm804-1-gif.2948/");
+    EdgeCases.Add(805, "https://pokemon-trainer.com/attachments/sprusulm805-1-gif.2950/");
+    EdgeCases.Add(806, "https://pokemon-trainer.com/attachments/sprusulm806-1-gif.2951/");
+    EdgeCases.Add(807, "https://pokemon-trainer.com/attachments/zeraora-1-gif.4570/");
+}
+
+protected override void OnParametersSet()
+{
+    //Always need to be 3 digits (1 -> 001, 01 -> 001)
+    var pokemonIdString = PokemonId.ToString().PadLeft(3, '0');
+    var genString = Gen.Equals("generation-vii") ? "sunmoonani" : "xyorasani";
+    if (IsSprite)
     {
-        if (PokemonId != 0)
+        if (EdgeCases.ContainsKey(PokemonId))
         {
-            //Always need to be 3 digits (1 -> 001, 01 -> 001)
-            var pokemonIdString = PokemonId.ToString().PadLeft(3, '0');
-            Source = $"https://assets.pokemon.com/assets/cms2/img/pokedex/full/{pokemonIdString}.png";
+            Source = EdgeCases[PokemonId];
         }
         else
         {
-            Source = $"http://www.pokestadium.com/sprites/xy/{PokemonName}.gif";
+            Source = $"https://pokemon-trainer.com/images/sprite/{genString}/{pokemonIdString}.gif";
         }
     }
-
+    else
+    {
+        Source = $"https://assets.pokemon.com/assets/cms2/img/pokedex/full/{pokemonIdString}.png";
+    }
+    //Source = $"http://www.pokestadium.com/sprites/xy/{PokemonName}.gif";
+    //Source = $"https://img.pokemondb.net/sprites/ultra-sun-ultra-moon/normal/{PokemonName}.png";
+}
+private void ChangeSrc()
+{
+    Source = Source.Replace("-", String.Empty);
+}
 }
 
