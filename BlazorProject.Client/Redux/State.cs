@@ -5,5 +5,6 @@ namespace BlazorProject.Client.Redux
     public class State
     {
         public FullPokemon Pokemon { get; set; }
+        public bool ShowDropdown { get; set; }
     }
 }

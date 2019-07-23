@@ -15,5 +15,6 @@ namespace BlazorProject.Shared.DTO
         public bool HasGenderDifferences { get; set; }
         public bool FormsSwitchable { get; set; }
         public int Position { get; set; }
+        public bool IsBaby { get; set; }
     }
 }

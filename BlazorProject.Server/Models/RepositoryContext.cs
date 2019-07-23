@@ -290,6 +290,8 @@ namespace BlazorProject.Server
 
                 entity.Property(e => e.HatchCounter).HasColumnName("hatch_counter");
 
+                entity.Property(e => e.IsBaby).HasColumnName("is_baby");
+
                 entity.Property(e => e.Position).HasColumnName("position");
 
                 entity.HasOne(d => d.EvolvesFromSpecies)

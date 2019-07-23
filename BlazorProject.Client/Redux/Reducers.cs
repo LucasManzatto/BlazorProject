@@ -14,7 +14,8 @@ namespace BlazorProject.Client.Redux
             }
             return new State
             {
-                Pokemon = PokemonReducer(state.Pokemon, action)
+                Pokemon = PokemonReducer(state.Pokemon, action),
+                ShowDropdown = DropdownReducer(state.ShowDropdown,action)
             };
         }
 
@@ -26,6 +27,17 @@ namespace BlazorProject.Client.Redux
                     return a.Value;
                 default:
                     return pokemon;
+            }
+        }
+        private static bool DropdownReducer(bool showDropdown, IRealmAction action)
+        {
+            switch (action)
+            {
+                case Actions.ShowDropdown.Set a:
+                    Console.WriteLine(a.Value);
+                    return a.Value;
+                default:
+                    return showDropdown;
             }
         }
     }

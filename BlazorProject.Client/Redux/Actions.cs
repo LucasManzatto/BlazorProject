@@ -15,6 +15,18 @@ namespace BlazorProject.Client.Redux.Actions
         }
         public class Reset : IRealmAction { }
         public class Dispose : Reset { }
-
+    }
+    namespace ShowDropdown
+    {
+        public class Set : IRealmAction
+        {
+            public bool Value { get; set; }
+            public Set(bool value)
+            {
+                Value = value;
+            }
+        }
+        public class Reset : IRealmAction { }
+        public class Dispose : Reset { }
     }
 }

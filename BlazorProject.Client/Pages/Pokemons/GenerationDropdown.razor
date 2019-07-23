@@ -2,25 +2,27 @@
 @using BlazorProject.Shared.DTO
 @inject HttpClient Http
 @inherits RealmComponent<State>
-<input class="form-control"
-       type="text"
-       value=@SearchInput 
-       placeholder=@(Items.Count > 0 ? "Gen " + GenNumber : "Loading...")
-       @onfocus="@(() => ShowDropdown=true)" 
-       @oninput="@(ui => SearchInput = (string)ui.Value)" />
-@if (ShowDropdown && Items.Count > 0)
-{
-    <div class="dropdown-menu" style='max-height:200px; overflow:auto; left:initial; display:inline;' aria-labelledby="@GenNumber">
-        @foreach (var item in FilteredItems(SearchInput))
-        {
-            <button @onclick="@(() => SetPokemon(item))"
-                    class="dropdown-item"
-                    type="button">
-                @item.Text
-            </button>
-        }
-    </div>
-}
+<div @onclick="@(() => ShowDropdown = true)" @onfocusout="@(() => ShowDropdown = false)">
+    <input class="form-control"
+           type="text"
+           value=@SearchInput
+           placeholder=@(Items.Count > 0 ? "Gen " + GenNumber : "Loading...")
+           @oninput="@(ui => SearchInput = (string)ui.Value)" />
+    @if (ShowDropdown && FilteredItems(SearchInput).Count > 0)
+    {
+        <div class="dropdown-menu" style='max-height:200px; overflow:auto; left:initial; display:inline;' aria-labelledby="@GenNumber">
+            @foreach (var item in FilteredItems(SearchInput))
+            {
+                <button @onclick="@(() => SetPokemon(item))"
+                        class="dropdown-item"
+                        type="button">
+                    @item.Id - @item.Text
+                </button>
+            }
+        </div>
+    }
+</div>
+
 
 @code {
     List<DropdownModel> Items { get; set; } = new List<DropdownModel>();
@@ -38,7 +40,7 @@
     async void SetPokemon(DropdownModel item)
     {
         ShowDropdown = false;
-        SearchInput = item.Text;
+        SearchInput = $"{item.Id} - {item.Text}";
         var pokemon = await Http.GetJsonAsync<FullPokemon>($"api/Pokemons/{item.Id}");
         Dispatch(new Redux.Actions.Pokemon.Set(pokemon));
     }
@@ -57,7 +59,10 @@
     }
     private List<DropdownModel> FilteredItems(string input)
     {
-        return Items.FindAll(p => p.Text.ToUpperInvariant().Contains(SearchInput.ToUpperInvariant()));
+        return Items.FindAll(p => p.Text.ToUpperInvariant()
+                                   .Contains(input.ToUpperInvariant()) ||
+                                   p.Id.ToString()
+                                   .Contains(input));
     }
 
 }

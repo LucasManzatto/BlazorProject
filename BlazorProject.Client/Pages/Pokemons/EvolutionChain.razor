@@ -5,10 +5,7 @@
 <div class="row justify-content-center text-center align-items-center mb-2">
     @foreach (var chain in EvolutionChainList)
     {
-        <div class="col-2">
-            <PokemonImage PokemonId=@chain.Id IsSprite=true Gen=@chain.SpeciesGenerationName />
-        </div>
-        if (chain != LastFromChain)
+        if (chain != FirstFromChain)
         {
             <div class="col-1 my-auto">
                 <div class="row text-center justify-content-center">
@@ -19,6 +16,9 @@
                 </div>
             </div>
         }
+        <div class="col-2">
+            <PokemonImage PokemonId=@chain.Id IsSprite=true Gen=@chain.SpeciesGenerationName />
+        </div>
     }
 </div>
 
@@ -26,12 +26,12 @@
     [Parameter]
     public int PokemonId { get; set; }
     private List<EvolutionChainPokemon> EvolutionChainList { get; set; } = new List<EvolutionChainPokemon>();
-    private EvolutionChainPokemon LastFromChain { get; set; }
+    private EvolutionChainPokemon FirstFromChain { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
         EvolutionChainList = await Http.GetJsonAsync<List<EvolutionChainPokemon>>($"api/Pokemons/{PokemonId}/evolutionChain");
-        LastFromChain = EvolutionChainList.Last();
+        FirstFromChain = EvolutionChainList.First();
     }
 }
 

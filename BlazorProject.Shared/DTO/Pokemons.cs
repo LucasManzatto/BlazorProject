@@ -16,6 +16,7 @@ namespace BlazorProject.Shared.DTO
         public string Name { get; set; }
         public string SpeciesGenerationName { get; set; }
         public string EvolutionCondition { get; set; }
+        public bool SpeciesIsBaby { get; set; }
     }
 
     public partial class FullPokemon

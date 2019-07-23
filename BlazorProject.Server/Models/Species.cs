@@ -8,7 +8,6 @@ namespace BlazorProject.Server.Models
         public Species()
         {
             InverseEvolvesFromSpecies = new HashSet<Species>();
-            Pokemons = new HashSet<Pokemons>();
         }
 
         // TODO: Precisa colocar de novo o campo IsBaby para a evolution chain ficar certa nos casos 
@@ -25,11 +24,11 @@ namespace BlazorProject.Server.Models
         public int GrowthRateId { get; set; }
         public bool FormsSwitchable { get; set; }
         public int Position { get; set; }
-
+        public bool IsBaby { get; set; }
         public virtual Species EvolvesFromSpecies { get; set; }
         public virtual Generation Generation { get; set; }
         public virtual GrowthRate GrowthRate { get; set; }
         public virtual ICollection<Species> InverseEvolvesFromSpecies { get; set; }
-        public virtual ICollection<Pokemons> Pokemons { get; set; }
+        public virtual Pokemons Pokemon { get; set; }
     }
 }
