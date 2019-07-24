@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DTO = BlazorProject.Shared.DTO;
+using BlazorProject.Shared;
 
 namespace BlazorProject.Server.Services
 {
@@ -114,7 +115,7 @@ namespace BlazorProject.Server.Services
                                     : "";
             string speciesInParty = pokemonEvolution.PartySpeciesId != null ? $"with {pokemonEvolution.PartySpecies.Pokemon.Name} on party " : "";
 
-            string evolutionCondition = $"({pokemonEvolution.EvolutionTrigger.Name} " +
+            string evolutionCondition = $"({pokemonEvolution.EvolutionTrigger.Name.FirstCharToUpper().Replace("-"," ")} " +
                     minimumHappiness +
                     minimumLevel +
                     triggerItem +
