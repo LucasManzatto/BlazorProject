@@ -32,8 +32,8 @@
                     @{ var category = $"https://img.pokemondb.net/images/icons/{move.DamageClass.Name}.png"; }
                     <img class="img-fixed"
                          src=@category
-                         alt="Physical"
-                         title="Physical"
+                         alt=@move.DamageClass.Name.FirstCharToUpper()
+                         title=@move.DamageClass.Name.FirstCharToUpper()
                          style="width:39px;
                          height:16px">
                 </td>
