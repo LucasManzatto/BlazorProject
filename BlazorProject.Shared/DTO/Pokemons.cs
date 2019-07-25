@@ -25,6 +25,7 @@ namespace BlazorProject.Shared.DTO
         {
             PokemonTypes = new List<PokemonTypes>();
             PokemonAbilities = new List<PokemonAbilities>();
+            PokemonMoves = new List<PokemonMoves>();
         }
         public int Id { get; set; }
         public string Name { get; set; }
@@ -39,5 +40,6 @@ namespace BlazorProject.Shared.DTO
         public ICollection<PokemonTypes> PokemonTypes { set; get; }
         public ICollection<TypeEfficacy> PokemonTypeEfficacy { set; get; }
         public ICollection<PokemonAbilities> PokemonAbilities { set; get; }
+        public ICollection<PokemonMoves> PokemonMoves { set; get; }
     }
 }

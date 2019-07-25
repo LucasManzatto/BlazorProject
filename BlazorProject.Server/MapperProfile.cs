@@ -22,6 +22,12 @@ namespace BlazorProject.Server
             CreateMap<Abilities, DTO.Abilities>().ReverseMap();
             CreateMap<AbilitiesProse, DTO.AbilitiesProse>().ReverseMap();
             CreateMap<PokemonAbilities, DTO.PokemonAbilities>().ReverseMap();
+            CreateMap<PokemonMoves, DTO.PokemonMoves>().ReverseMap();
+            CreateMap<Moves, DTO.Moves>().ReverseMap();
+            CreateMap<MoveEffects, DTO.MoveEffects>().ReverseMap();
+            CreateMap<MoveTargets, DTO.MoveTargets>().ReverseMap();
+            CreateMap<VersionGroups, DTO.VersionGroups>().ReverseMap();
+            CreateMap<MoveLearnMethods, DTO.MoveLearnMethods>().ReverseMap();
         }
     }
 }

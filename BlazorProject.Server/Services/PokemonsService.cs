@@ -19,36 +19,63 @@ namespace BlazorProject.Server.Services
         public PokemonsService(RepositoryContext context, IMapper mapper)
         {
             this.context = context;
+            this.context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             this.mapper = mapper; 
         }
 
         public async Task<DTO.FullPokemon> Get(int id)
         {
-            var pokemon = await context.Pokemons
-                .Include(m => m.Species)
-                .Include(p => p.PokemonStats)
-                .Include("PokemonTypes.Type")
-                .SingleAsync(p => p.Id == id);
-
-            var pokemonAbilities = await context.PokemonAbilities
-                .Include(p => p.Ability)
-                .ThenInclude(p => p.AbilitiesProse)
-                .Where(p => p.PokemonId == pokemon.Id)
-                .ToListAsync();
-
-            var typeEfficacies = await context.TypeEfficacy
-                .Include(p => p.TargetType)
-                .Include(p => p.DamageType)
-                .Where(p => pokemon.PokemonTypes.Select(s => s.TypeId).Contains(p.TargetTypeId))
-                .ToListAsync();
+            Pokemons pokemon = await GetPokemon(id);
+            ICollection<PokemonAbilities> pokemonAbilities = await GetPokemonAbilities(pokemon);
+            ICollection<PokemonMoves> pokemonMoves = await GetPokemonMoves(pokemon);
+            ICollection<TypeEfficacy> typeEfficacies = await GetTypeEfficacies(pokemon);
 
             pokemon.PokemonAbilities = pokemonAbilities;
 
             var fullPokemonDTO = mapper.Map<DTO.FullPokemon>(pokemon);
 
-            fullPokemonDTO.PokemonTypeEfficacy = mapper.Map<List<DTO.TypeEfficacy>>(typeEfficacies);
+            fullPokemonDTO.PokemonMoves = mapper.Map<ICollection<DTO.PokemonMoves>>(pokemonMoves);
+
+            fullPokemonDTO.PokemonTypeEfficacy = mapper.Map<ICollection<DTO.TypeEfficacy>>(typeEfficacies);
 
             return fullPokemonDTO;
+        }
+
+        private async Task<ICollection<TypeEfficacy>> GetTypeEfficacies(Pokemons pokemon)
+        {
+            return await context.TypeEfficacy
+                .Include(p => p.TargetType)
+                .Include(p => p.DamageType)
+                .Where(p => pokemon.PokemonTypes.Select(s => s.TypeId).Contains(p.TargetTypeId))
+                .ToListAsync();
+        }
+
+        private async Task<ICollection<PokemonMoves>> GetPokemonMoves(Pokemons pokemon)
+        {
+            return await context.PokemonMoves
+                .Include(p => p.Move.DamageClass)
+                .Include(p => p.Move.Type)
+                .Where(p => p.PokemonId == pokemon.Id && p.VersionGroupId == 18)
+                .OrderBy(p => p.Level)
+                .ToListAsync();
+        }
+
+        private async Task<ICollection<PokemonAbilities>> GetPokemonAbilities(Pokemons pokemon)
+        {
+            return await context.PokemonAbilities
+                .Include(p => p.Ability)
+                .ThenInclude(p => p.AbilitiesProse)
+                .Where(p => p.PokemonId == pokemon.Id)
+                .ToListAsync();
+        }
+
+        private async Task<Pokemons> GetPokemon(int id)
+        {
+            return await context.Pokemons
+                .Include(m => m.Species)
+                .Include(p => p.PokemonStats)
+                .Include("PokemonTypes.Type")
+                .SingleAsync(p => p.Id == id);
         }
 
         public Task<List<DTO.DropdownPokemon>> GetAll()
@@ -97,7 +124,6 @@ namespace BlazorProject.Server.Services
 
         private string CreateEvolutionConditionString(PokemonEvolution pokemonEvolution)
         {
-            
             string minimumHappiness = pokemonEvolution.MinimumHappiness != null ? "with High Happiness " : "";
             string dayTime = pokemonEvolution.TimeOfDay != null ? $"during {pokemonEvolution.TimeOfDay}time " : "";
             string minimumLevel = pokemonEvolution.MinimumLevel != null ? $"at level {pokemonEvolution.MinimumLevel} " : "";

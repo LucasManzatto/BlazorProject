@@ -1,0 +1,51 @@
+﻿@using BlazorProject.Shared.DTO
+@using BlazorProject.Client.Shared.Utils
+@using BlazorProject.Shared
+@inject HttpClient Http
+
+<h2>Moves</h2>
+<table class="table table-hover table-sm">
+    <thead>
+        <tr>
+            <th scope="col">Level</th>
+            <th scope="col">Move</th>
+            <th scope="col">Type</th>
+            <th scope="col">Category</th>
+            <th scope="col">Power</th>
+            <th scope="col">Accuracy</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pokemonMove in PokemonMovesList)
+        {
+            var move = pokemonMove.Move;
+            <tr>
+                <th style="vertical-align:middle !important" scope="row">@pokemonMove.Level</th>
+                <td style="vertical-align:middle !important">@move.Name</td>
+                <td style="vertical-align:middle !important">
+                    <button class="pokemon-type" 
+                            style="background-color:@Utils.GetColorHex(move.Type?.Name) !important"
+                            type="button">@move.Type?.Name
+                    </button>
+                </td>
+                <td style="vertical-align:middle !important">
+                    @{ var category = $"https://img.pokemondb.net/images/icons/{move.DamageClass.Name}.png"; }
+                    <img class="img-fixed"
+                         src=@category
+                         alt="Physical"
+                         title="Physical"
+                         style="width:39px;
+                         height:16px">
+                </td>
+                <td style="vertical-align:middle !important">@move.Power</td>
+                <td style="vertical-align:middle !important">@move.Accuracy</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    IEnumerable<PokemonMoves> PokemonMovesList { get; set; }
+}
+

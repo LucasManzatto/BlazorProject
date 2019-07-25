@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BlazorProject.Server.Contracts.Services;
 using DTO = BlazorProject.Shared.DTO;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BlazorProject.Server.Controllers
 {
@@ -19,15 +20,28 @@ namespace BlazorProject.Server.Controllers
 
         // GET: api/Pokemons/5
         [HttpGet("{id}")]
-        public async Task<DTO.FullPokemon> Get(int id, [FromServices]IPokemonsService service)
+        public async Task<DTO.FullPokemon> Get(int id, [FromServices]IPokemonsService service, [FromServices]IMemoryCache cache)
         {
-            return await service.Get(id);
+            var pokemon = cache.Get<DTO.FullPokemon>($"GetPokemon{id}");
+            if (pokemon == null)
+            {
+                pokemon = await service.Get(id);
+                cache.Set($"GetPokemon{id}", pokemon);
+            }
+            return pokemon;
         }
         // GET: api/Pokemons/5/evolutionChain
         [HttpGet("{id}/evolutionChain")]
-        public async Task<List<DTO.EvolutionChainPokemon>> GetEvolutionChain(int id, [FromServices]IPokemonsService service)
+        public async Task<List<DTO.EvolutionChainPokemon>> GetEvolutionChain(int id, [FromServices]IPokemonsService service,[FromServices]IMemoryCache cache)
         {
-            return await service.GetEvolutionChain(id);
+            var evolutionChain = cache.Get<List<DTO.EvolutionChainPokemon>>("EvolutionChain");
+            if(evolutionChain == null)
+            {
+                evolutionChain = await service.GetEvolutionChain(id);
+                cache.Set("EvolutionChain", evolutionChain);
+            }
+            return evolutionChain;
+           
         }
         // GET: api/Pokemons/maxStats
         [HttpGet]

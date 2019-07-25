@@ -234,3 +234,38 @@ CREATE TABLE pokemon_evolution(
   ,CONSTRAINT FK_Pokemon_Evolution_Party_Type FOREIGN KEY (party_type_id) REFERENCES [types](id)
   ,CONSTRAINT FK_Pokemon_Evolution_Trade_Species FOREIGN KEY (trade_species_id) REFERENCES species(id)
 );
+
+CREATE TABLE version_groups(
+   id            INTEGER  NOT NULL
+  ,name          VARCHAR(25) NOT NULL
+  ,generation_id INTEGER  NOT NULL
+  ,[order]         INTEGER  NOT NULL
+   ,PRIMARY KEY CLUSTERED ([id] ASC)
+   ,CONSTRAINT FK_Version_Groups_Generation FOREIGN KEY (generation_id) REFERENCES Generation(id)
+);
+
+CREATE TABLE move_learn_methods(
+   id         INTEGER  NOT NULL
+  ,name       VARCHAR(23) NOT NULL
+   ,PRIMARY KEY CLUSTERED ([id] ASC)
+);
+
+CREATE TABLE pokemon_moves (
+	id INTEGER IDENTITY(1,1) NOT NULL
+	,pokemon_id INT NULL,
+	version_group_id INT NULL,
+	move_id INT NULL,
+	move_learn_methods_id INT NULL,
+	[level] INT NULL,
+	[order] VARCHAR(2) NULL
+	,PRIMARY KEY CLUSTERED ([id] ASC)
+	,CONSTRAINT FK_Pokemon_Moves_Pokemon FOREIGN KEY (pokemon_id) REFERENCES pokemons(id)
+	,CONSTRAINT FK_Pokemon_Moves_Version_Group FOREIGN KEY (version_group_id) REFERENCES version_groups(id)
+	,CONSTRAINT FK_Pokemon_Moves_Move FOREIGN KEY (move_id) REFERENCES moves(id)
+	,CONSTRAINT FK_Pokemon_Moves_Move_Learn_Methods FOREIGN KEY (move_learn_methods_id) REFERENCES move_learn_methods(id)
+);
+
+BULK INSERT pokemon_moves from 'C:\Users\1572172\source\repos\BlazorProject\BlazorProject.Server\Scripts\pokemon_moves.csv'
+ WITH (FIRSTROW=2 , FIELDTERMINATOR = ';', ROWTERMINATOR='0x0a');
+
+

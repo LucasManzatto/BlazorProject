@@ -10,6 +10,7 @@ namespace BlazorProject.Server.Models
         {
             PokemonTypes = new HashSet<PokemonTypes>();
             PokemonAbilities = new HashSet<PokemonAbilities>();
+            PokemonMoves = new HashSet<PokemonMoves>();
         }
 
         public int Id { get; set; }
@@ -21,9 +22,10 @@ namespace BlazorProject.Server.Models
         public int Position { get; set; }
         public bool IsDefault { get; set; }
 
-        public virtual Species Species { get; set; }
-        public virtual PokemonStats PokemonStats { get; set; }
-        public virtual ICollection<PokemonTypes> PokemonTypes { get; set; }
-        public virtual ICollection<PokemonAbilities> PokemonAbilities { get; set; }
+        public Species Species { get; set; }
+        public PokemonStats PokemonStats { get; set; }
+        public ICollection<PokemonTypes> PokemonTypes { get; set; }
+        public ICollection<PokemonAbilities> PokemonAbilities { get; set; }
+        public ICollection<PokemonMoves> PokemonMoves { get; set; }
     }
 }

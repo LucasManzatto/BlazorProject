@@ -27,6 +27,7 @@ namespace BlazorProject.Server
         public void ConfigureServices(IServiceCollection services)
         {
             //services.ConfigureCors();
+            services.AddMemoryCache();
             services.AddScoped<IPokemonsService, PokemonsService>();
             services.AddScoped<IGenerationService, GenerationService>();
             services.AddAutoMapper(typeof(Startup));

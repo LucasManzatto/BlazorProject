@@ -29,22 +29,24 @@ namespace BlazorProject.Server
         public virtual DbSet<Locations> Locations { get; set; }
         public virtual DbSet<MainRegion> MainRegion { get; set; }
         public virtual DbSet<MoveEffects> MoveEffects { get; set; }
+        public virtual DbSet<MoveLearnMethods> MoveLearnMethods { get; set; }
         public virtual DbSet<MoveTargets> MoveTargets { get; set; }
         public virtual DbSet<Moves> Moves { get; set; }
         public virtual DbSet<PokemonAbilities> PokemonAbilities { get; set; }
         public virtual DbSet<PokemonEvolution> PokemonEvolution { get; set; }
+        public virtual DbSet<PokemonMoves> PokemonMoves { get; set; }
         public virtual DbSet<PokemonStats> PokemonStats { get; set; }
         public virtual DbSet<PokemonTypes> PokemonTypes { get; set; }
         public virtual DbSet<Pokemons> Pokemons { get; set; }
         public virtual DbSet<Species> Species { get; set; }
         public virtual DbSet<TypeEfficacy> TypeEfficacy { get; set; }
         public virtual DbSet<Types> Types { get; set; }
+        public virtual DbSet<VersionGroups> VersionGroups { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=dev;Trusted_Connection=True;");
             }
         }
@@ -617,59 +619,105 @@ namespace BlazorProject.Server
                 entity.Property(e => e.TriggerItemId).HasColumnName("trigger_item_id");
 
                 entity.Property(e => e.TurnUpsideDown).HasColumnName("turn_upside_down");
-
-                //entity.HasOne(d => d.EvolutionTrigger)
-                //    .WithMany(p => p.PokemonEvolution)
-                //    .HasForeignKey(d => d.EvolutionTriggerId)
-                //    .OnDelete(DeleteBehavior.ClientSetNull)
-                //    .HasConstraintName("FK_Pokemon_Evolution_Evolved_Trigger");
-
-                //entity.HasOne(d => d.EvolvedSpecies)
-                //    .WithMany(p => p.PokemonEvolutionEvolvedSpecies)
-                //    .HasForeignKey(d => d.EvolvedSpeciesId)
-                //    .OnDelete(DeleteBehavior.ClientSetNull)
-                //    .HasConstraintName("FK_Pokemon_Evolution_Evolved_Species");
-
-                //entity.HasOne(d => d.HeldItem)
-                //    .WithMany(p => p.PokemonEvolutionHeldItem)
-                //    .HasForeignKey(d => d.HeldItemId)
-                //    .HasConstraintName("FK_Pokemon_Evolution_Held_Item");
-
-                //entity.HasOne(d => d.KnownMove)
-                //    .WithMany(p => p.PokemonEvolution)
-                //    .HasForeignKey(d => d.KnownMoveId)
-                //    .HasConstraintName("FK_Pokemon_Evolution_Know_Move");
-
-                //entity.HasOne(d => d.KnownMoveType)
-                //    .WithMany(p => p.PokemonEvolutionKnownMoveType)
-                //    .HasForeignKey(d => d.KnownMoveTypeId)
-                //    .HasConstraintName("FK_Pokemon_Evolution_Know_Move_Type");
-
-                //entity.HasOne(d => d.Location)
-                //    .WithMany(p => p.PokemonEvolution)
-                //    .HasForeignKey(d => d.LocationId)
-                //    .HasConstraintName("FK_Pokemon_Evolution_Location");
-
-                //entity.HasOne(d => d.PartySpecies)
-                //    .WithMany(p => p.PokemonEvolutionPartySpecies)
-                //    .HasForeignKey(d => d.PartySpeciesId)
-                //    .HasConstraintName("FK_Pokemon_Evolution_Party_Species");
-
-                //entity.HasOne(d => d.PartyType)
-                //    .WithMany(p => p.PokemonEvolutionPartyType)
-                //    .HasForeignKey(d => d.PartyTypeId)
-                //    .HasConstraintName("FK_Pokemon_Evolution_Party_Type");
-
-                //entity.HasOne(d => d.TradeSpecies)
-                //    .WithMany(p => p.PokemonEvolutionTradeSpecies)
-                //    .HasForeignKey(d => d.TradeSpeciesId)
-                //    .HasConstraintName("FK_Pokemon_Evolution_Trade_Species");
-
-                //entity.HasOne(d => d.TriggerItem)
-                //    .WithMany(p => p.PokemonEvolutionTriggerItem)
-                //    .HasForeignKey(d => d.TriggerItemId)
-                //    .HasConstraintName("FK_Pokemon_Evolution_Trigger_Item");
             });
+
+            modelBuilder.Entity<PokemonMoves>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.ToTable("pokemon_moves");
+
+                entity.Property(e => e.Level).HasColumnName("level");
+
+                entity.Property(e => e.MoveId).HasColumnName("move_id");
+
+                entity.Property(e => e.MoveLearnMethodsId).HasColumnName("move_learn_methods_id");
+
+                entity.Property(e => e.Order).HasColumnName("order");
+
+                entity.Property(e => e.PokemonId).HasColumnName("pokemon_id");
+
+                entity.Property(e => e.VersionGroupId).HasColumnName("version_group_id");
+
+                entity.HasOne(d => d.Pokemon)
+                   .WithMany(p => p.PokemonMoves)
+                   .HasForeignKey(d => d.PokemonId)
+                   .OnDelete(DeleteBehavior.ClientSetNull)
+                   .HasConstraintName("FK_Pokemon_Moves_Pokemon");
+            });
+
+            modelBuilder.Entity<Moves>(entity =>
+            {
+                entity.ToTable("moves");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Accuracy).HasColumnName("accuracy");
+
+                entity.Property(e => e.DamageClassId).HasColumnName("damage_class_id");
+
+                entity.Property(e => e.GenerationId).HasColumnName("generation_id");
+
+                entity.Property(e => e.MoveEffectChance).HasColumnName("move_effect_chance");
+
+                entity.Property(e => e.MoveEffectId).HasColumnName("move_effect_id");
+
+                entity.Property(e => e.MoveTargetId).HasColumnName("move_target_id");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(32)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Power).HasColumnName("power");
+
+                entity.Property(e => e.Pp).HasColumnName("pp");
+
+                entity.Property(e => e.Priority).HasColumnName("priority");
+
+                entity.Property(e => e.TypeId).HasColumnName("type_id");
+            });
+
+            modelBuilder.Entity<MoveLearnMethods>(entity =>
+            {
+                entity.ToTable("move_learn_methods");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(23)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VersionGroups>(entity =>
+            {
+                entity.ToTable("version_groups");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.GenerationId).HasColumnName("generation_id");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name")
+                    .HasMaxLength(25)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Order).HasColumnName("order");
+            });
+
+
 
             OnModelCreatingPartial(modelBuilder);
         }

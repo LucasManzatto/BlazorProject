@@ -38,7 +38,16 @@
                 <TypeDefenses TypeEfficacies=@Pokemon.PokemonTypeEfficacy />
             </div>
         </div>
-        <EvolutionChain PokemonId=@Pokemon.Id />
+        <div class="row">
+            <div class="col">
+                <EvolutionChain PokemonId=@Pokemon.Id />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <PokemonMove PokemonMovesList=@Pokemon.PokemonMoves />
+            </div>
+        </div>
     }
 </div>
 
