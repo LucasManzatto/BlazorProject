@@ -5,6 +5,10 @@ namespace BlazorProject.Server.Models
 {
     public partial class Moves
     {
+        public Moves()
+        {
+            TmMachines = new HashSet<TmMachines>();
+        }
         public int Id { get; set; }
         public string Name { get; set; }
         public int GenerationId { get; set; }
@@ -23,5 +27,6 @@ namespace BlazorProject.Server.Models
         public virtual MoveEffects MoveEffect { get; set; }
         public virtual MoveTargets MoveTarget { get; set; }
         public virtual Types Type { get; set; }
+        public ICollection<TmMachines> TmMachines { get; set; }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BlazorProject.Shared.DTO
+﻿namespace BlazorProject.Shared.DTO
 {
     public partial class Types
     {

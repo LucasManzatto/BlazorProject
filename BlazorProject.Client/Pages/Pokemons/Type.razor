@@ -1,0 +1,22 @@
+﻿@using BlazorProject.Client.Shared.Utils
+
+<button class="pokemon-type"
+        style="background-color:@Color; @(IsSmall ? "width:40px;" : "")"
+        type="button">
+    @Text
+</button>
+
+@code {
+    [Parameter]
+    string Text { get; set; }
+    [Parameter]
+    bool IsSmall { get; set; } = false;
+    private string Color { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        Color = @Utils.GetColorHex(Text);
+        Text = IsSmall ? Text.Substring(0, 3) : Text;
+    }
+}
+

@@ -8,8 +8,14 @@ namespace BlazorProject.Shared.DTO
         public int Id { get; set; }
         public int? Level { get; set; }
         public int? Order { get; set; }
-        public Moves Move { get; set; }
-        public virtual MoveLearnMethods MoveLearnMethods { get; set; }
-        public virtual VersionGroups VersionGroup { get; set; }
+        public int PokemonId { get; set; }
+        public string DamageClass { get; set; }
+        public string Name { get; set; }
+        public int? Power { get; set; }
+        public int? Accuracy { get; set; }
+        public string Type { get; set; }
+        public string LearnMethods { get; set; }
+        public int VersionGroupId { get; set; }
+        public int TmMachineNumber { get; set; }
     }
 }

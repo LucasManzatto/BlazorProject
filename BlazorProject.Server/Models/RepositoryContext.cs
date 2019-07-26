@@ -41,6 +41,8 @@ namespace BlazorProject.Server
         public virtual DbSet<Species> Species { get; set; }
         public virtual DbSet<TypeEfficacy> TypeEfficacy { get; set; }
         public virtual DbSet<Types> Types { get; set; }
+
+        public virtual DbSet<TmMachines> TmMachines {get;set;}
         public virtual DbSet<VersionGroups> VersionGroups { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -696,6 +698,24 @@ namespace BlazorProject.Server
                     .HasColumnName("name")
                     .HasMaxLength(23)
                     .IsUnicode(false);
+            });
+            modelBuilder.Entity<TmMachines>(entity =>
+            {
+                entity.ToTable("tm_machines");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+                entity.Property(e => e.MachineNumber).HasColumnName("machine_number");
+                entity.Property(e => e.ItemId).HasColumnName("item_id");
+                entity.Property(e => e.MoveId).HasColumnName("move_id");
+                entity.Property(e => e.VersionGroupId).HasColumnName("version_group_id");
+
+                entity.HasOne(d => d.Move)
+                   .WithMany(p => p.TmMachines)
+                   .HasForeignKey(d => d.MoveId)
+                   .OnDelete(DeleteBehavior.ClientSetNull)
+                   .HasConstraintName("FK_Tm_Machines_Move");
             });
 
             modelBuilder.Entity<VersionGroups>(entity =>

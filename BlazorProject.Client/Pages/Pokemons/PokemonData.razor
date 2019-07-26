@@ -14,11 +14,14 @@
                     <td>@(Pokemon.Name.FirstCharToUpper())</td>
                 </tr>
                 <tr>
-                    <td style="vertical-align:middle !important" class="text-muted">Type:</td>
+                    <td style="vertical-align:middle !important" 
+                        class="text-muted">
+                        Type:
+                    </td>
                     <td>
-                        @foreach (var type in Pokemon.PokemonTypes.OrderBy(o => o.Slot))
+                        @foreach (var type in Pokemon.PokemonTypes.OrderBy(o => o.Slot).Select(p => p.Type))
                         {
-                            <button class="pokemon-type" style="background-color:@Utils.GetColorHex(type.Type.Name) !important" type="button">@type.Type.Name.ToUpper()</button>
+                            <Type Text=@type.Name />
                         }
                     </td>
                 </tr>
@@ -88,8 +91,10 @@
                         }
                         else
                         {
-                            <span style="color:#39f">@(((float)(8 - Pokemon.Species.GenderRate) / 8) * 100)% Male</span>
-                            <span style="color:#f59">@(((float)Pokemon.Species.GenderRate / 8) * 100)% Female</span>
+                            var femalePercentage = ((float)Pokemon.Species.GenderRate / 8) * 100;
+                            var malePercentage = 100 - femalePercentage;
+                            <span style="color:#39f">@malePercentage% Male</span>
+                            <span style="color:#f59">@femalePercentage% Female</span>
                         }
                     </td>
                 </tr>

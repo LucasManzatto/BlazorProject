@@ -10,6 +10,6 @@ namespace BlazorProject.Shared.DTO
         public string ShortEffect { get; set; }
         public string Effect { get; set; }
 
-        public virtual Abilities Ability { get; set; }
+        public Abilities Ability { get; set; }
     }
 }

@@ -9,10 +9,12 @@
     Pokemon = Store.GetState().Pokemon;
 }
 <div class="container-fluid">
+
     <nav class="navbar navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Pokémon</a>
     </nav>
-    <div class="row mt-2">
+
+    <div class="row mt-3 mb-3">
         @for (var genNumber = 1; genNumber <= numberOfGenerations; genNumber++)
         {
             <div class="col">
@@ -20,9 +22,10 @@
             </div>
         }
     </div>
+
     @if (Pokemon != null)
     {
-        <div class="row align-items-center">
+        <div class="row align-items-center mb-3">
             <div class="col-4">
                 <PokemonImage PokemonId=@Pokemon.Id />
             </div>
@@ -30,7 +33,8 @@
                 <PokemonData Pokemon=@Pokemon />
             </div>
         </div>
-        <div class="row">
+
+        <div class="row mb-3">
             <div class="col-7">
                 <PokemonStatsComponent Stats=@Pokemon.PokemonStats MaxStats=@MaxStats/>
             </div>
@@ -38,13 +42,15 @@
                 <TypeDefenses TypeEfficacies=@Pokemon.PokemonTypeEfficacy />
             </div>
         </div>
-        <div class="row">
+
+        <div class="row mb-3">
             <div class="col">
                 <EvolutionChain PokemonId=@Pokemon.Id />
             </div>
         </div>
-        <div class="row">
-            <div class="col-6">
+
+        <div class="row mb-3">
+            <div class="col">
                 <PokemonMove PokemonMovesList=@Pokemon.PokemonMoves />
             </div>
         </div>

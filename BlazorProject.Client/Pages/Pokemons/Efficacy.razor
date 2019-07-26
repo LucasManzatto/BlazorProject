@@ -1,0 +1,50 @@
+﻿@using BlazorProject.Shared.DTO
+@if (!EfficacyIsNeutral(EfficacyValue))
+{
+    <button class="pokemon-type"
+            style="background-color:@EfficacyColor; width:40px;"
+            disabled
+            type="button">
+        @EfficacyValue
+    </button>
+}
+
+@code {
+[Parameter]
+public ICollection<TypeEfficacy> PokemonTypeEfficacies { get; set; }
+private string EfficacyColor { get; set; }
+private float EfficacyValue { get; set; }
+
+protected override void OnParametersSet()
+{
+    EfficacyValue = GetEfficacy();
+    EfficacyColor = GetEfficacyColor(EfficacyValue);
+}
+private string GetEfficacyColor(float efficacy)
+{
+    switch (efficacy)
+    {
+        case 0:
+            return "black";
+        case 0.25f:
+            return "darkred";
+        case 0.5f:
+            return "firebrick";
+        case 2:
+            return "forestgreen";
+        case 4:
+            return "darkgreen";
+        default:
+            return "none";
+    }
+}
+private bool EfficacyIsNeutral(float efficacy) => efficacy == 1;
+
+private float GetEfficacy()
+{
+    var calculatedTypeEfficacy = PokemonTypeEfficacies
+       .Aggregate(1, (float acc,TypeEfficacy p) => acc * (((float) p.DamageFactor)/100));
+    return calculatedTypeEfficacy;
+}
+}
+

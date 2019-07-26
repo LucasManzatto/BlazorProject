@@ -13,10 +13,10 @@ namespace BlazorProject.Shared.DTO
         public int Priority { get; set; }
         public int? MoveEffectChance { get; set; }
 
-        public virtual DamageClass DamageClass { get; set; }
-        public virtual Generation Generation { get; set; }
-        public virtual MoveEffects MoveEffect { get; set; }
-        public virtual MoveTargets MoveTarget { get; set; }
-        public virtual Types Type { get; set; }
+        public DamageClass DamageClass { get; set; }
+        public Generation Generation { get; set; }
+        public MoveEffects MoveEffect { get; set; }
+        public MoveTargets MoveTarget { get; set; }
+        public Types Type { get; set; }
     }
 }

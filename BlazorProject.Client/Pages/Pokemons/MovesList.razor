@@ -1,0 +1,75 @@
+﻿@using BlazorProject.Shared.DTO
+@using BlazorProject.Shared
+@inject HttpClient Http
+
+<div class="col mb-3">
+    <h2>Moves learned by @(List.Key == "machine" ? "TM" : List.Key.FirstCharToUpper().Replace("-", " "))</h2>
+    <table class="table table-hover table-sm text-center">
+        <thead>
+            <tr>
+                @if (IsLevelUp)
+                {
+                    <th scope="col" class="text-right">Level</th>
+                }
+                <th scope="col" class="text-left">Move</th>
+                <th scope="col" class="text-center">Type</th>
+                <th scope="col">Category</th>
+                <th scope="col" class="text-right">Power</th>
+                <th scope="col" class="text-right">Accuracy</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pokemonMove in List.ToList())
+            {
+                var powerString = pokemonMove.Power == null ? "-" : pokemonMove.Power.ToString();
+                var accuracyString = pokemonMove.Accuracy == null ? "-" : pokemonMove.Accuracy.ToString();
+            <tr>
+                @if (IsLevelUp)
+                {
+                    <th class="text-right"
+                        style="vertical-align:middle"
+                        scope="row">
+                        @pokemonMove.Level
+                    </th>
+                }
+                <td style="vertical-align:middle"
+                    class="text-left">
+                    @pokemonMove.Name.FirstCharToUpper().Replace("-", " ")
+                </td>
+                <td style="vertical-align:middle">
+                    <Type Text="@pokemonMove.Type" />
+                </td>
+                <td style="vertical-align:middle">
+                    @{ var category = $"https://img.pokemondb.net/images/icons/{pokemonMove.DamageClass}.png"; }
+                    <img class="img-fixed"
+                         src=@category
+                         alt=@pokemonMove.DamageClass.FirstCharToUpper()
+                         title=@pokemonMove.DamageClass.FirstCharToUpper()
+                         style="width:39px;
+                                             height:16px">
+                </td>
+                <td class="text-right"
+                    style="vertical-align:middle">
+                    @powerString
+                </td>
+                <td class="text-right"
+                    style="vertical-align:middle">
+                    @accuracyString
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@code {
+    [Parameter]
+    IGrouping<string, PokemonMoves> List { get; set; }
+    private bool IsLevelUp { get; set; }
+    protected override void OnParametersSet()
+    {
+        IsLevelUp = List.Key == "level-up";
+    }
+}
+

@@ -265,7 +265,16 @@ CREATE TABLE pokemon_moves (
 	,CONSTRAINT FK_Pokemon_Moves_Move_Learn_Methods FOREIGN KEY (move_learn_methods_id) REFERENCES move_learn_methods(id)
 );
 
-BULK INSERT pokemon_moves from 'C:\Users\1572172\source\repos\BlazorProject\BlazorProject.Server\Scripts\pokemon_moves.csv'
- WITH (FIRSTROW=2 , FIELDTERMINATOR = ';', ROWTERMINATOR='0x0a');
+CREATE TABLE tm_machines(
+	id INTEGER IDENTITY(1,1) NOT NULL
+	,machine_number   INTEGER  NOT NULL
+	,version_group_id INTEGER  NOT NULL
+	,item_id          INTEGER  NOT NULL
+	,move_id          INTEGER  NOT NULL
+	,PRIMARY KEY CLUSTERED ([id] ASC)
+	,CONSTRAINT FK_Tm_Machines_Version_Group FOREIGN KEY (version_group_id) REFERENCES version_groups(id)
+	,CONSTRAINT FK_Tm_Machines_Item FOREIGN KEY (item_id) REFERENCES items(id)
+	,CONSTRAINT FK_Tm_Machines_Move FOREIGN KEY (move_id) REFERENCES moves(id)
+);
 
 

@@ -27,14 +27,14 @@ namespace BlazorProject.Server.Services
         {
             Pokemons pokemon = await GetPokemon(id);
             ICollection<PokemonAbilities> pokemonAbilities = await GetPokemonAbilities(pokemon);
-            ICollection<PokemonMoves> pokemonMoves = await GetPokemonMoves(pokemon);
+            ICollection<DTO.PokemonMoves> pokemonMoves = await GetPokemonMoves(pokemon);
             ICollection<TypeEfficacy> typeEfficacies = await GetTypeEfficacies(pokemon);
 
             pokemon.PokemonAbilities = pokemonAbilities;
 
             var fullPokemonDTO = mapper.Map<DTO.FullPokemon>(pokemon);
 
-            fullPokemonDTO.PokemonMoves = mapper.Map<ICollection<DTO.PokemonMoves>>(pokemonMoves);
+            fullPokemonDTO.PokemonMoves = pokemonMoves;
 
             fullPokemonDTO.PokemonTypeEfficacy = mapper.Map<ICollection<DTO.TypeEfficacy>>(typeEfficacies);
 
@@ -50,11 +50,24 @@ namespace BlazorProject.Server.Services
                 .ToListAsync();
         }
 
-        private async Task<ICollection<PokemonMoves>> GetPokemonMoves(Pokemons pokemon)
+        private async Task<ICollection<DTO.PokemonMoves>> GetPokemonMoves(Pokemons pokemon)
         {
             return await context.PokemonMoves
-                .Include(p => p.Move.DamageClass)
-                .Include(p => p.Move.Type)
+                .Select(moves => new DTO.PokemonMoves
+                {
+                    Id = moves.Id,
+                    Level = moves.Level,
+                    Order = moves.Order,
+                    VersionGroupId = (int)moves.VersionGroupId,
+                    Accuracy = moves.Move.Accuracy,
+                    DamageClass = moves.Move.DamageClass.Name,
+                    LearnMethods = moves.MoveLearnMethods.Name,
+                    Name = moves.Move.Name,
+                    Power = moves.Move.Power,
+                    Type = moves.Move.Type.Name,
+                    PokemonId = moves.PokemonId,
+                    TmMachineNumber = moves.Move.TmMachines.First(p => p.VersionGroupId == 18).MachineNumber
+                })
                 .Where(p => p.PokemonId == pokemon.Id && p.VersionGroupId == 18)
                 .OrderBy(p => p.Level)
                 .ToListAsync();
@@ -105,7 +118,7 @@ namespace BlazorProject.Server.Services
                 .Include(p => p.KnownMoveType)
                 .Include(p => p.Location)
                 .Include(p => p.HeldItem)
-                .Include(p => p.PartySpecies).ThenInclude(p => p.Pokemon)
+                .Include(p => p.PartySpecies.Pokemon)
                 .Where(p => evolutionChainExcludingFirst.Contains(p.EvolvedSpeciesId))
                 .ToListAsync();
 

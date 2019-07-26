@@ -36,6 +36,7 @@
   <ItemGroup>
     <Watch Remove="Models\PokemonTypes.cs" />
     <Watch Remove="Models\RepositoryContext.cs" />
+    <Watch Remove="Models\TmMachines.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BlazorProject.Server.Models
 {
@@ -12,7 +13,6 @@ namespace BlazorProject.Server.Models
         public int? MoveLearnMethodsId { get; set; }
         public int? Level { get; set; }
         public int? Order { get; set; }
-
         public virtual Moves Move { get; set; }
         public virtual MoveLearnMethods MoveLearnMethods { get; set; }
         public virtual Pokemons Pokemon { get; set; }
