@@ -25,20 +25,7 @@ namespace BlazorProject.Server.Services
 
         public async Task<DTO.FullPokemon> Get(int id)
         {
-            Pokemons pokemon = await GetPokemon(id);
-            ICollection<PokemonAbilities> pokemonAbilities = await GetPokemonAbilities(pokemon);
-            ICollection<DTO.PokemonMoves> pokemonMoves = await GetPokemonMoves(pokemon);
-            ICollection<TypeEfficacy> typeEfficacies = await GetTypeEfficacies(pokemon);
-
-            pokemon.PokemonAbilities = pokemonAbilities;
-
-            var fullPokemonDTO = mapper.Map<DTO.FullPokemon>(pokemon);
-
-            fullPokemonDTO.PokemonMoves = pokemonMoves;
-
-            fullPokemonDTO.PokemonTypeEfficacy = mapper.Map<ICollection<DTO.TypeEfficacy>>(typeEfficacies);
-
-            return fullPokemonDTO;
+            return await GetPokemon(id);
         }
 
         private async Task<ICollection<TypeEfficacy>> GetTypeEfficacies(Pokemons pokemon)
@@ -50,45 +37,83 @@ namespace BlazorProject.Server.Services
                 .ToListAsync();
         }
 
-        private async Task<ICollection<DTO.PokemonMoves>> GetPokemonMoves(Pokemons pokemon)
+        private async Task<ICollection<DTO.PokemonMoves>> GetPokemonMoves(int id)
         {
             return await context.PokemonMoves
+                .Where(p => p.PokemonId == id && p.VersionGroupId == 18)
                 .Select(moves => new DTO.PokemonMoves
                 {
-                    Id = moves.Id,
                     Level = moves.Level,
                     Order = moves.Order,
-                    VersionGroupId = (int)moves.VersionGroupId,
                     Accuracy = moves.Move.Accuracy,
                     DamageClass = moves.Move.DamageClass.Name,
                     LearnMethods = moves.MoveLearnMethods.Name,
                     Name = moves.Move.Name,
                     Power = moves.Move.Power,
                     Type = moves.Move.Type.Name,
-                    PokemonId = moves.PokemonId,
                     TmMachineNumber = moves.Move.TmMachines.First(p => p.VersionGroupId == 18).MachineNumber
                 })
-                .Where(p => p.PokemonId == pokemon.Id && p.VersionGroupId == 18)
                 .OrderBy(p => p.Level)
                 .ToListAsync();
         }
 
-        private async Task<ICollection<PokemonAbilities>> GetPokemonAbilities(Pokemons pokemon)
+        private async Task<DTO.FullPokemon> GetPokemon(int id)
         {
-            return await context.PokemonAbilities
-                .Include(p => p.Ability)
-                .ThenInclude(p => p.AbilitiesProse)
-                .Where(p => p.PokemonId == pokemon.Id)
+            var types = await GetPokemonTypes(id);
+            var abilities = await GetPokemonAbilities(id);
+            var moves = await GetPokemonMoves(id);
+
+            var pokemon = await context.Pokemons.Where(p => p.Id == id).Select(x => new DTO.FullPokemon
+            {
+                Id = x.Id,
+                BaseExperience = x.BaseExperience,
+                BaseHappiness = x.Species.BaseHappiness,
+                CaptureRate = x.Species.CaptureRate,
+                GenderRate = x.Species.GenderRate,
+                HatchCounter = x.Species.HatchCounter,
+                Height = x.Height,
+                IsDefault = x.IsDefault,
+                Name = x.Name,
+                Position = x.Position,
+                Weight = x.Weight,
+                Stats = new DTO.PokemonStats
+                {
+                    Hp = x.PokemonStats.Hp,
+                    Attack = x.PokemonStats.Attack,
+                    Defense = x.PokemonStats.Defense,
+                    SpAttack = x.PokemonStats.SpAttack,
+                    SpDefense = x.PokemonStats.SpDefense,
+                    Speed = x.PokemonStats.Speed,
+                }
+            }).SingleAsync();
+            pokemon.Types = types;
+            pokemon.Abilities = abilities;
+            pokemon.Moves = moves;
+            return pokemon;
+        }
+
+        private async Task<List<string>> GetPokemonTypes(int id)
+        {
+            return await context.PokemonTypes
+                .Where(p => p.PokemonId == id)
+                .Select(t => t.Type.Name)
                 .ToListAsync();
         }
 
-        private async Task<Pokemons> GetPokemon(int id)
+        private async Task<List<DTO.PokemonAbilities>> GetPokemonAbilities(int id)
         {
-            return await context.Pokemons
-                .Include(m => m.Species)
-                .Include(p => p.PokemonStats)
-                .Include("PokemonTypes.Type")
-                .SingleAsync(p => p.Id == id);
+            return await context.PokemonAbilities
+                .Where(p => p.PokemonId == id)
+                .Select(p => new DTO.PokemonAbilities
+                {
+                    Effect = p.Ability.AbilitiesProse.Effect,
+                    IsHidden = p.IsHidden,
+                    Name = p.Ability.Name,
+                    ShortEffect = p.Ability.AbilitiesProse.ShortEffect,
+                    Slot = p.Slot
+                })
+                .OrderBy(p => p.Slot)
+                .ToListAsync();
         }
 
         public Task<List<DTO.DropdownPokemon>> GetAll()
@@ -175,7 +200,6 @@ namespace BlazorProject.Server.Services
         {
             DTO.PokemonStats pokeStats = new DTO.PokemonStats
             {
-                Id= 0,
                 Hp = await context.PokemonStats.MaxAsync(p => p.Hp),
                 Attack = await context.PokemonStats.MaxAsync(p => p.Attack),
                 Defense = await context.PokemonStats.MaxAsync(p => p.Defense),

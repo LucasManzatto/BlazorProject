@@ -2,8 +2,6 @@
 {
     public partial class PokemonStats
     {
-        public int Id { get; set; }
-        public int PokemonId { get; set; }
         public int Hp { get; set; }
         public int Attack { get; set; }
         public int Defense { get; set; }

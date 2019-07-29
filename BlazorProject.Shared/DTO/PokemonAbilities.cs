@@ -5,9 +5,10 @@ namespace BlazorProject.Shared.DTO
 {
     public partial class PokemonAbilities
     {
-        public int Id { get; set; }
+        public string Effect { get; set; }
         public bool IsHidden { get; set; }
+        public string Name { get; set; }
+        public string ShortEffect { get; set; }
         public int Slot { get; set; }
-        public Abilities Ability { get; set; }
     }
 }

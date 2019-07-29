@@ -1,4 +1,5 @@
 ﻿@using BlazorProject.Shared.DTO
+@using System.Linq.Expressions
 @inject HttpClient Http
 
 <h2 class="mb-3">Moves</h2>
@@ -23,18 +24,30 @@
 
 
 @code {
-    [Parameter]
-    IEnumerable<PokemonMoves> PokemonMovesList { get; set; }
-    IEnumerable<IGrouping<string, PokemonMoves>> FirstHalf { get; set; }
-    IEnumerable<IGrouping<string, PokemonMoves>> SecondHalf { get; set; }
-    protected override void OnParametersSet()
-    {
-        var subGroups = PokemonMovesList
-          .GroupBy(p => p.LearnMethods)
-          .OrderBy(s => new List<string> { "level-up", "egg", "machine", "tutor" }.IndexOf(s.Key));
-        var halfArraySize = subGroups.ToList().Count / 2;
-        FirstHalf = subGroups.Take(halfArraySize);
-        SecondHalf = subGroups.Skip(halfArraySize);
-    }
+[Parameter]
+IEnumerable<PokemonMoves> PokemonMovesList { get; set; }
+IEnumerable<IGrouping<string, PokemonMoves>> FirstHalf { get; set; }
+IEnumerable<IGrouping<string, PokemonMoves>> SecondHalf { get; set; }
+protected override void OnParametersSet()
+{
+    var subGroups = PokemonMovesList
+      .GroupBy(p => p.LearnMethods)
+      .OrderBy(s => new List<string> { "level-up", "egg", "machine", "tutor" }.IndexOf(s.Key));
+    var queue = new Queue<Expression<Func<PokemonMoves, object>>>();
+    queue.Enqueue(p => p.Level);
+    queue.Enqueue(p => p.Name);
+    queue.Enqueue(p => p.TmMachineNumber);
+    queue.Enqueue(p => p.Name);
+    var subGroupsOrderKey = new List<Expression<Func<PokemonMoves, object>>>
+        {
+            p => p.Level,
+            p => p.Name,
+            p => p.TmMachineNumber,
+            p => p.Name
+        };
+    var halfArraySize = subGroups.ToList().Count / 2;
+    FirstHalf = subGroups.Take(halfArraySize);
+    SecondHalf = subGroups.Skip(halfArraySize);
+}
 }
 

@@ -18,14 +18,13 @@ namespace BlazorProject.Shared.DTO
         public string EvolutionCondition { get; set; }
         public bool SpeciesIsBaby { get; set; }
     }
-
     public partial class FullPokemon
     {
         public FullPokemon()
         {
-            PokemonTypes = new List<PokemonTypes>();
-            PokemonAbilities = new List<PokemonAbilities>();
-            PokemonMoves = new List<PokemonMoves>();
+            Types = new List<string>();
+            Abilities = new List<PokemonAbilities>();
+            Moves = new List<PokemonMoves>();
         }
         public int Id { get; set; }
         public string Name { get; set; }
@@ -34,16 +33,13 @@ namespace BlazorProject.Shared.DTO
         public int BaseExperience { get; set; }
         public int Position { get; set; }
         public bool IsDefault { get; set; }
-        public Species Species { get; set; }
         public int CaptureRate { get; set; }
         public int BaseHappiness { get; set; }
         public int GenderRate { get; set; }
         public int HatchCounter { get; set; }
-        public PokemonStats PokemonStats { get; set; }
-        public ICollection<PokemonTypes> PokemonTypes { set; get; }
-        public ICollection<string> Types { get; set; }
-        public ICollection<TypeEfficacy> PokemonTypeEfficacy { set; get; }
-        public ICollection<PokemonAbilities> PokemonAbilities { set; get; }
-        public ICollection<PokemonMoves> PokemonMoves { set; get; }
+        public ICollection<string> Types { set; get; }
+        public ICollection<PokemonAbilities> Abilities { set; get; }
+        public ICollection<PokemonMoves> Moves { set; get; }
+        public PokemonStats Stats { get; set; }
     }
 }

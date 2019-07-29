@@ -19,9 +19,9 @@
                         Type:
                     </td>
                     <td>
-                        @foreach (var type in Pokemon.PokemonTypes.OrderBy(o => o.Slot).Select(p => p.Type))
+                        @foreach (var type in Pokemon.Types)
                         {
-                            <Type Text=@type.Name />
+                            <Type Text=@type />
                         }
                     </td>
                 </tr>
@@ -33,11 +33,11 @@
                     @* TODO: fix de alguns textos de habilidade, como Eevee *@
                     <td style="vertical-align:middle !important" class="text-muted">Abilities:</td>
                     <td>
-                        @foreach (var pokemonAbility in Pokemon.PokemonAbilities.ToList())
+                        @foreach (var pokemonAbility in Pokemon.Abilities.ToList())
                         {
-                            pokemonAbility.Ability.AbilitiesProse.ShortEffect = Regex.Replace(pokemonAbility.Ability.AbilitiesProse.ShortEffect, @"(\{.*?\})", String.Empty);
-                            pokemonAbility.Ability.AbilitiesProse.ShortEffect = Regex.Replace(pokemonAbility.Ability.AbilitiesProse.ShortEffect, @"(\[*\]*)", String.Empty);
-                            var abilityText = pokemonAbility.Ability.Name.FirstCharToUpper().Replace("-", " ");
+                            pokemonAbility.ShortEffect = Regex.Replace(pokemonAbility.ShortEffect, @"(\{.*?\})", String.Empty);
+                            pokemonAbility.ShortEffect = Regex.Replace(pokemonAbility.ShortEffect, @"(\[*\]*)", String.Empty);
+                            var abilityText = pokemonAbility.Name.FirstCharToUpper().Replace("-", " ");
                             <div class="row">
                                 <div class="col">
                                     <div class="tooltipCustom">
@@ -49,7 +49,7 @@
                                         {
                                             @abilityText
                                         }
-                                        <span class="tooltiptext">@pokemonAbility.Ability.AbilitiesProse.ShortEffect</span>
+                                        <span class="tooltiptext">@pokemonAbility.ShortEffect</span>
                                     </div>
                                 </div>
                             </div>
@@ -76,22 +76,22 @@
                 </tr>
                 <tr>
                     <td class="text-muted">Capture Rate:</td>
-                    <td>@Pokemon.Species.CaptureRate</td>
+                    <td>@Pokemon.CaptureRate</td>
                 </tr>
                 <tr>
                     <td class="text-muted">Base Happiness:</td>
-                    <td>@Pokemon.Species.BaseHappiness</td>
+                    <td>@Pokemon.BaseHappiness</td>
                 </tr>
                 <tr>
                     <td class="text-muted">Gender:</td>
                     <td>
-                        @if (Pokemon.Species.GenderRate == -1)
+                        @if (Pokemon.GenderRate == -1)
                         {
                             <span>Genderless</span>
                         }
                         else
                         {
-                            var femalePercentage = ((float)Pokemon.Species.GenderRate / 8) * 100;
+                            var femalePercentage = ((float)Pokemon.GenderRate / 8) * 100;
                             var malePercentage = 100 - femalePercentage;
                             <span style="color:#39f">@malePercentage% Male</span>
                             <span style="color:#f59">@femalePercentage% Female</span>
@@ -102,7 +102,7 @@
                     <td class="text-muted">Hatch Counter:</td>
                     <td>
                         <span>
-                            @Pokemon.Species.HatchCounter <span class="text-muted">(@(Pokemon.Species.HatchCounter * 257) steps)</span>
+                            @Pokemon.HatchCounter <span class="text-muted">(@(Pokemon.HatchCounter * 257) steps)</span>
                         </span>
                     </td>
                 </tr>

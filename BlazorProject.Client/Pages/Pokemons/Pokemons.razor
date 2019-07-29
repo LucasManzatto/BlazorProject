@@ -36,10 +36,10 @@
 
         <div class="row mb-3">
             <div class="col-7">
-                <PokemonStatsComponent Stats=@Pokemon.PokemonStats MaxStats=@MaxStats/>
+                <PokemonStatsComponent Stats=@Pokemon.Stats MaxStats=@MaxStats/>
             </div>
             <div class="col-5">
-                <TypeDefenses TypeEfficacies=@Pokemon.PokemonTypeEfficacy />
+                @*<TypeDefenses TypeEfficacies=@Pokemon.PokemonTypeEfficacy />*@
             </div>
         </div>
 
@@ -51,7 +51,7 @@
 
         <div class="row mb-3">
             <div class="col">
-                <PokemonMove PokemonMovesList=@Pokemon.PokemonMoves />
+                <PokemonMove PokemonMovesList=@Pokemon.Moves />
             </div>
         </div>
     }

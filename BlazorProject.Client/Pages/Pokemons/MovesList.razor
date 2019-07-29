@@ -7,9 +7,9 @@
     <table class="table table-hover table-sm text-center">
         <thead>
             <tr>
-                @if (IsLevelUp)
+                @if (ShowLevelOrTmColumn)
                 {
-                    <th scope="col" class="text-right">Level</th>
+                    <th scope="col" class="text-right">@(IsLevelUp ? "Level" : "TM")</th>
                 }
                 <th scope="col" class="text-left">Move</th>
                 <th scope="col" class="text-center">Type</th>
@@ -23,40 +23,40 @@
             {
                 var powerString = pokemonMove.Power == null ? "-" : pokemonMove.Power.ToString();
                 var accuracyString = pokemonMove.Accuracy == null ? "-" : pokemonMove.Accuracy.ToString();
-            <tr>
-                @if (IsLevelUp)
-                {
-                    <th class="text-right"
-                        style="vertical-align:middle"
-                        scope="row">
-                        @pokemonMove.Level
-                    </th>
-                }
-                <td style="vertical-align:middle"
-                    class="text-left">
-                    @pokemonMove.Name.FirstCharToUpper().Replace("-", " ")
-                </td>
-                <td style="vertical-align:middle">
-                    <Type Text="@pokemonMove.Type" />
-                </td>
-                <td style="vertical-align:middle">
-                    @{ var category = $"https://img.pokemondb.net/images/icons/{pokemonMove.DamageClass}.png"; }
-                    <img class="img-fixed"
-                         src=@category
-                         alt=@pokemonMove.DamageClass.FirstCharToUpper()
-                         title=@pokemonMove.DamageClass.FirstCharToUpper()
-                         style="width:39px;
+                <tr>
+                    @if (ShowLevelOrTmColumn)
+                    {
+                        <th class="text-right"
+                            style="vertical-align:middle"
+                            scope="row">
+                            @(IsLevelUp ? pokemonMove.Level : pokemonMove.TmMachineNumber)
+                        </th>
+                    }
+                    <td style="vertical-align:middle"
+                        class="text-left">
+                        @pokemonMove.Name.FirstCharToUpper().Replace("-", " ")
+                    </td>
+                    <td style="vertical-align:middle">
+                        <Type Text="@pokemonMove.Type" />
+                    </td>
+                    <td style="vertical-align:middle">
+                        @{ var category = $"https://img.pokemondb.net/images/icons/{pokemonMove.DamageClass}.png"; }
+                        <img class="img-fixed"
+                             src=@category
+                             alt=@pokemonMove.DamageClass.FirstCharToUpper()
+                             title=@pokemonMove.DamageClass.FirstCharToUpper()
+                             style="width:39px;
                                              height:16px">
-                </td>
-                <td class="text-right"
-                    style="vertical-align:middle">
-                    @powerString
-                </td>
-                <td class="text-right"
-                    style="vertical-align:middle">
-                    @accuracyString
-                </td>
-            </tr>
+                    </td>
+                    <td class="text-right"
+                        style="vertical-align:middle">
+                        @powerString
+                    </td>
+                    <td class="text-right"
+                        style="vertical-align:middle">
+                        @accuracyString
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
@@ -67,9 +67,11 @@
     [Parameter]
     IGrouping<string, PokemonMoves> List { get; set; }
     private bool IsLevelUp { get; set; }
+    private bool ShowLevelOrTmColumn { get; set; }
     protected override void OnParametersSet()
     {
         IsLevelUp = List.Key == "level-up";
+        ShowLevelOrTmColumn = List.Key == "level-up" || List.Key == "machine";
     }
 }
 
