@@ -34,11 +34,11 @@ namespace BlazorProject.Server.Controllers
         [HttpGet("{id}/evolutionChain")]
         public async Task<List<DTO.EvolutionChainPokemon>> GetEvolutionChain(int id, [FromServices]IPokemonsService service,[FromServices]IMemoryCache cache)
         {
-            var evolutionChain = cache.Get<List<DTO.EvolutionChainPokemon>>("EvolutionChain");
+            var evolutionChain = cache.Get<List<DTO.EvolutionChainPokemon>>($"EvolutionChain{id}");
             if(evolutionChain == null)
             {
                 evolutionChain = await service.GetEvolutionChain(id);
-                cache.Set("EvolutionChain", evolutionChain);
+                cache.Set($"EvolutionChain{id}", evolutionChain);
             }
             return evolutionChain;
            

@@ -60,11 +60,12 @@
     private async Task<List<DropdownModel>> CreateDropdownModelData(int id)
     {
         var list = await Http.GetJsonAsync<List<DropdownPokemon>>($"api/Generation/{id}/pokemons");
-        List<DropdownModel> newList = new List<DropdownModel>();
-        list.ForEach(item =>
-            newList.Add(new DropdownModel { Id = item.Id, Text = item.Name.FirstCharToUpper() }));
-        return newList;
+
+        return list
+            .Select(item => new DropdownModel { Id = item.Id, Text = item.Name.FirstCharToUpper() })
+            .ToList();
     }
+
     private List<DropdownModel> FilteredItems(string input)
     {
         if (input == "")

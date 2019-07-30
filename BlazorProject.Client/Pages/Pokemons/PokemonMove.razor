@@ -8,7 +8,7 @@
         <div class="row">
             @foreach (var groupList in FirstHalf)
             {
-                <MovesList List=@groupList />
+                <MovesList List=@groupList OrderBy=@SubGroupsOrderKey[groupList.Key] />
             }
         </div>
     </div>
@@ -16,7 +16,7 @@
         <div class="row">
             @foreach (var groupList in SecondHalf)
             {
-                <MovesList List=@groupList />
+                <MovesList List=@groupList OrderBy=@SubGroupsOrderKey[groupList.Key] />
             }
         </div>
     </div>
@@ -24,30 +24,31 @@
 
 
 @code {
-[Parameter]
-IEnumerable<PokemonMoves> PokemonMovesList { get; set; }
-IEnumerable<IGrouping<string, PokemonMoves>> FirstHalf { get; set; }
-IEnumerable<IGrouping<string, PokemonMoves>> SecondHalf { get; set; }
-protected override void OnParametersSet()
-{
-    var subGroups = PokemonMovesList
-      .GroupBy(p => p.LearnMethods)
-      .OrderBy(s => new List<string> { "level-up", "egg", "machine", "tutor" }.IndexOf(s.Key));
-    var queue = new Queue<Expression<Func<PokemonMoves, object>>>();
-    queue.Enqueue(p => p.Level);
-    queue.Enqueue(p => p.Name);
-    queue.Enqueue(p => p.TmMachineNumber);
-    queue.Enqueue(p => p.Name);
-    var subGroupsOrderKey = new List<Expression<Func<PokemonMoves, object>>>
+    [Parameter]
+    IEnumerable<PokemonMoves> PokemonMovesList { get; set; }
+    IEnumerable<IGrouping<string, PokemonMoves>> FirstHalf { get; set; }
+    IEnumerable<IGrouping<string, PokemonMoves>> SecondHalf { get; set; }
+    private Dictionary<string,Func<PokemonMoves, object>> SubGroupsOrderKey { get; set; }
+
+    protected override void OnInit()
+    {
+        SubGroupsOrderKey = new Dictionary<string, Func<PokemonMoves, object>>
         {
-            p => p.Level,
-            p => p.Name,
-            p => p.TmMachineNumber,
-            p => p.Name
+            {"level-up", p => p.Level },
+            {"egg", p => p.Name },
+            {"machine",p => p.TmMachineNumber },
+            {"tutor",p => p.Name }
         };
-    var halfArraySize = subGroups.ToList().Count / 2;
-    FirstHalf = subGroups.Take(halfArraySize);
-    SecondHalf = subGroups.Skip(halfArraySize);
-}
+    }
+    protected override void OnParametersSet()
+    {
+        var subGroups = PokemonMovesList
+          .GroupBy(p => p.LearnMethods)
+          .OrderBy(s => new List<string> { "level-up", "egg", "machine", "tutor" }.IndexOf(s.Key));
+
+        var halfArraySize = subGroups.ToList().Count / 2;
+        FirstHalf = subGroups.Take(halfArraySize);
+        SecondHalf = subGroups.Skip(halfArraySize);
+    }
 }
 

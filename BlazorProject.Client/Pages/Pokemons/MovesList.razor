@@ -1,5 +1,6 @@
 ﻿@using BlazorProject.Shared.DTO
 @using BlazorProject.Shared
+@using System.Linq.Expressions
 @inject HttpClient Http
 
 <div class="col mb-3">
@@ -19,7 +20,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var pokemonMove in List.ToList())
+            @foreach (var pokemonMove in List.ToList().OrderBy(OrderBy))
             {
                 var powerString = pokemonMove.Power == null ? "-" : pokemonMove.Power.ToString();
                 var accuracyString = pokemonMove.Accuracy == null ? "-" : pokemonMove.Accuracy.ToString();
@@ -66,6 +67,8 @@
 @code {
     [Parameter]
     IGrouping<string, PokemonMoves> List { get; set; }
+    [Parameter]
+    Func<PokemonMoves,object> OrderBy { get; set; }
     private bool IsLevelUp { get; set; }
     private bool ShowLevelOrTmColumn { get; set; }
     protected override void OnParametersSet()
@@ -73,5 +76,6 @@
         IsLevelUp = List.Key == "level-up";
         ShowLevelOrTmColumn = List.Key == "level-up" || List.Key == "machine";
     }
+
 }
 

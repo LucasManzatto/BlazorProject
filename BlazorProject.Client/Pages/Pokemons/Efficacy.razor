@@ -1,50 +1,31 @@
-﻿@using BlazorProject.Shared.DTO
-@if (!EfficacyIsNeutral(EfficacyValue))
+﻿@if (!EfficacyIsNeutral(Multiplier))
 {
     <button class="pokemon-type"
-            style="background-color:@EfficacyColor; width:40px;"
+            style="background-color:@EfficacyColor[Multiplier]; width:40px;"
             disabled
             type="button">
-        @EfficacyValue
+        @Multiplier
     </button>
 }
 
 @code {
 [Parameter]
-public ICollection<TypeEfficacy> PokemonTypeEfficacies { get; set; }
-private string EfficacyColor { get; set; }
-private float EfficacyValue { get; set; }
+public float Multiplier { get; set; }
+private IDictionary<float,string> EfficacyColor { get; set; }
 
-protected override void OnParametersSet()
+protected override void OnInit()
 {
-    EfficacyValue = GetEfficacy();
-    EfficacyColor = GetEfficacyColor(EfficacyValue);
-}
-private string GetEfficacyColor(float efficacy)
-{
-    switch (efficacy)
+    EfficacyColor = new Dictionary<float, string>
     {
-        case 0:
-            return "black";
-        case 0.25f:
-            return "darkred";
-        case 0.5f:
-            return "firebrick";
-        case 2:
-            return "forestgreen";
-        case 4:
-            return "darkgreen";
-        default:
-            return "none";
-    }
+        {0,"black" },
+        {0.25f,"darkred" },
+        {0.5f,"firebrick" },
+        {1, "none" },
+        {2,"forestgreen" },
+        {4,"darkgreen" }
+    };
 }
-private bool EfficacyIsNeutral(float efficacy) => efficacy == 1;
 
-private float GetEfficacy()
-{
-    var calculatedTypeEfficacy = PokemonTypeEfficacies
-       .Aggregate(1, (float acc,TypeEfficacy p) => acc * (((float) p.DamageFactor)/100));
-    return calculatedTypeEfficacy;
-}
+private bool EfficacyIsNeutral(float efficacy) => efficacy == 1;
 }
 

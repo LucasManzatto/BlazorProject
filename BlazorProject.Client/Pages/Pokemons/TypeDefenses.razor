@@ -1,5 +1,4 @@
-﻿@using BlazorProject.Shared.DTO
-@using BlazorProject.Client.Shared.Utils
+﻿@using BlazorProject.Client.Shared.Utils
 <h2 class="text-center">Type Defenses</h2>
 <div class="row justify-content-center">
     <div class="col-9">
@@ -8,7 +7,7 @@
             {
                 <div class="col">
                     <Type IsSmall=true Text=@type/>
-                    <Efficacy PokemonTypeEfficacies=@GetEfficacy(type)/>
+                    <Efficacy Multiplier=@TypeEfficacies[type]/>
                 </div>
             }
         </div>
@@ -17,11 +16,6 @@
 
 @code {
 [Parameter]
-public ICollection<TypeEfficacy> TypeEfficacies { get; set; }
-
-private ICollection<TypeEfficacy> GetEfficacy(string damageType)
-{
-    return TypeEfficacies.Where(p => p.DamageType.Name.Equals(damageType)).ToList();
-}
+public IDictionary<string,float> TypeEfficacies { get; set; }
 }
 

@@ -20,7 +20,7 @@ namespace BlazorProject.Server.Services
         {
             this.context = context;
             this.context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-            this.mapper = mapper; 
+            this.mapper = mapper;
         }
 
         public async Task<DTO.FullPokemon> Get(int id)
@@ -28,68 +28,58 @@ namespace BlazorProject.Server.Services
             return await GetPokemon(id);
         }
 
-        private async Task<ICollection<TypeEfficacy>> GetTypeEfficacies(Pokemons pokemon)
+        private async Task<IDictionary<string,float>> GetTypeEfficacies(ICollection<string> types)
         {
-            return await context.TypeEfficacy
+            var typeEfficacies = await context.TypeEfficacy
                 .Include(p => p.TargetType)
                 .Include(p => p.DamageType)
-                .Where(p => pokemon.PokemonTypes.Select(s => s.TypeId).Contains(p.TargetTypeId))
+                .Where(p => types.Any(s => s == p.TargetType.Name))
                 .ToListAsync();
+
+            var efficaciesMultiplier = new Dictionary<string, float>();
+            typeEfficacies
+                .GroupBy(p => p.DamageTypeId)
+                .ToList()
+                .ForEach(typeGroup =>
+                {
+                    var key = typeGroup.ElementAt(0).DamageType.Name;
+                    efficaciesMultiplier[key] = typeGroup.Aggregate(1, (float acc, TypeEfficacy p) => acc * (((float)p.DamageFactor) / 100));
+                });
+
+            return efficaciesMultiplier;
         }
 
         private async Task<ICollection<DTO.PokemonMoves>> GetPokemonMoves(int id)
         {
             return await context.PokemonMoves
                 .Where(p => p.PokemonId == id && p.VersionGroupId == 18)
-                .Select(moves => new DTO.PokemonMoves
-                {
-                    Level = moves.Level,
-                    Order = moves.Order,
-                    Accuracy = moves.Move.Accuracy,
-                    DamageClass = moves.Move.DamageClass.Name,
-                    LearnMethods = moves.MoveLearnMethods.Name,
-                    Name = moves.Move.Name,
-                    Power = moves.Move.Power,
-                    Type = moves.Move.Type.Name,
-                    TmMachineNumber = moves.Move.TmMachines.First(p => p.VersionGroupId == 18).MachineNumber
-                })
+                .ProjectTo<DTO.PokemonMoves>(mapper.ConfigurationProvider)
                 .OrderBy(p => p.Level)
                 .ToListAsync();
         }
 
         private async Task<DTO.FullPokemon> GetPokemon(int id)
         {
-            var types = await GetPokemonTypes(id);
-            var abilities = await GetPokemonAbilities(id);
-            var moves = await GetPokemonMoves(id);
+            var pokemon = await context.Pokemons
+                .ProjectTo<DTO.FullPokemon>(mapper.ConfigurationProvider)
+                .Where(p => p.Id == id)
+                .SingleAsync();
 
-            var pokemon = await context.Pokemons.Where(p => p.Id == id).Select(x => new DTO.FullPokemon
-            {
-                Id = x.Id,
-                BaseExperience = x.BaseExperience,
-                BaseHappiness = x.Species.BaseHappiness,
-                CaptureRate = x.Species.CaptureRate,
-                GenderRate = x.Species.GenderRate,
-                HatchCounter = x.Species.HatchCounter,
-                Height = x.Height,
-                IsDefault = x.IsDefault,
-                Name = x.Name,
-                Position = x.Position,
-                Weight = x.Weight,
-                Stats = new DTO.PokemonStats
-                {
-                    Hp = x.PokemonStats.Hp,
-                    Attack = x.PokemonStats.Attack,
-                    Defense = x.PokemonStats.Defense,
-                    SpAttack = x.PokemonStats.SpAttack,
-                    SpDefense = x.PokemonStats.SpDefense,
-                    Speed = x.PokemonStats.Speed,
-                }
-            }).SingleAsync();
-            pokemon.Types = types;
-            pokemon.Abilities = abilities;
-            pokemon.Moves = moves;
+            pokemon.Types = await GetPokemonTypes(id);
+            pokemon.Efficacies = await GetTypeEfficacies(pokemon.Types);
+            pokemon.Abilities = await GetPokemonAbilities(id);
+            pokemon.Moves = await GetPokemonMoves(id);
+            pokemon.Stats = await GetPokemonStats(id);
+
             return pokemon;
+        }
+
+        private async Task<DTO.PokemonStats> GetPokemonStats(int id)
+        {
+            return await context.PokemonStats
+                .Where(p => p.Id == id)
+                .ProjectTo<DTO.PokemonStats>(mapper.ConfigurationProvider)
+                .SingleAsync();
         }
 
         private async Task<List<string>> GetPokemonTypes(int id)
@@ -104,14 +94,7 @@ namespace BlazorProject.Server.Services
         {
             return await context.PokemonAbilities
                 .Where(p => p.PokemonId == id)
-                .Select(p => new DTO.PokemonAbilities
-                {
-                    Effect = p.Ability.AbilitiesProse.Effect,
-                    IsHidden = p.IsHidden,
-                    Name = p.Ability.Name,
-                    ShortEffect = p.Ability.AbilitiesProse.ShortEffect,
-                    Slot = p.Slot
-                })
+                .ProjectTo<DTO.PokemonAbilities>(mapper.ConfigurationProvider)
                 .OrderBy(p => p.Slot)
                 .ToListAsync();
         }
@@ -127,10 +110,10 @@ namespace BlazorProject.Server.Services
         //ERRORS: Tyrogue fica 
         public async Task<List<DTO.EvolutionChainPokemon>> GetEvolutionChain(int id)
         {
-            var pokemonSpecies = await context.Species.FindAsync(id);
+            var pokemonChain = await context.Species.Where(p => p.Id == id).Select(x => x.EvolutionChain).SingleAsync();
 
             var evolutionChain = await context.Pokemons
-                .Where(p => p.Species.EvolutionChain == pokemonSpecies.EvolutionChain && p.IsDefault)
+                .Where(p => p.Species.EvolutionChain == pokemonChain && p.IsDefault)
                 .ProjectTo<DTO.EvolutionChainPokemon>(mapper.ConfigurationProvider)
                 .OrderByDescending(p => p.SpeciesIsBaby)
                 .ToListAsync();
@@ -154,7 +137,7 @@ namespace BlazorProject.Server.Services
                 pokemonEvolutionList
                     .Where(p => p.EvolvedSpeciesId == chain.Id)
                     .ToList()
-                    .ForEach(pokemonEvolution => 
+                    .ForEach(pokemonEvolution =>
                                     chain.EvolutionCondition += CreateEvolutionConditionString(pokemonEvolution));
             }
             return evolutionChain;
@@ -171,7 +154,7 @@ namespace BlazorProject.Server.Services
             string knowMove = pokemonEvolution.KnownMoveId != null ? $"knowing {pokemonEvolution.KnownMove.Name} " : "";
             string knowMoveType = pokemonEvolution.KnownMoveTypeId != null ? $"knowing a {pokemonEvolution.KnownMoveType.Name} type " : "";
             string location = pokemonEvolution.LocationId != null ? $"in {pokemonEvolution.Location.Name} " : "";
-            string heldItem = pokemonEvolution.HeldItemId != null ? $"holding {pokemonEvolution.HeldItem.Name} " :"";
+            string heldItem = pokemonEvolution.HeldItemId != null ? $"holding {pokemonEvolution.HeldItem.Name} " : "";
             string gender = pokemonEvolution.Gender == 1 ? "(Female) " : pokemonEvolution.Gender == 2 ? "(Male) " : "";
             string physicalStats = pokemonEvolution.RelativePhysicalStats == 1 ? "(Attack > Defense)"
                                     : pokemonEvolution.RelativePhysicalStats == -1 ? "(Attack < Defense)"
@@ -179,7 +162,7 @@ namespace BlazorProject.Server.Services
                                     : "";
             string speciesInParty = pokemonEvolution.PartySpeciesId != null ? $"with {pokemonEvolution.PartySpecies.Pokemon.Name} on party " : "";
 
-            string evolutionCondition = $"({pokemonEvolution.EvolutionTrigger.Name.FirstCharToUpper().Replace("-"," ")} " +
+            string evolutionCondition = $"({pokemonEvolution.EvolutionTrigger.Name.FirstCharToUpper().Replace("-", " ")} " +
                     minimumHappiness +
                     minimumLevel +
                     triggerItem +
