@@ -9,7 +9,10 @@ namespace BlazorProject.Server
         public MapperProfile()
         {
             CreateMap<Pokemons, DTO.DropdownPokemon>().ReverseMap();
-            CreateMap<Pokemons, DTO.EvolutionChainPokemon>().ReverseMap();
+            CreateMap<PokemonStats, DTO.PokemonStats>().ReverseMap();
+            CreateMap<Pokemons, DTO.EvolutionChainPokemon>()
+                .ForMember(m => m.Generation, opt => opt.MapFrom(p => p.Species.Generation.Name))
+                .ReverseMap();
             CreateMap<Pokemons, DTO.PokemonList>().ReverseMap();
             CreateMap<Pokemons, DTO.FullPokemon>()
                 .ForMember(m => m.BaseHappiness, opt => opt.MapFrom(p => p.Species.BaseHappiness))

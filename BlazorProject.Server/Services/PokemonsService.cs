@@ -88,8 +88,8 @@ namespace BlazorProject.Server.Services
 
             var evolutionChain = await context.Pokemons
                 .Where(p => p.Species.EvolutionChain == pokemonChain && p.IsDefault)
+                .OrderByDescending(p => p.Species.IsBaby)
                 .ProjectTo<DTO.EvolutionChainPokemon>(mapper.ConfigurationProvider)
-                .OrderByDescending(p => p.SpeciesIsBaby)
                 .ToListAsync();
 
             var evolutionChainExcludingFirst = evolutionChain.Skip(1).Select(s => s.Id);

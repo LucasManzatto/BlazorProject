@@ -27,7 +27,7 @@ namespace BlazorProject.Shared.DTO
         public ICollection<string> Types { set; get; }
         public ICollection<PokemonAbilities> Abilities { set; get; }
         public ICollection<PokemonMoves> Moves { set; get; }
+        public IDictionary<string, float> Efficacies { get; set; }
         public PokemonStats Stats { get; set; }
-        public IDictionary<string,float> Efficacies { get; set; }
     }
 }
