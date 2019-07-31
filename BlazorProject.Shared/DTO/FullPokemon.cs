@@ -3,21 +3,7 @@ using System.Collections.Generic;
 
 namespace BlazorProject.Shared.DTO
 {
-    public partial class DropdownPokemon
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string SpeciesGenerationName { get; set; }
-    }
 
-    public partial class EvolutionChainPokemon
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string SpeciesGenerationName { get; set; }
-        public string EvolutionCondition { get; set; }
-        public bool SpeciesIsBaby { get; set; }
-    }
     public partial class FullPokemon
     {
         public FullPokemon()
