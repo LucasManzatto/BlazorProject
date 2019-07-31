@@ -14,6 +14,7 @@ namespace BlazorProject.Server
             CreateMap<Species, DTO.Species>().ReverseMap();
             CreateMap<Pokemons, DTO.DropdownPokemon>().ReverseMap();
             CreateMap<Pokemons, DTO.EvolutionChainPokemon>().ReverseMap();
+            CreateMap<Pokemons, DTO.PokemonList>().ReverseMap();
             CreateMap<Pokemons, DTO.FullPokemon>()
                 .ForMember(m => m.BaseHappiness, opt => opt.MapFrom(p => p.Species.BaseHappiness))
                 .ForMember(m => m.CaptureRate, opt => opt.MapFrom(p => p.Species.CaptureRate))

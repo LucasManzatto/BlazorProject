@@ -1,6 +1,7 @@
 ﻿@page "/pokemons"
 @using BlazorProject.Shared.DTO
 @using BlazorProject.Client.Pages.Pokemons.Stats
+@using BlazorProject.Client.Pages.Pokemons.MovesList
 @inject HttpClient Http
 @inherits RealmComponent<State>
 
@@ -36,7 +37,7 @@
 
         <div class="row mb-3">
             <div class="col-7">
-                <PokemonStatsComponent Stats=@Pokemon.Stats MaxStats=@MaxStats/>
+                <PokemonStatsComponent Stats=@Pokemon.Stats MaxStats=@MaxStats />
             </div>
             <div class="col-5">
                 <TypeDefenses TypeEfficacies=@Pokemon.Efficacies />
