@@ -24,31 +24,32 @@
 
 
 @code {
-    [Parameter]
-    IEnumerable<PokemonMoves> PokemonMovesList { get; set; }
-    IEnumerable<IGrouping<string, PokemonMoves>> FirstHalf { get; set; }
-    IEnumerable<IGrouping<string, PokemonMoves>> SecondHalf { get; set; }
-    private Dictionary<string,Func<PokemonMoves, object>> SubGroupsOrderKey { get; set; }
+[Parameter]
+IEnumerable<PokemonMoves> PokemonMovesList { get; set; }
+IEnumerable<IGrouping<string, PokemonMoves>> FirstHalf { get; set; }
+IEnumerable<IGrouping<string, PokemonMoves>> SecondHalf { get; set; }
+private Dictionary<string,Func<PokemonMoves, object>> SubGroupsOrderKey { get; set; }
 
-    protected override void OnInit()
-    {
-        SubGroupsOrderKey = new Dictionary<string, Func<PokemonMoves, object>>
+protected override void OnInit()
+{
+    SubGroupsOrderKey = new Dictionary<string, Func<PokemonMoves, object>>
         {
             {"level-up", p => p.Level },
             {"egg", p => p.Name },
             {"machine",p => p.TmMachineNumber },
             {"tutor",p => p.Name }
         };
-    }
-    protected override void OnParametersSet()
-    {
-        var subGroups = PokemonMovesList
-          .GroupBy(p => p.LearnMethods)
-          .OrderBy(s => new List<string> { "level-up", "egg", "machine", "tutor" }.IndexOf(s.Key));
+}
+protected override void OnParametersSet()
+{
+    Console.WriteLine(PokemonMovesList.ToList().Count);
+    var subGroups = PokemonMovesList
+      .GroupBy(p => p.LearnMethods)
+      .OrderBy(s => new List<string> { "level-up", "egg", "machine", "tutor" }.IndexOf(s.Key));
 
-        var halfArraySize = subGroups.ToList().Count / 2;
-        FirstHalf = subGroups.Take(halfArraySize);
-        SecondHalf = subGroups.Skip(halfArraySize);
-    }
+    var halfArraySize = subGroups.ToList().Count / 2;
+    FirstHalf = subGroups.Take(halfArraySize);
+    SecondHalf = subGroups.Skip(halfArraySize);
+}
 }
 

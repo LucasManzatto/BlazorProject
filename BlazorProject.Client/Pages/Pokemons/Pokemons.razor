@@ -1,71 +1,56 @@
-﻿@page "/pokemons"
+﻿@page "/pokemon/{Id:int}"
 @using BlazorProject.Shared.DTO
 @using BlazorProject.Client.Pages.Pokemons.Stats
 @using BlazorProject.Client.Pages.Pokemons.MovesList
 @inject HttpClient Http
 @inherits RealmComponent<State>
 
-
-@{
-    Pokemon = Store.GetState().Pokemon;
-}
-<div class="container-fluid">
-
-    <nav class="navbar navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Pokémon</a>
-    </nav>
-
-    <div class="row mt-3 mb-3">
-        @for (var genNumber = 1; genNumber <= numberOfGenerations; genNumber++)
-        {
-            <div class="col">
-                <GenerationDropdown GenNumber="@genNumber" />
-            </div>
-        }
+@if (Pokemon != null && Pokemon.Id == Id)
+{
+    <div class="row align-items-center mb-3">
+        <div class="col-4">
+            <PokemonImage PokemonId=@Pokemon.Id />
+        </div>
+        <div class="col-8">
+            <PokemonData Pokemon=@Pokemon />
+        </div>
     </div>
 
-    @if (Pokemon != null)
-    {
-        <div class="row align-items-center mb-3">
-            <div class="col-4">
-                <PokemonImage PokemonId=@Pokemon.Id />
-            </div>
-            <div class="col-8">
-                <PokemonData Pokemon=@Pokemon />
-            </div>
+    <div class="row mb-3">
+        <div class="col-7">
+            <PokemonStatsComponent Stats=@Pokemon.Stats MaxStats=@MaxStats />
         </div>
+        <div class="col-5">
+            <TypeDefenses TypeEfficacies=@Pokemon.Efficacies />
+        </div>
+    </div>
 
-        <div class="row mb-3">
-            <div class="col-7">
-                <PokemonStatsComponent Stats=@Pokemon.Stats MaxStats=@MaxStats />
-            </div>
-            <div class="col-5">
-                <TypeDefenses TypeEfficacies=@Pokemon.Efficacies />
-            </div>
+    <div class="row mb-3">
+        <div class="col">
+            <EvolutionChain PokemonId=@Pokemon.Id />
         </div>
+    </div>
 
-        <div class="row mb-3">
-            <div class="col">
-                <EvolutionChain PokemonId=@Pokemon.Id />
-            </div>
+    <div class="row mb-3">
+        <div class="col">
+            <PokemonMove PokemonMovesList=@Pokemon.Moves />
         </div>
-
-        <div class="row mb-3">
-            <div class="col">
-                <PokemonMove PokemonMovesList=@Pokemon.Moves />
-            </div>
-        </div>
-    }
-</div>
+    </div>
+}
 
 @code {
     [Parameter]
     public FullPokemon Pokemon { get; set; }
+    [Parameter]
+    public int Id { get; set; }
     private PokemonStats MaxStats { get; set; }
-    int numberOfGenerations = 7;
     protected override async Task OnInitAsync()
     {
         MaxStats = await Http.GetJsonAsync<PokemonStats>("api/Pokemons/maxStats");
+    }
+    protected async override Task OnParametersSetAsync()
+    {
+        Pokemon = await Http.GetJsonAsync<FullPokemon>($"api/Pokemons/{Id}");
     }
 }
 

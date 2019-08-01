@@ -1,0 +1,46 @@
+﻿@page "/pokedex"
+@using BlazorProject.Shared.DTO;
+@using BlazorProject.Shared;
+@inject IUriHelper UriHelper
+@inject HttpClient Http
+<h2 class="text-center">National Pokédex</h2>
+@foreach (var gen in Pokemons.GroupBy(p => p.Generation))
+{
+    <h2>@(Format(gen.Key))</h2>
+    @foreach (var row in gen.Select((s, i) => gen.Skip(i * 8).Take(8)).Where(a => a.Any()))
+    {
+        <div class="row justify-content-center text-center align-items-center mb-3">
+            @foreach (var pokemon in row)
+            {
+                <div class="col">
+                    <PokemonImage PokemonId=@pokemon.Id PokemonName=@pokemon.Name IsSmall=true Gen=@pokemon.Generation Types=@pokemon.Types/>
+                </div>
+            }
+        </div>
+    }
+    <br />
+}
+
+
+@code {
+    [Parameter]
+    private ICollection<PokemonList> Pokemons { get; set; } = new List<PokemonList>();
+
+    protected async override Task OnInitAsync()
+    {
+        Pokemons = await Http.GetJsonAsync<List<PokemonList>>($"api/Pokemons");
+    }
+    private string Format(string gen)
+    {
+        string formattedString = "";
+
+        var splitString = gen
+                       .Replace("-", " ")
+                       .Split(' ');
+        splitString
+            .ToList()
+            .ForEach(word => formattedString += word == splitString.First() ? word.FirstCharToUpper() + " " : word.ToUpper() + " ");
+        return formattedString;
+    }
+}
+

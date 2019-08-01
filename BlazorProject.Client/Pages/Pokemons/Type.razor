@@ -1,16 +1,30 @@
 ﻿@using BlazorProject.Client.Shared.Utils
+@using BlazorProject.Shared
+@if (OnlyColor)
+{
+    <button class="btn btn-link"
+            style="color:@Color; padding:0px;"
+            type="button">
+        @Text.FirstCharToUpper()
+    </button>
+}
+else
+{
+    <button class="pokemon-type"
+            style="background-color:@Color; @(IsSmall ? "width:40px;" : "")"
+            type="button">
+        @Text
+    </button>
+}
 
-<button class="pokemon-type"
-        style="background-color:@Color; @(IsSmall ? "width:40px;" : "")"
-        type="button">
-    @Text
-</button>
 
 @code {
     [Parameter]
     string Text { get; set; }
     [Parameter]
     bool IsSmall { get; set; } = false;
+    [Parameter]
+    bool OnlyColor { get; set; } = false;
     private string Color { get; set; }
 
     protected override void OnParametersSet()

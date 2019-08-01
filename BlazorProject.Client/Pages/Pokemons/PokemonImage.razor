@@ -1,6 +1,28 @@
-﻿@if (IsSprite)
+﻿@inject IUriHelper UriHelper
+@using BlazorProject.Shared
+@if (IsSmall)
 {
-    <img src=@Source class="img-fluid" />
+    <div class="row justify-content-center text-center align-items-center">
+        <div class="col">
+            <img src=@Source class="img-fluid" />
+            <div class="text-muted">
+                #@PokemonId.ToString().PadLeft(3, '0')
+            </div>
+            <div>
+                <button @onclick=@(() => UriHelper.NavigateTo($"pokemon/{PokemonId}")) style="padding:0px;" class="btn btn-link" type="button">
+                    <strong>@PokemonName.FirstCharToUpper()</strong>
+                </button>
+            </div>
+            <div class="row justify-content-center">
+                @foreach (var type in Types)
+                {
+                    <span class="ml-1 mr-1"> @(type == Types.Last() && Types.Count == 2 ? "-" : "") </span>
+                    <Type OnlyColor=true Text=@type />
+                }
+            </div>
+        </div>
+    </div>
+
 }
 else
 {
@@ -14,9 +36,11 @@ public int PokemonId { get; set; } = 0;
 [Parameter]
 public string PokemonName { get; set; } = "";
 [Parameter]
-public bool IsSprite { get; set; } = false;
-[Parameter]
 public string Gen { get; set; } = "";
+[Parameter]
+public bool IsSmall { get; set; } = false;
+[Parameter]
+public ICollection<string> Types { get; set; } = new List<string>();
 
 private Dictionary<int, string> EdgeCases { get; set; }
 
@@ -35,15 +59,15 @@ protected override void OnParametersSet()
     //Always need to be 3 digits (1 -> 001, 01 -> 001)
     var pokemonIdString = PokemonId.ToString().PadLeft(3, '0');
     var genString = Gen.Equals("generation-vii") ? "sunmoonani" : "xyorasani";
-    if (IsSprite)
+    if (IsSmall)
     {
-        if (EdgeCases.ContainsKey(PokemonId))
+        if (Gen == "generation-vii")
         {
-            Source = EdgeCases[PokemonId];
+            Source = $"https://img.pokemondb.net/sprites/ultra-sun-ultra-moon/small/{PokemonName}.jpg";
         }
         else
         {
-            Source = $"https://pokemon-trainer.com/images/sprite/{genString}/{pokemonIdString}.gif";
+            Source = $"https://img.pokemondb.net/sprites/omega-ruby-alpha-sapphire/dex/normal/{PokemonName}.png";
         }
     }
     else
@@ -51,11 +75,8 @@ protected override void OnParametersSet()
         Source = $"https://assets.pokemon.com/assets/cms2/img/pokedex/full/{pokemonIdString}.png";
     }
     //Source = $"http://www.pokestadium.com/sprites/xy/{PokemonName}.gif";
+    //Source = $"https://pokemon-trainer.com/images/sprite/{genString}/{pokemonIdString}.gif";
     //Source = $"https://img.pokemondb.net/sprites/ultra-sun-ultra-moon/normal/{PokemonName}.png";
-}
-private void ChangeSrc()
-{
-    Source = Source.Replace("-", String.Empty);
 }
 }
 

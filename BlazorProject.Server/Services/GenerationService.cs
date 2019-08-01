@@ -23,12 +23,14 @@ namespace BlazorProject.Server.Services
 
         public async Task<Models.Generation> Get(int id)
         {
-            return await context.Generation.FindAsync(id).AsTask();
+            return await context.Generation.FindAsync(id);
         }
 
         public async Task<List<Shared.DTO.Generation>> GetAll()
         {
-            return await context.Generation.ProjectTo<Shared.DTO.Generation>(mapper.ConfigurationProvider).ToListAsync();
+            return await context.Generation
+                .ProjectTo<Shared.DTO.Generation>(mapper.ConfigurationProvider)
+                .ToListAsync();
         }
 
         public async Task<List<DropdownPokemon>> GetPokemonsByGeneration(int generationId)

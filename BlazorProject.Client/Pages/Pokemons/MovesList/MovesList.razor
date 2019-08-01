@@ -78,7 +78,7 @@
                         <th class="text-right"
                             style="vertical-align:middle"
                             scope="row">
-                            @(IsLevelUp ? pokemonMove.Level : pokemonMove.TmMachineNumber)
+                            @(IsLevelUp ? pokemonMove.Level == 0 ? "Evolve" : pokemonMove.Level.ToString() : pokemonMove.TmMachineNumber.ToString())
                         </th>
                     }
                     @* MOVE NAME *@

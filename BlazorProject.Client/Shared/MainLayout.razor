@@ -1,9 +1,39 @@
 ﻿@inherits LayoutComponentBase
-
+@inject IUriHelper UriHelper
+@using BlazorProject.Client.Pages.Pokemons
 <div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+                <a class="navbar-brand" href="#">Pokémon</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" @onclick=@(() => UriHelper.NavigateTo("pokedex"))>Home<span class="sr-only">(current)</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="row mt-3 mb-3">
+        @for (var genNumber = 1; genNumber <= numberOfGenerations; genNumber++)
+        {
+            <div class="col">
+                <GenerationDropdown GenNumber="@genNumber" />
+            </div>
+        }
+    </div>
     <div class="row">
         <div class="col">
             @Body
         </div>
     </div>
 </div>
+
+@code{
+    private int numberOfGenerations = 7;
+}

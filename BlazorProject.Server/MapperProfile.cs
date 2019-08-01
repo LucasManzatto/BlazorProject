@@ -1,6 +1,7 @@
 ﻿using BlazorProject.Server.Models;
 using DTO = BlazorProject.Shared.DTO;
 using System.Linq;
+using BlazorProject.Shared;
 
 namespace BlazorProject.Server
 {
@@ -8,12 +9,17 @@ namespace BlazorProject.Server
     {
         public MapperProfile()
         {
-            CreateMap<Pokemons, DTO.DropdownPokemon>().ReverseMap();
+            CreateMap<Pokemons, DTO.DropdownPokemon>()
+                .ForMember(m => m.Id, opt => opt.MapFrom(p => p.Id.ToString().PadLeft(3,'0')))
+                .ForMember(m => m.Name, opt => opt.MapFrom(p => p.Name.FirstCharToUpper()))
+                .ReverseMap();
             CreateMap<PokemonStats, DTO.PokemonStats>().ReverseMap();
             CreateMap<Pokemons, DTO.EvolutionChainPokemon>()
                 .ForMember(m => m.Generation, opt => opt.MapFrom(p => p.Species.Generation.Name))
                 .ReverseMap();
-            CreateMap<Pokemons, DTO.PokemonList>().ReverseMap();
+            CreateMap<Pokemons, DTO.PokemonList>()
+                .ForMember(m => m.Generation, opt => opt.MapFrom(p => p.Species.Generation.Name))
+                .ReverseMap();
             CreateMap<Pokemons, DTO.FullPokemon>()
                 .ForMember(m => m.BaseHappiness, opt => opt.MapFrom(p => p.Species.BaseHappiness))
                 .ForMember(m => m.CaptureRate, opt => opt.MapFrom(p => p.Species.CaptureRate))
