@@ -11,7 +11,7 @@
 else
 {
     <button class="pokemon-type"
-            style="background-color:@Color; @(IsSmall ? "width:40px;" : "")"
+            style="background-color:@Color; @(IsSmall ? "width:95%;" : "")"
             type="button">
         @Text
     </button>
@@ -29,7 +29,7 @@ else
 
     protected override void OnParametersSet()
     {
-        Color = @Utils.GetColorHex(Text);
+        Color = Utils.GetColorHex(Text);
         Text = IsSmall ? Text.Substring(0, 3) : Text;
     }
 }

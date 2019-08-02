@@ -5,22 +5,22 @@
 @inject HttpClient Http
 @inherits RealmComponent<State>
 
-@if (Pokemon != null && Pokemon.Id == Id)
+@if (Pokemon != null)
 {
     <div class="row align-items-center mb-3">
-        <div class="col-4">
+        <div class="col-xl-4 col-lg-8">
             <PokemonImage PokemonId=@Pokemon.Id />
         </div>
-        <div class="col-8">
+        <div class="col-xl-8 col-lg-12">
             <PokemonData Pokemon=@Pokemon />
         </div>
     </div>
 
-    <div class="row mb-3">
-        <div class="col-7">
+    <div class="row mb-3 justify-content-center">
+        <div class="col-xl-6 col-lg-6 col-md-12">
             <PokemonStatsComponent Stats=@Pokemon.Stats MaxStats=@MaxStats />
         </div>
-        <div class="col-5">
+        <div class="col-xl-6 col-lg-6 col-md-10">
             <TypeDefenses TypeEfficacies=@Pokemon.Efficacies />
         </div>
     </div>
@@ -30,12 +30,14 @@
             <EvolutionChain PokemonId=@Pokemon.Id />
         </div>
     </div>
-
-    <div class="row mb-3">
-        <div class="col">
-            <PokemonMove PokemonMovesList=@Pokemon.Moves />
+    @if (Pokemon.Id == Id)
+    {
+        <div class="row mb-3">
+            <div class="col">
+                <PokemonMove PokemonMovesList=@Pokemon.Moves />
+            </div>
         </div>
-    </div>
+    }
 }
 
 @code {

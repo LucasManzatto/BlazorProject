@@ -1,13 +1,14 @@
 ﻿@page "/pokedex"
 @using BlazorProject.Shared.DTO;
 @using BlazorProject.Shared;
+@using Shared.Utils;
 @inject IUriHelper UriHelper
 @inject HttpClient Http
 <h2 class="text-center">National Pokédex</h2>
 @foreach (var gen in Pokemons.GroupBy(p => p.Generation))
 {
     <h2>@(Format(gen.Key))</h2>
-    @foreach (var row in gen.Select((s, i) => gen.Skip(i * 8).Take(8)).Where(a => a.Any()))
+    @foreach (var row in gen.DivideList(8))
     {
         <div class="row justify-content-center text-center align-items-center mb-3">
             @foreach (var pokemon in row)

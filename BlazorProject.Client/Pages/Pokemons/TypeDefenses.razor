@@ -1,21 +1,26 @@
 ﻿@using BlazorProject.Client.Shared.Utils
+@using BlazorProject.Shared;
 <h2 class="text-center">Type Defenses</h2>
+
 <div class="row justify-content-center">
-    <div class="col-9">
-        <div class="row no-gutters">
-            @foreach (string type in Colors.TypesList.Select(p => p.Key))
-            {
-                <div class="col">
-                    <Type IsSmall=true Text=@type/>
-                    <Efficacy Multiplier=@TypeEfficacies[type]/>
-                </div>
-            }
-        </div>
+    <div class="col-xl-9 col-lg-9 col-md-10 col-sm-12">
+        @foreach (var row in Colors.TypesDict.Divide(Colors.TypesDict.Count/2))
+        {
+            <div class="row no-gutters">
+                @foreach (var type in row.Select(p => p.Key))
+                {
+                    <div class="col">
+                        <Type IsSmall=true Text=@type />
+                        <Efficacy Multiplier=@TypeEfficacies[type] />
+                    </div>
+                }
+            </div>
+        }
     </div>
 </div>
 
 @code {
-[Parameter]
-public IDictionary<string,float> TypeEfficacies { get; set; }
+    [Parameter]
+    public IDictionary<string, float> TypeEfficacies { get; set; }
 }
 

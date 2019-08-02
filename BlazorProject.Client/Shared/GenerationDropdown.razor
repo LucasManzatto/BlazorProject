@@ -3,7 +3,9 @@
 @inject HttpClient Http
 @inherits RealmComponent<State>
 
-@{var filteredItems = FilteredItems(SearchInput);}
+@{
+    var filteredItems = FilteredItems(SearchInput);
+}
 <div class="dropdown">
     <input class="form-control dropdown-toggle"
            type="text"
@@ -52,7 +54,7 @@
     private void SetPokemon(DropdownPokemon item)
     {
         ShowDropdown = false;
-        SearchInput = $"{item.Id} - {item.Name}";
+        SearchInput = item.Name;
         UriHelper.NavigateTo($"pokemon/{item.Id}");
         //var pokemon = await Http.GetJsonAsync<FullPokemon>($"api/Pokemons/{item.Id}");
         //Dispatch(new Redux.Actions.Pokemon.Set(pokemon));

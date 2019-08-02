@@ -21,4 +21,18 @@ namespace BlazorProject.Shared
             return source != null && toCheck != null && source.IndexOf(toCheck, comp) >= 0;
         }
     }
+    public static class IEnumerableExtensions
+    {
+        public static IEnumerable<IEnumerable<T>> DivideList<T>(this IEnumerable<T> array, int size)
+        {
+            return array.ToList().Select((s, i) => array.Skip(i * size).Take(size)).Where(a => a.Any());
+        }
+    }
+    public static class IDictionaryExtensions
+    {
+        public static IEnumerable<IEnumerable<KeyValuePair<T,T>>> Divide<T>(this IDictionary<T,T> array, int size)
+        {
+            return array.ToList().Select((s, i) => array.Skip(i * size).Take(size)).Where(a => a.Any());
+        }
+    }
 }

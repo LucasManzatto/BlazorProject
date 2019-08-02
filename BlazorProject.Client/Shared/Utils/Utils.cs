@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace BlazorProject.Client.Shared.Utils
+﻿namespace BlazorProject.Client.Shared.Utils
 {
     public static class Utils
     {
-        public static string GetColorHex(string color) => Colors.TypesList.Find(p => p.Key == color).Value;
+        public static string GetColorHex(string color) => Colors.TypesDict[color];
 
         public static int CalculateHpStat(int baseStat, int iv, int ev)
         {

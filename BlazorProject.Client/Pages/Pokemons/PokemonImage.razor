@@ -3,16 +3,20 @@
 @if (IsSmall)
 {
     <div class="row justify-content-center text-center align-items-center">
+
         <div class="col">
             <img src=@Source class="img-fluid" />
+
             <div class="text-muted">
                 #@PokemonId.ToString().PadLeft(3, '0')
             </div>
+
             <div>
                 <button @onclick=@(() => UriHelper.NavigateTo($"pokemon/{PokemonId}")) style="padding:0px;" class="btn btn-link" type="button">
                     <strong>@PokemonName.FirstCharToUpper()</strong>
                 </button>
             </div>
+
             <div class="row justify-content-center">
                 @foreach (var type in Types)
                 {
@@ -20,7 +24,9 @@
                     <Type OnlyColor=true Text=@type />
                 }
             </div>
+
         </div>
+
     </div>
 
 }
