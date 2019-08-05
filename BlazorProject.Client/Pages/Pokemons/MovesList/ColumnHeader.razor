@@ -1,7 +1,7 @@
 ﻿@inject HttpClient Http
 
 <div class="row @JustifyContent no-gutters">
-    <div class=@ColumnSize>
+    <div class="@ColumnSize">
         @ColumnText
     </div>
     <div class="col-3">
@@ -27,23 +27,28 @@
 
 @code
 {
-[Parameter]
-public string ColumnText { get; set; }
-[Parameter]
-public string SelectedColumn { get; set; }
-[Parameter]
-public string Direction { get; set; }
-[Parameter]
-public string Column { get; set; }
-[Parameter]
-public string ColumnSize { get; set; }
-[Parameter]
-public string JustifyContent { get; set; }
 
-//protected override void OnInit()
-//{
-//    ColumnSize = "col-5";
-//    JustifyContent = "justify-content-center";
-//}
+    [Parameter]
+    public string ColumnText { get; set; }
+
+    [Parameter]
+    public string SelectedColumn { get; set; }
+
+    [Parameter]
+    public string Direction { get; set; }
+
+    [Parameter]
+    public string Column { get; set; }
+
+    [Parameter]
+    public string ColumnSize { get; set; }
+
+    [Parameter]
+    public string JustifyContent { get; set; }
+
+    //protected override void OnInit()
+    //{
+    //    ColumnSize = "col-5";
+    //    JustifyContent = "justify-content-center";
+    //}
 }
-

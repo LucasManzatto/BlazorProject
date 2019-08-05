@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="row mt-3 mb-3">
-        @for (var genNumber = 1; genNumber <= numberOfGenerations; genNumber++)
+        @for (var genNumber = 1; genNumber <= NumberOfGenerations; genNumber++)
         {
             <div class="col">
                 <GenerationDropdown GenNumber="@genNumber" />
@@ -34,5 +34,5 @@
 </div>
 
 @code{
-    private int numberOfGenerations = 7;
+    private const int NumberOfGenerations = 7;
 }

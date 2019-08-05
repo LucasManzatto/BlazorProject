@@ -1,5 +1,4 @@
 ﻿@using BlazorProject.Shared.DTO
-@using BlazorProject.Shared
 @inject HttpClient Http
 
 <h2>Evolution Chart</h2>
@@ -19,15 +18,17 @@
         }
         <div class="col-2">
             <div class="row justify-content-center align-items-center">
-                <PokemonImage PokemonId=@chain.Id PokemonName=@chain.Name IsSmall=true Gen=@chain.Generation />
+                <PokemonImage PokemonId=@chain.Id PokemonName=@chain.Name IsSmall=true Gen=@chain.Generation/>
             </div>
         </div>
     }
 </div>
 
 @code {
+
     [Parameter]
     public int PokemonId { get; set; }
+
     private List<EvolutionChainPokemon> EvolutionChainList { get; set; } = new List<EvolutionChainPokemon>();
     private EvolutionChainPokemon FirstFromChain { get; set; }
 
@@ -36,5 +37,5 @@
         EvolutionChainList = await Http.GetJsonAsync<List<EvolutionChainPokemon>>($"api/Pokemons/{PokemonId}/evolutionChain");
         FirstFromChain = EvolutionChainList.First();
     }
-}
 
+}

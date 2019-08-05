@@ -1,7 +1,7 @@
 ﻿@using BlazorProject.Shared.DTO
 @inject IUriHelper UriHelper
 @inject HttpClient Http
-@inherits RealmComponent<State>
+@inherits RealmComponent<BlazorProject.Client.Redux.State>
 
 @{
     var filteredItems = FilteredItems(SearchInput);
@@ -11,10 +11,10 @@
            type="text"
            data-toggle="dropdown"
            value=@SearchInput
-           placeholder=@(Items.Count > 0 ? "Gen " + GenNumber : "Loading...")
-           @oninput="@(ui => SearchInput = (string)ui.Value)" />
+           placeholder=@(Items.Count > 0 ? "Gen " + GenNumber : "Loading...") 
+           @oninput=@(ui => SearchInput = (string) ui.Value) />
 
-    <div @ref="dropdown" class="dropdown-menu" style='max-height:200px; overflow:auto; left:initial; @(filteredItems.Count == 0 ? "display:none;" : "")' aria-labelledby="@GenNumber">
+    <div class="dropdown-menu" style='max-height: 200px; overflow: auto; left: initial; @(filteredItems.Count == 0 ? "display:none;" : "")' aria-labelledby="@GenNumber">
         @if (filteredItems.Count == 0)
         {
             <div class="row justify-content-center align-content-center">
@@ -36,24 +36,21 @@
 
 
 @code {
-    ElementRef dropdown;
     List<DropdownPokemon> Items { get; set; } = new List<DropdownPokemon>();
+
     [Parameter]
-    int GenNumber { get; set; }
+    static int GenNumber => 0;
+
     public string SearchInput { get; set; } = "";
 
-    private bool ShowDropdown { get; set; } = false;
-    private int SelectedIndex { get; set; } = 0;
-    private DropdownPokemon SelectedItem { get; set; }
 
-    protected async override Task OnInitAsync()
+    protected override async Task OnInitAsync()
     {
         Items = await Http.GetJsonAsync<List<DropdownPokemon>>($"api/Generation/{GenNumber}/pokemons");
     }
 
     private void SetPokemon(DropdownPokemon item)
     {
-        ShowDropdown = false;
         SearchInput = item.Name;
         UriHelper.NavigateTo($"pokemon/{item.Id}");
         //var pokemon = await Http.GetJsonAsync<FullPokemon>($"api/Pokemons/{item.Id}");
@@ -63,9 +60,10 @@
     private List<DropdownPokemon> FilteredItems(string input)
     {
         return input == "" ? Items
-                           : Items.FindAll(p => p.Name.ToUpperInvariant()
-                                   .Contains(input.ToUpperInvariant()) ||
-                                   p.Id.ToString()
-                                   .Contains(input));
+            : Items.FindAll(p => p.Name.ToUpperInvariant()
+                .Contains(input.ToUpperInvariant()) ||
+                                 p.Id.ToString()
+                                     .Contains(input));
     }
+
 }

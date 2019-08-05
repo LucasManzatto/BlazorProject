@@ -5,14 +5,14 @@
     <div class="row justify-content-center text-center align-items-center">
 
         <div class="col">
-            <img src=@Source class="img-fluid" />
+            <img src=@Source class="img-fluid" alt=""/>
 
             <div class="text-muted">
                 #@PokemonId.ToString().PadLeft(3, '0')
             </div>
 
             <div>
-                <button @onclick=@(() => UriHelper.NavigateTo($"pokemon/{PokemonId}")) style="padding:0px;" class="btn btn-link" type="button">
+                <button @onclick=@(() => UriHelper.NavigateTo($"pokemon/{PokemonId}")) style="padding: 0;" class="btn btn-link" type="button">
                     <strong>@PokemonName.FirstCharToUpper()</strong>
                 </button>
             </div>
@@ -21,30 +21,34 @@
                 @foreach (var type in Types)
                 {
                     <span class="ml-1 mr-1"> @(type == Types.Last() && Types.Count == 2 ? "-" : "") </span>
-                    <Type OnlyColor=true Text=@type />
+                    <Type OnlyColor=true Text=@type/>
                 }
             </div>
 
         </div>
 
     </div>
-
 }
 else
 {
-    <img src=@Source style="width:100%;height:auto;" class="img-fluid">
+    <img src=@Source style="width: 100%; height: auto;" class="img-fluid" alt="">
 }
 
 @code {
 public string Source { get; set; }
+
 [Parameter]
 public int PokemonId { get; set; } = 0;
+
 [Parameter]
 public string PokemonName { get; set; } = "";
+
 [Parameter]
 public string Gen { get; set; } = "";
+
 [Parameter]
 public bool IsSmall { get; set; } = false;
+
 [Parameter]
 public ICollection<string> Types { get; set; } = new List<string>();
 
@@ -52,12 +56,14 @@ private Dictionary<int, string> EdgeCases { get; set; }
 
 protected override void OnInit()
 {
-    EdgeCases = new Dictionary<int, string>();
-    EdgeCases.Add(803, "https://pokemon-trainer.com/attachments/sprusulm803-1-gif.2949/");
-    EdgeCases.Add(804, "https://pokemon-trainer.com/attachments/sprusulm804-1-gif.2948/");
-    EdgeCases.Add(805, "https://pokemon-trainer.com/attachments/sprusulm805-1-gif.2950/");
-    EdgeCases.Add(806, "https://pokemon-trainer.com/attachments/sprusulm806-1-gif.2951/");
-    EdgeCases.Add(807, "https://pokemon-trainer.com/attachments/zeraora-1-gif.4570/");
+    EdgeCases = new Dictionary<int, string>
+    {
+        {803, "https://pokemon-trainer.com/attachments/sprusulm803-1-gif.2949/"},
+        {804, "https://pokemon-trainer.com/attachments/sprusulm804-1-gif.2948/"},
+        {805, "https://pokemon-trainer.com/attachments/sprusulm805-1-gif.2950/"},
+        {806, "https://pokemon-trainer.com/attachments/sprusulm806-1-gif.2951/"},
+        {807, "https://pokemon-trainer.com/attachments/zeraora-1-gif.4570/"}
+    };
 }
 
 protected override void OnParametersSet()
@@ -67,14 +73,9 @@ protected override void OnParametersSet()
     var genString = Gen.Equals("generation-vii") ? "sunmoonani" : "xyorasani";
     if (IsSmall)
     {
-        if (Gen == "generation-vii")
-        {
-            Source = $"https://img.pokemondb.net/sprites/ultra-sun-ultra-moon/small/{PokemonName}.jpg";
-        }
-        else
-        {
-            Source = $"https://img.pokemondb.net/sprites/omega-ruby-alpha-sapphire/dex/normal/{PokemonName}.png";
-        }
+        Source = Gen == "generation-vii" 
+            ? $"https://img.pokemondb.net/sprites/ultra-sun-ultra-moon/small/{PokemonName}.jpg" 
+            : $"https://img.pokemondb.net/sprites/omega-ruby-alpha-sapphire/dex/normal/{PokemonName}.png";
     }
     else
     {
@@ -84,5 +85,5 @@ protected override void OnParametersSet()
     //Source = $"https://pokemon-trainer.com/images/sprite/{genString}/{pokemonIdString}.gif";
     //Source = $"https://img.pokemondb.net/sprites/ultra-sun-ultra-moon/normal/{PokemonName}.png";
 }
-}
 
+}

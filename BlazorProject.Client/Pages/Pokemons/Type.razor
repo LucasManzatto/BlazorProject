@@ -3,7 +3,7 @@
 @if (OnlyColor)
 {
     <button class="btn btn-link"
-            style="color:@Color; padding:0px;"
+            style="color: @Color; padding: 0;"
             type="button">
         @Text.FirstCharToUpper()
     </button>
@@ -11,7 +11,7 @@
 else
 {
     <button class="pokemon-type"
-            style="background-color:@Color; @(IsSmall ? "width:95%;" : "")"
+            style="background-color: @Color; @(IsSmall ? "width:95%;" : "")"
             type="button">
         @Text
     </button>
@@ -19,12 +19,16 @@ else
 
 
 @code {
+
     [Parameter]
     string Text { get; set; }
+
     [Parameter]
     bool IsSmall { get; set; } = false;
+
     [Parameter]
     bool OnlyColor { get; set; } = false;
+
     private string Color { get; set; }
 
     protected override void OnParametersSet()
@@ -32,5 +36,5 @@ else
         Color = Utils.GetColorHex(Text);
         Text = IsSmall ? Text.Substring(0, 3) : Text;
     }
-}
 
+}

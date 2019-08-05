@@ -1,7 +1,7 @@
 ﻿@if (!EfficacyIsNeutral(Multiplier))
 {
     <button class="pokemon-type"
-            style="background-color:@EfficacyColor[Multiplier]; width:95%;"
+            style="background-color: @EfficacyColor[Multiplier]; width: 95%;"
             disabled
             type="button">
         @Multiplier
@@ -9,23 +9,24 @@
 }
 
 @code {
-[Parameter]
-public float Multiplier { get; set; }
-private IDictionary<float,string> EfficacyColor { get; set; }
 
-protected override void OnInit()
-{
-    EfficacyColor = new Dictionary<float, string>
+    [Parameter]
+    public float Multiplier { get; set; }
+
+    private IDictionary<float, string> EfficacyColor { get; set; }
+
+    protected override void OnInit()
     {
-        {0,"black" },
-        {0.25f,"darkred" },
-        {0.5f,"firebrick" },
-        {1, "none" },
-        {2,"forestgreen" },
-        {4,"darkgreen" }
-    };
-}
+        EfficacyColor = new Dictionary<float, string>
+        {
+            {0, "black"},
+            {0.25f, "darkred"},
+            {0.5f, "firebrick"},
+            {1, "none"},
+            {2, "forestgreen"},
+            {4, "darkgreen"}
+        };
+    }
 
-private bool EfficacyIsNeutral(float efficacy) => efficacy == 1;
+    private static bool EfficacyIsNeutral(float efficacy) => (int) efficacy == 1;
 }
-

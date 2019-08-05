@@ -1,6 +1,5 @@
 ﻿@using BlazorProject.Shared.DTO
 @using BlazorProject.Shared
-@using System.Linq.Expressions
 @inject HttpClient Http
 
 <div class="col mb-3">
@@ -10,60 +9,58 @@
             <tr>
                 @if (ShowLevelOrTmColumn)
                 {
-                    <th class="disable-select" 
-                        style="cursor:pointer;"
-                        scope="col" 
-                        @onclick=@(() => OrderColumn(IsLevelUp ? "level-up" : "machine"))
-                    >
-                        <ColumnHeader 
-                                      ColumnText=@(IsLevelUp ? "Lv." : "TM")
-                                      Direction=@Direction 
+                    <th class="disable-select"
+                        style="cursor: pointer;"
+                        scope="col"
+                        @onclick=@(() => OrderColumn(IsLevelUp ? "level-up" : "machine"))>
+                        <ColumnHeader ColumnText=@(IsLevelUp ? "Lv." : "TM")
+                                      Direction=@Direction
                                       SelectedColumn=@SelectedColumn
                                       ColumnSize="col-5"
                                       JustifyContent="justify-content-center"
-                                      Column=@(IsLevelUp ? "level-up" : "machine")
-                        />
+                                      Column=@(IsLevelUp ? "level-up" : "machine") />
                     </th>
                 }
-            <th class="disable-select" style="cursor:pointer" scope="col" @onclick=@(() => OrderColumn("move"))>
-                <ColumnHeader ColumnText="Move"
-                              Direction=@Direction
-                              SelectedColumn=@SelectedColumn
-                              ColumnSize="col-5"
-                              JustifyContent="justify-content-start"
-                              Column="move"/>
-            </th>
-            <th class="disable-select" style="cursor:pointer" scope="col" @onclick=@(() => OrderColumn("type"))>
-                <ColumnHeader ColumnText="Type"
-                              Direction=@Direction
-                              SelectedColumn=@SelectedColumn
-                              ColumnSize="col-5"
-                              JustifyContent="justify-content-center"
-                              Column="type" />
-            </th>
-            <th class="disable-select" style="cursor:pointer; width:15%" scope="col" @onclick=@(() => OrderColumn("category"))>
-                <ColumnHeader ColumnText="Cat."
-                              Direction=@Direction
-                              SelectedColumn=@SelectedColumn
-                              ColumnSize="col-5"
-                              JustifyContent="justify-content-center"
-                              Column="category" />
-            </th>
-            <th class="disable-select" style="cursor:pointer;width:16%" scope="col" @onclick=@(() => OrderColumn("power"))>
-                <ColumnHeader ColumnText="Power"
-                              Direction=@Direction
-                              SelectedColumn=@SelectedColumn
-                              ColumnSize="col-7"
-                              JustifyContent="justify-content-end"
-                              Column="power" />
-            </th>
-            <th class="disable-select" style="cursor:pointer;width:15%" scope="col" @onclick=@(() => OrderColumn("accuracy"))>
-                <ColumnHeader ColumnText="Acc."
-                              Direction=@Direction
-                              SelectedColumn=@SelectedColumn
-                              JustifyContent="justify-content-end"
-                              Column="accuracy" />
-            </th>
+                <th class="disable-select" style="cursor: pointer" scope="col" @onclick=@(() => OrderColumn("move"))>
+                    <ColumnHeader ColumnText="Move"
+                                  Direction=@Direction
+                                  SelectedColumn=@SelectedColumn
+                                  ColumnSize="col-5"
+                                  JustifyContent="justify-content-start"
+                                  Column="move" />
+                </th>
+                <th class="disable-select" style="cursor: pointer" scope="col" @onclick=@(() => OrderColumn("type"))>
+                    <ColumnHeader ColumnText="Type"
+                                  Direction=@Direction
+                                  SelectedColumn=@SelectedColumn
+                                  ColumnSize="col-5"
+                                  JustifyContent="justify-content-center"
+                                  Column="type" />
+                </th>
+                <th class="disable-select"
+                    style="cursor: pointer;width: 15%" scope="col" @onclick=@(() => OrderColumn("category"))>
+                    <ColumnHeader ColumnText="Cat."
+                                  Direction=@Direction
+                                  SelectedColumn=@SelectedColumn
+                                  ColumnSize="col-5"
+                                  JustifyContent="justify-content-center"
+                                  Column="category" />
+                </th>
+                <th class="disable-select" style="cursor: pointer; width: 16%" scope="col" @onclick=@(() => OrderColumn("power"))>
+                    <ColumnHeader ColumnText="Power"
+                                  Direction=@Direction
+                                  SelectedColumn=@SelectedColumn
+                                  ColumnSize="col-7"
+                                  JustifyContent="justify-content-end"
+                                  Column="power" />
+                </th>
+                <th class="disable-select" style="cursor: pointer; width: 15%" scope="col" @onclick=@(() => OrderColumn("accuracy"))>
+                    <ColumnHeader ColumnText="Acc."
+                                  Direction=@Direction
+                                  SelectedColumn=@SelectedColumn
+                                  JustifyContent="justify-content-end"
+                                  Column="accuracy" />
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -76,38 +73,36 @@
                     @if (ShowLevelOrTmColumn)
                     {
                         <th class="text-right"
-                            style="vertical-align:middle"
+                            style="vertical-align: middle"
                             scope="row">
                             @(IsLevelUp ? pokemonMove.Level == 0 ? "Evolve" : pokemonMove.Level.ToString() : pokemonMove.TmMachineNumber.ToString())
                         </th>
                     }
                     @* MOVE NAME *@
-                    <td style="vertical-align:middle"
+                    <td style="vertical-align: middle"
                         class="text-left">
                         @pokemonMove.Name.FirstCharToUpper().Replace("-", " ")
                     </td>
                     @* TYPE *@
-                    <td style="vertical-align:middle">
+                    <td style="vertical-align: middle">
                         <Type Text="@pokemonMove.Type" />
                     </td>
                     @* CATEGORY *@
-                    <td style="vertical-align:middle">
+                    <td style="vertical-align: middle">
                         @{ var category = $"https://img.pokemondb.net/images/icons/{pokemonMove.DamageClass}.png"; }
-                        <img class="img-fixed"
-                             src=@category
+                        <img src=@category
                              alt=@pokemonMove.DamageClass.FirstCharToUpper()
                              title=@pokemonMove.DamageClass.FirstCharToUpper()
-                             style="width:39px;
-                                             height:16px">
+                             style="width: 39px; height: 16px">
                     </td>
                     @* POWER *@
                     <td class="text-right"
-                        style="vertical-align:middle">
+                        style="vertical-align: middle">
                         @powerString
                     </td>
                     @* ACCURACY *@
                     <td class="text-right"
-                        style="vertical-align:middle">
+                        style="vertical-align: middle">
                         @accuracyString
                     </td>
                 </tr>
@@ -120,11 +115,11 @@
 @code
 {
     [Parameter]
-    IGrouping<string, PokemonMoves> List { get; set; }
+    static IGrouping<string, PokemonMoves> List => null;
+
     [Parameter]
     Func<PokemonMoves, object> OrderBy { get; set; }
 
-    private Dictionary<string, Func<PokemonMoves, object>> Order { get; set; }
     private Dictionary<string, Func<PokemonMoves, object>> OrderKeys { get; set; }
     private bool IsLevelUp { get; set; }
     private bool ShowLevelOrTmColumn { get; set; }
@@ -135,17 +130,18 @@
     protected override void OnInit()
     {
         SortedList = List.ToList().OrderBy(OrderBy);
-        OrderKeys = new Dictionary<string, Func<PokemonMoves, object>>
-{
-            {"level-up", p => p.Level },
-            {"machine",p => p.TmMachineNumber },
-            {"move", p => p.Name },
-            {"type",p => p.Type },
-            {"category", p => p.DamageClass },
-            {"power", p => p.Power },
-            {"accuracy", p => p.Accuracy },
-        };
+        OrderKeys = new Dictionary<string, Func<PokemonMoves,object>>
+                    {
+                        {"level-up", p => p.Level},
+                        {"machine", p => p.TmMachineNumber},
+                        {"move", p => p.Name},
+                        {"type", p => p.Type},
+                        {"category", p => p.DamageClass},
+                        {"power", p => p.Power},
+                        {"accuracy", p => p.Accuracy},
+                    };
     }
+
     protected override void OnParametersSet()
     {
         IsLevelUp = List.Key == "level-up";
@@ -158,9 +154,8 @@
         SelectedColumn = selectedColumn;
         OrderBy = OrderKeys[selectedColumn];
         SortedList = Direction.Equals("asc")
-                    ? List.ToList().OrderBy(OrderBy)
-                    : List.ToList().OrderByDescending(OrderBy);
+            ? List.ToList().OrderBy(OrderBy)
+            : List.ToList().OrderByDescending(OrderBy);
     }
 
 }
-

@@ -1,118 +1,118 @@
 ﻿@using BlazorProject.Shared.DTO
-@using BlazorProject.Client.Shared.Utils
 @using BlazorProject.Shared
 @using System.Text.RegularExpressions;
 @inject HttpClient Http
 
-<h2 class="text-center">Pokedéx Data</h2>
+<h2 class="text-center">Pokédex Data</h2>
 <div class="row">
     <div class="col-6">
         <table class="table">
             <tbody>
-                <tr>
-                    <td class="w-25 text-muted">Pokemon:</td>
-                    <td>@(Pokemon.Name.FirstCharToUpper())</td>
-                </tr>
-                <tr>
-                    <td style="vertical-align:middle !important" 
-                        class="text-muted">
-                        Type:
-                    </td>
-                    <td>
-                        @foreach (var type in Pokemon.Types)
-                        {
-                            <Type Text=@type />
-                        }
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-muted">Dex No.:</td>
-                    <td>@Pokemon.Id</td>
-                </tr>
-                <tr>
-                    @* TODO: fix de alguns textos de habilidade, como Eevee *@
-                    <td style="vertical-align:middle !important" class="text-muted">Abilities:</td>
-                    <td>
-                        @foreach (var pokemonAbility in Pokemon.Abilities.ToList())
-                        {
-                            pokemonAbility.ShortEffect = Regex.Replace(pokemonAbility.ShortEffect, @"(\{.*?\})", String.Empty);
-                            pokemonAbility.ShortEffect = Regex.Replace(pokemonAbility.ShortEffect, @"(\[*\]*)", String.Empty);
-                            var abilityText = pokemonAbility.Name.FirstCharToUpper().Replace("-", " ");
-                            <div class="row">
-                                <div class="col">
-                                    <div class="tooltipCustom">
-                                        @if (pokemonAbility.IsHidden)
-                                        {
-                                            <small>@abilityText @(pokemonAbility.IsHidden ? "(Hidden)" : "")</small>
-                                        }
-                                        else
-                                        {
-                                            @abilityText
-                                        }
-                                        <span class="tooltiptext">@pokemonAbility.ShortEffect</span>
-                                    </div>
+            <tr>
+                <td class="w-25 text-muted">Pokemon:</td>
+                <td>@(Pokemon.Name.FirstCharToUpper())</td>
+            </tr>
+            <tr>
+                <td style="vertical-align: middle !important"
+                    class="text-muted">
+                    Type:
+                </td>
+                <td>
+                    @foreach (var type in Pokemon.Types)
+                    {
+                        <Type Text=@type/>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="text-muted">Dex No.:</td>
+                <td>@Pokemon.Id</td>
+            </tr>
+            <tr>
+                @* TODO: fix some abilities texts, like Eevee's *@
+                <td style="vertical-align: middle !important" class="text-muted">Abilities:</td>
+                <td>
+                    @foreach (var pokemonAbility in Pokemon.Abilities.ToList())
+                    {
+                        pokemonAbility.ShortEffect = Regex.Replace(pokemonAbility.ShortEffect, @"(\{.*?\})", string.Empty);
+                        pokemonAbility.ShortEffect = Regex.Replace(pokemonAbility.ShortEffect, @"(\[*\]*)", string.Empty);
+                        var abilityText = pokemonAbility.Name.FirstCharToUpper().Replace("-", " ");
+                        <div class="row">
+                            <div class="col">
+                                <div class="tooltipCustom">
+                                    @if (pokemonAbility.IsHidden)
+                                    {
+                                        <small>@abilityText @(pokemonAbility.IsHidden ? "(Hidden)" : "")</small>
+                                    }
+                                    else
+                                    {
+                                        @abilityText
+                                    }
+                                    <span class="tooltiptext">@pokemonAbility.ShortEffect</span>
                                 </div>
                             </div>
-                        }
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-muted">Height:</td>
-                    <td>@Pokemon.Height m</td>
-                </tr>
-                <tr>
-                    <td class="text-muted">Weight:</td>
-                    <td>@Pokemon.Weight kg</td>
-                </tr>
+                        </div>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="text-muted">Height:</td>
+                <td>@Pokemon.Height m</td>
+            </tr>
+            <tr>
+                <td class="text-muted">Weight:</td>
+                <td>@Pokemon.Weight kg</td>
+            </tr>
             </tbody>
         </table>
     </div>
     <div class="col-6">
         <table class="table">
             <tbody>
-                <tr>
-                    <td class="text-muted" style="width:35%">Base Exp.:</td>
-                    <td>@Pokemon.BaseExperience</td>
-                </tr>
-                <tr>
-                    <td class="text-muted">Capture Rate:</td>
-                    <td>@Pokemon.CaptureRate</td>
-                </tr>
-                <tr>
-                    <td class="text-muted">Base Happiness:</td>
-                    <td>@Pokemon.BaseHappiness</td>
-                </tr>
-                <tr>
-                    <td class="text-muted">Gender:</td>
-                    <td>
-                        @if (Pokemon.GenderRate == -1)
-                        {
-                            <span>Genderless</span>
-                        }
-                        else
-                        {
-                            var femalePercentage = ((float)Pokemon.GenderRate / 8) * 100;
-                            var malePercentage = 100 - femalePercentage;
-                            <span style="color:#39f">@malePercentage% Male</span>
-                            <span style="color:#f59">@femalePercentage% Female</span>
-                        }
-                    </td>
-                </tr>
-                <tr>
-                    <td class="text-muted">Hatch Counter:</td>
-                    <td>
-                        <span>
-                            @Pokemon.HatchCounter <span class="text-muted">(@(Pokemon.HatchCounter * 257) steps)</span>
-                        </span>
-                    </td>
-                </tr>
+            <tr>
+                <td class="text-muted" style="width: 35%">Base Exp.:</td>
+                <td>@Pokemon.BaseExperience</td>
+            </tr>
+            <tr>
+                <td class="text-muted">Capture Rate:</td>
+                <td>@Pokemon.CaptureRate</td>
+            </tr>
+            <tr>
+                <td class="text-muted">Base Happiness:</td>
+                <td>@Pokemon.BaseHappiness</td>
+            </tr>
+            <tr>
+                <td class="text-muted">Gender:</td>
+                <td>
+                    @if (Pokemon.GenderRate == -1)
+                    {
+                        <span>Genderless</span>
+                    }
+                    else
+                    {
+                        var femalePercentage = ((float) Pokemon.GenderRate / 8) * 100;
+                        var malePercentage = 100 - femalePercentage;
+                        <span style="color: #39f">@malePercentage% Male</span>
+                        <span style="color: #f59">@femalePercentage% Female</span>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td class="text-muted">Hatch Counter:</td>
+                <td>
+                    <span>
+                        @Pokemon.HatchCounter <span class="text-muted">(@(Pokemon.HatchCounter * 257) steps)</span>
+                    </span>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
 </div>
 
 @code {
+
     [Parameter]
     public FullPokemon Pokemon { get; set; }
-}
 
+}
