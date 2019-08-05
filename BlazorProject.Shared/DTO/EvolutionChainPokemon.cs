@@ -1,6 +1,6 @@
 ﻿namespace BlazorProject.Shared.DTO
 {
-    public partial class EvolutionChainPokemon
+    public class EvolutionChainPokemon
     {
         public int Id { get; set; }
         public string Name { get; set; }

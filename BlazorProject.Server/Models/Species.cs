@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace BlazorProject.Server.Models
 {
-    public partial class Species
+    public sealed class Species
     {
-        public Species()
-        {
-            InverseEvolvesFromSpecies = new HashSet<Species>();
-        }
 
         // TODO: Precisa colocar de novo o campo IsBaby para a evolution chain ficar certa nos casos 
         // de evoluções que vieram em outras gerações, como o pichu
@@ -25,10 +20,10 @@ namespace BlazorProject.Server.Models
         public bool FormsSwitchable { get; set; }
         public int Position { get; set; }
         public bool IsBaby { get; set; }
-        public virtual Species EvolvesFromSpecies { get; set; }
-        public virtual Generation Generation { get; set; }
-        public virtual GrowthRate GrowthRate { get; set; }
-        public virtual ICollection<Species> InverseEvolvesFromSpecies { get; set; }
-        public virtual Pokemons Pokemon { get; set; }
+        public Species EvolvesFromSpecies { get; set; }
+        public Generation Generation { get; set; }
+        public GrowthRate GrowthRate { get; set; }
+        public ICollection<Species> InverseEvolvesFromSpecies { get; set; } = new HashSet<Species>();
+        public Pokemons Pokemon { get; set; }
     }
 }

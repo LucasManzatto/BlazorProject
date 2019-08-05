@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BlazorProject.Server.Models
+﻿namespace BlazorProject.Server.Models
 {
-    public partial class Items
+    public class Items
     {
         public int Id { get; set; }
         public string Name { get; set; }

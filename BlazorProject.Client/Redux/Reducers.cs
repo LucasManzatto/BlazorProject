@@ -9,9 +9,8 @@ namespace BlazorProject.Client.Redux
         public static State RootReducer(State state,IRealmAction action)
         {
             if(state == null)
-            {
                 throw new ArgumentNullException(nameof(state));
-            }
+
             return new State
             {
                 Pokemon = PokemonReducer(state.Pokemon, action),

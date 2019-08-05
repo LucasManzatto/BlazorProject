@@ -7,20 +7,22 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog;
-using System;
 using System.IO;
 using System.Linq;
 using AutoMapper;
 using BlazorProject.Server.Contracts.Services;
+using BlazorProject.Server.Extensions;
+using BlazorProject.Server.Models;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace BlazorProject.Server
 {
     public class Startup
     {
-
+        // ReSharper disable once UnusedParameter.Local
         public Startup(IConfiguration configuration)
         {
-            LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+            LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
         }
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -31,7 +33,7 @@ namespace BlazorProject.Server
             services.AddScoped<IPokemonsService, PokemonsService>();
             services.AddScoped<IGenerationService, GenerationService>();
             services.AddAutoMapper(typeof(Startup));
-            services.ConfigureIISIntegration();
+            services.ConfigureIisIntegration();
             services.ConfigureLoggerService();
             services.AddDbContext<RepositoryContext>(option => option.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=dev;Trusted_Connection=True;"));
             services.AddMvc().AddNewtonsoftJson(options => 
@@ -45,6 +47,7 @@ namespace BlazorProject.Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // ReSharper disable once UnusedMember.Global
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseResponseCompression();
@@ -57,11 +60,11 @@ namespace BlazorProject.Server
 
             app.UseClientSideBlazorFiles<Client.Startup>();
 
-            //app.UseCors("CorsPolicy");
-            //app.UseForwardedHeaders(new ForwardedHeadersOptions
-            //{
-            //    ForwardedHeaders = ForwardedHeaders.All
-            //});
+            app.UseCors("CorsPolicy");
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All
+            });
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

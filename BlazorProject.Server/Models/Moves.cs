@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace BlazorProject.Server.Models
 {
-    public partial class Moves
+    public sealed class Moves
     {
-        public Moves()
-        {
-            TmMachines = new HashSet<TmMachines>();
-        }
         public int Id { get; set; }
         public string Name { get; set; }
         public int GenerationId { get; set; }
@@ -22,11 +17,11 @@ namespace BlazorProject.Server.Models
         public int MoveEffectId { get; set; }
         public int? MoveEffectChance { get; set; }
 
-        public virtual DamageClass DamageClass { get; set; }
-        public virtual Generation Generation { get; set; }
-        public virtual MoveEffects MoveEffect { get; set; }
-        public virtual MoveTargets MoveTarget { get; set; }
-        public virtual Types Type { get; set; }
-        public ICollection<TmMachines> TmMachines { get; set; }
+        public DamageClass DamageClass { get; set; }
+        public Generation Generation { get; set; }
+        public MoveEffects MoveEffect { get; set; }
+        public MoveTargets MoveTarget { get; set; }
+        public Types Type { get; set; }
+        public ICollection<TmMachines> TmMachines { get; set; } = new HashSet<TmMachines>();
     }
 }

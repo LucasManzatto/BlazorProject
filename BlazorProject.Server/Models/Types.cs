@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace BlazorProject.Server.Models
 {
-    public partial class Types
+    public class Types
     {
-        public Types()
-        {
-            PokemonTypes = new HashSet<PokemonTypes>();
-        }
-
         public int Id { get; set; }
         public string Name { get; set; }
         public int GenerationId { get; set; }
@@ -17,6 +11,6 @@ namespace BlazorProject.Server.Models
 
         public virtual DamageClass DamageClass { get; set; }
         public virtual Generation Generation { get; set; }
-        public virtual ICollection<PokemonTypes> PokemonTypes { get; set; }
+        public virtual ICollection<PokemonTypes> PokemonTypes { get; set; } = new HashSet<PokemonTypes>();
     }
 }

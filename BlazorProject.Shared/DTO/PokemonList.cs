@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace BlazorProject.Shared.DTO
 {
-    public partial class PokemonList
+    public class PokemonList
     {
         public PokemonList()
         {

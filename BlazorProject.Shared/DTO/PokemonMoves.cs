@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BlazorProject.Shared.DTO
+﻿namespace BlazorProject.Shared.DTO
 {
-    public partial class PokemonMoves
+    public class PokemonMoves
     {
         public int? Level { get; set; }
         public int? Order { get; set; }

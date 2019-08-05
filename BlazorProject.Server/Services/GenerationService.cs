@@ -1,43 +1,44 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using BlazorProject.Server.Contracts.Services;
-using BlazorProject.Server.Models;
 using BlazorProject.Shared.DTO;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BlazorProject.Server.Models;
+using Generation = BlazorProject.Shared.DTO.Generation;
 
 namespace BlazorProject.Server.Services
 {
     public class GenerationService : IGenerationService
     {
-        private readonly RepositoryContext context;
-        private readonly IMapper mapper;
+        private readonly RepositoryContext _context;
+        private readonly IMapper _mapper;
+
         public GenerationService(RepositoryContext context, IMapper mapper)
         {
-            this.context = context;
-            this.mapper = mapper;
+            _context = context;
+            _mapper = mapper;
         }
 
         public async Task<Models.Generation> Get(int id)
         {
-            return await context.Generation.FindAsync(id);
+            return await _context.Generation.FindAsync(id);
         }
 
-        public async Task<List<Shared.DTO.Generation>> GetAll()
+        public async Task<List<Generation>> GetAll()
         {
-            return await context.Generation
-                .ProjectTo<Shared.DTO.Generation>(mapper.ConfigurationProvider)
+            return await _context.Generation
+                .ProjectTo<Generation>(_mapper.ConfigurationProvider)
                 .ToListAsync();
         }
 
         public async Task<List<DropdownPokemon>> GetPokemonsByGeneration(int generationId)
         {
-            return await context.Pokemons
+            return await _context.Pokemons
                 .Where(p => p.Species.GenerationId == generationId && p.IsDefault)
-                .ProjectTo<DropdownPokemon>(mapper.ConfigurationProvider)
+                .ProjectTo<DropdownPokemon>(_mapper.ConfigurationProvider)
                 .ToListAsync();
         }
     }

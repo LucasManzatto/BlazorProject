@@ -1,6 +1,5 @@
 ﻿using BlazorProject.Server.Contracts.Services;
 using BlazorProject.Server.Models;
-using BlazorProject.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,7 +12,6 @@ namespace BlazorProject.Server.Controllers
     [ApiController]
     public class GenerationController : Controller
     {
-
         [HttpGet]
         public async Task<List<DTO.Generation>> GetAll([FromServices] IGenerationService service)
         {
@@ -25,16 +23,19 @@ namespace BlazorProject.Server.Controllers
         {
             return await service.Get(id);
         }
+
         [Route("{id}/pokemons")]
         [HttpGet]
-        public async Task<List<DTO.DropdownPokemon>> GetPokemonsByGenerationId(int id, [FromServices] IGenerationService service, [FromServices]IMemoryCache cache)
+        public async Task<List<DTO.DropdownPokemon>> GetPokemonsByGenerationId(int id,
+            [FromServices] IGenerationService service, [FromServices] IMemoryCache cache)
         {
             var pokemons = cache.Get<List<DTO.DropdownPokemon>>($"GetPokemonsByGenerationId{id}");
-            if (pokemons == null)
-            {
-                pokemons = await service.GetPokemonsByGeneration(id);
-                cache.Set($"GetPokemonsByGenerationId{id}", pokemons);
-            }
+
+            if (pokemons != null) return pokemons;
+
+            pokemons = await service.GetPokemonsByGeneration(id);
+            cache.Set($"GetPokemonsByGenerationId{id}", pokemons);
+
             return pokemons;
         }
     }

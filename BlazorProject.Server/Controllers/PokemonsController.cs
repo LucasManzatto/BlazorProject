@@ -13,40 +13,45 @@ namespace BlazorProject.Server.Controllers
     {
         // GET: api/Pokemons
         [HttpGet]
-        public async Task<List<DTO.PokemonList>> GetAll([FromServices]IPokemonsService service)
+        public async Task<List<DTO.PokemonList>> GetAll([FromServices] IPokemonsService service)
         {
             return await service.GetAll();
         }
 
         // GET: api/Pokemons/5
         [HttpGet("{id}")]
-        public async Task<DTO.FullPokemon> Get(int id, [FromServices]IPokemonsService service, [FromServices]IMemoryCache cache)
+        public async Task<DTO.FullPokemon> Get(int id, [FromServices] IPokemonsService service,
+            [FromServices] IMemoryCache cache)
         {
             var pokemon = cache.Get<DTO.FullPokemon>($"GetPokemon{id}");
-            if (pokemon == null)
-            {
-                pokemon = await service.Get(id);
-                cache.Set($"GetPokemon{id}", pokemon);
-            }
+
+            if (pokemon != null) return pokemon;
+
+            pokemon = await service.Get(id);
+            cache.Set($"GetPokemon{id}", pokemon);
+
             return pokemon;
         }
+
         // GET: api/Pokemons/5/evolutionChain
         [HttpGet("{id}/evolutionChain")]
-        public async Task<List<DTO.EvolutionChainPokemon>> GetEvolutionChain(int id, [FromServices]IPokemonsService service,[FromServices]IMemoryCache cache)
+        public async Task<List<DTO.EvolutionChainPokemon>> GetEvolutionChain(int id,
+            [FromServices] IPokemonsService service, [FromServices] IMemoryCache cache)
         {
             var evolutionChain = cache.Get<List<DTO.EvolutionChainPokemon>>($"EvolutionChain{id}");
-            if(evolutionChain == null)
-            {
-                evolutionChain = await service.GetEvolutionChain(id);
-                cache.Set($"EvolutionChain{id}", evolutionChain);
-            }
+
+            if (evolutionChain != null) return evolutionChain;
+
+            evolutionChain = await service.GetEvolutionChain(id);
+            cache.Set($"EvolutionChain{id}", evolutionChain);
+
             return evolutionChain;
-           
         }
+
         // GET: api/Pokemons/maxStats
         [HttpGet]
         [Route("maxStats")]
-        public async Task<DTO.PokemonStats> GetMaxStats([FromServices]IPokemonsService service)
+        public async Task<DTO.PokemonStats> GetMaxStats([FromServices] IPokemonsService service)
         {
             return await service.GetMaxStats();
         }

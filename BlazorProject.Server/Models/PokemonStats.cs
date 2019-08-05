@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace BlazorProject.Server.Models
+﻿namespace BlazorProject.Server.Models
 {
-    public partial class PokemonStats
+    public class PokemonStats
     {
         public int Id { get; set; }
         public int PokemonId { get; set; }

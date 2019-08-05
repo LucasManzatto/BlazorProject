@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
 
 namespace BlazorProject.Server.Models
 {
-    public partial class Pokemons
+    public class Pokemons
     {
-        public Pokemons()
-        {
-            PokemonTypes = new HashSet<PokemonTypes>();
-            PokemonAbilities = new HashSet<PokemonAbilities>();
-            PokemonMoves = new HashSet<PokemonMoves>();
-        }
-
         public int Id { get; set; }
         public string Name { get; set; }
         public int SpeciesId { get; set; }
@@ -24,8 +15,8 @@ namespace BlazorProject.Server.Models
 
         public Species Species { get; set; }
         public PokemonStats PokemonStats { get; set; }
-        public ICollection<PokemonTypes> PokemonTypes { get; set; }
-        public ICollection<PokemonAbilities> PokemonAbilities { get; set; }
-        public ICollection<PokemonMoves> PokemonMoves { get; set; }
+        public ICollection<PokemonTypes> PokemonTypes { get; set; } = new HashSet<PokemonTypes>();
+        public ICollection<PokemonAbilities> PokemonAbilities { get; set; } = new HashSet<PokemonAbilities>();
+        public ICollection<PokemonMoves> PokemonMoves { get; set; } = new HashSet<PokemonMoves>();
     }
 }

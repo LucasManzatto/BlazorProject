@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BlazorProject.Server.Models
+﻿namespace BlazorProject.Server.Models
 {
-    public partial class TmMachines
+    public class TmMachines
     {
         public int Id { get; set; }
         public int MachineNumber { get; set; }

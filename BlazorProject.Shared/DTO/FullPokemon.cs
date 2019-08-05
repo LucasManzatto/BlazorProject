@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace BlazorProject.Shared.DTO
 {
 
-    public partial class FullPokemon
+    public class FullPokemon
     {
         public FullPokemon()
         {

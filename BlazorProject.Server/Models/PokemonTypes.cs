@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BlazorProject.Server.Models
+﻿namespace BlazorProject.Server.Models
 {
-    public partial class PokemonTypes
+    public class PokemonTypes
     {
         public int Id { get; set; }
         public int PokemonId { get; set; }

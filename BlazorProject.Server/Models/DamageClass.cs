@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace BlazorProject.Server.Models
 {
-    public partial class DamageClass
+    public sealed class DamageClass
     {
-        public DamageClass()
-        {
-            Types = new HashSet<Types>();
-        }
-
         public int Id { get; set; }
         public string Name { get; set; }
-
-        public virtual ICollection<Types> Types { get; set; }
+        public ICollection<Types> Types { get; set; } = new HashSet<Types>();
     }
 }

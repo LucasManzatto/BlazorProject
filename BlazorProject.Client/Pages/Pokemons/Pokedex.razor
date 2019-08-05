@@ -14,7 +14,7 @@
             @foreach (var pokemon in row)
             {
                 <div class="col">
-                    <PokemonImage PokemonId=@pokemon.Id PokemonName=@pokemon.Name IsSmall=true Gen=@pokemon.Generation Types=@pokemon.Types/>
+                    <PokemonImage PokemonId=@pokemon.Id PokemonName=@pokemon.Name IsSmall=true Gen=@pokemon.Generation Types=@pokemon.Types />
                 </div>
             }
         </div>
@@ -25,10 +25,12 @@
 
 @code {
     [Parameter]
-    private ICollection<PokemonList> Pokemons { get; set; } = new List<PokemonList>();
+    private ICollection<PokemonList>
+    Pokemons { get; set; } = new List<PokemonList>
+        ();
 
-    protected async override Task OnInitAsync()
-    {
+        protected async override Task OnInitAsync()
+        {
         Pokemons = await Http.GetJsonAsync<List<PokemonList>>($"api/Pokemons");
     }
     private string Format(string gen)

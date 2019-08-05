@@ -1,17 +1,15 @@
 ﻿using System;
-using BlazorProject.Server.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace BlazorProject.Server
+namespace BlazorProject.Server.Models
 {
-    public partial class RepositoryContext : DbContext
+    public class RepositoryContext : DbContext
     {
         public RepositoryContext()
         {
         }
 
-        public RepositoryContext(DbContextOptions<RepositoryContext> options)
+        public RepositoryContext(DbContextOptions options)
             : base(options)
         {
         }
@@ -42,20 +40,17 @@ namespace BlazorProject.Server
         public virtual DbSet<TypeEfficacy> TypeEfficacy { get; set; }
         public virtual DbSet<Types> Types { get; set; }
 
-        public virtual DbSet<TmMachines> TmMachines {get;set;}
+        public virtual DbSet<TmMachines> TmMachines { get; set; }
         public virtual DbSet<VersionGroups> VersionGroups { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
-            {
                 optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=dev;Trusted_Connection=True;");
-            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<Abilities>(entity =>
             {
                 entity.ToTable("abilities");
@@ -194,7 +189,6 @@ namespace BlazorProject.Server
                 entity.Property(e => e.SpDefense).HasColumnName("sp_defense");
 
                 entity.Property(e => e.Speed).HasColumnName("speed");
-
             });
 
             modelBuilder.Entity<PokemonAbilities>(entity =>
@@ -644,10 +638,10 @@ namespace BlazorProject.Server
                 entity.Property(e => e.VersionGroupId).HasColumnName("version_group_id");
 
                 entity.HasOne(d => d.Pokemon)
-                   .WithMany(p => p.PokemonMoves)
-                   .HasForeignKey(d => d.PokemonId)
-                   .OnDelete(DeleteBehavior.ClientSetNull)
-                   .HasConstraintName("FK_Pokemon_Moves_Pokemon");
+                    .WithMany(p => p.PokemonMoves)
+                    .HasForeignKey(d => d.PokemonId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Pokemon_Moves_Pokemon");
             });
 
             modelBuilder.Entity<Moves>(entity =>
@@ -712,10 +706,10 @@ namespace BlazorProject.Server
                 entity.Property(e => e.VersionGroupId).HasColumnName("version_group_id");
 
                 entity.HasOne(d => d.Move)
-                   .WithMany(p => p.TmMachines)
-                   .HasForeignKey(d => d.MoveId)
-                   .OnDelete(DeleteBehavior.ClientSetNull)
-                   .HasConstraintName("FK_Tm_Machines_Move");
+                    .WithMany(p => p.TmMachines)
+                    .HasForeignKey(d => d.MoveId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Tm_Machines_Move");
             });
 
             modelBuilder.Entity<VersionGroups>(entity =>
@@ -738,10 +732,12 @@ namespace BlazorProject.Server
             });
 
 
-
             OnModelCreatingPartial(modelBuilder);
         }
 
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+        private static void OnModelCreatingPartial(ModelBuilder modelBuilder)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

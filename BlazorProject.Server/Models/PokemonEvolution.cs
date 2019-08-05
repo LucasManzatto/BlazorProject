@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace BlazorProject.Server.Models
+﻿namespace BlazorProject.Server.Models
 {
-    public partial class PokemonEvolution
+    public class PokemonEvolution
     {
         public int Id { get; set; }
         public int EvolvedSpeciesId { get; set; }
