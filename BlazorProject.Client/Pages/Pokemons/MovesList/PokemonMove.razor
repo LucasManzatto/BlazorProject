@@ -7,7 +7,7 @@
         <div class="row">
             @foreach (var groupList in FirstHalf)
             {
-                <MovesList List=@groupList OrderBy=@SubGroupsOrderKey[groupList.Key]/>
+                <MovesList List=@groupList OrderBy=@SubGroupsOrderKey[groupList.Key] />
             }
         </div>
     </div>
@@ -15,7 +15,7 @@
         <div class="row">
             @foreach (var groupList in SecondHalf)
             {
-                <MovesList List=@groupList OrderBy=@SubGroupsOrderKey[groupList.Key]/>
+                <MovesList List=@groupList OrderBy=@SubGroupsOrderKey[groupList.Key] />
             }
         </div>
     </div>
@@ -25,7 +25,7 @@
 @code {
 
     [Parameter]
-    static IEnumerable<PokemonMoves> PokemonMovesList => null;
+    public IEnumerable<PokemonMoves> PokemonMovesList { get; set; }
 
     IEnumerable<IGrouping<string, PokemonMoves>> FirstHalf { get; set; }
     IEnumerable<IGrouping<string, PokemonMoves>> SecondHalf { get; set; }
@@ -34,7 +34,7 @@
     protected override void OnInit()
     {
         SubGroupsOrderKey = new Dictionary<string, Func<PokemonMoves, object>>
-        {
+    {
             {"level-up", p => p.Level},
             {"egg", p => p.Name},
             {"machine", p => p.TmMachineNumber},
@@ -46,7 +46,7 @@
     {
         var subGroups = PokemonMovesList
             .GroupBy(p => p.LearnMethods)
-            .OrderBy(s => new List<string> {"level-up", "egg", "machine", "tutor"}
+            .OrderBy(s => new List<string> { "level-up", "egg", "machine", "tutor" }
                 .IndexOf(s.Key)).ToList();
 
         var halfArraySize = subGroups.Count / 2;

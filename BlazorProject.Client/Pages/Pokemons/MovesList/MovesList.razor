@@ -115,7 +115,7 @@
 @code
 {
     [Parameter]
-    static IGrouping<string, PokemonMoves> List => null;
+    public IGrouping<string, PokemonMoves> List { get; set; }
 
     [Parameter]
     Func<PokemonMoves, object> OrderBy { get; set; }
@@ -130,16 +130,16 @@
     protected override void OnInit()
     {
         SortedList = List.ToList().OrderBy(OrderBy);
-        OrderKeys = new Dictionary<string, Func<PokemonMoves,object>>
-                    {
-                        {"level-up", p => p.Level},
-                        {"machine", p => p.TmMachineNumber},
-                        {"move", p => p.Name},
-                        {"type", p => p.Type},
-                        {"category", p => p.DamageClass},
-                        {"power", p => p.Power},
-                        {"accuracy", p => p.Accuracy},
-                    };
+        OrderKeys = new Dictionary<string, Func<PokemonMoves, object>>
+        {
+            {"level-up", p => p.Level},
+            {"machine", p => p.TmMachineNumber},
+            {"move", p => p.Name},
+            {"type", p => p.Type},
+            {"category", p => p.DamageClass},
+            {"power", p => p.Power},
+            {"accuracy", p => p.Accuracy},
+        };
     }
 
     protected override void OnParametersSet()

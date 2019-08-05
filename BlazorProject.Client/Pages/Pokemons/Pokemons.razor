@@ -1,5 +1,7 @@
 ﻿@page "/pokemon/{Id:int}"
 @using BlazorProject.Shared.DTO
+@using BlazorProject.Client.Pages.Pokemons.MovesList
+@using BlazorProject.Client.Pages.Pokemons.Stats
 @inject HttpClient Http
 @inherits RealmComponent<BlazorProject.Client.Redux.State>
 
@@ -32,7 +34,7 @@
      {
          <div class="row mb-3">
              <div class="col">
-                 <PokemonMove PokemonMovesList=@Pokemon.Moves/>
+                <PokemonMove PokemonMovesList=@Pokemon.Moves/>
              </div>
          </div>
      }
