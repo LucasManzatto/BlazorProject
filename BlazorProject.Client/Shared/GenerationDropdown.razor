@@ -39,7 +39,7 @@
     List<DropdownPokemon> Items { get; set; } = new List<DropdownPokemon>();
 
     [Parameter]
-    static int GenNumber => 0;
+    public int GenNumber { get; set; } = 1;
 
     public string SearchInput { get; set; } = "";
 

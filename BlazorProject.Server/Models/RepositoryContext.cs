@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlazorProject.Server.Models
 {
-    public class RepositoryContext : DbContext
+    public partial class RepositoryContext : DbContext
     {
         public RepositoryContext()
         {
@@ -735,9 +735,6 @@ namespace BlazorProject.Server.Models
             OnModelCreatingPartial(modelBuilder);
         }
 
-        private static void OnModelCreatingPartial(ModelBuilder modelBuilder)
-        {
-            throw new NotImplementedException();
-        }
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

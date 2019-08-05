@@ -60,11 +60,11 @@ namespace BlazorProject.Server
 
             app.UseClientSideBlazorFiles<Client.Startup>();
 
-            app.UseCors("CorsPolicy");
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.All
-            });
+            //app.UseCors("CorsPolicy");
+            //app.UseForwardedHeaders(new ForwardedHeadersOptions
+            //{
+            //    ForwardedHeaders = ForwardedHeaders.All
+            //});
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
