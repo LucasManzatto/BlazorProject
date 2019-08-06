@@ -10,9 +10,9 @@
     <input class="form-control dropdown-toggle"
            type="text"
            data-toggle="dropdown"
-           value=@SearchInput
+           value="@SearchInput"
            placeholder=@(Items.Count > 0 ? "Gen " + GenNumber : "Loading...") 
-           @oninput=@(ui => SearchInput = (string) ui.Value) />
+           @oninput="@(ui => SearchInput = (string) ui.Value)" />
 
     <div class="dropdown-menu" style='max-height: 200px; overflow: auto; left: initial; @(filteredItems.Count == 0 ? "display:none;" : "")' aria-labelledby="@GenNumber">
         @if (filteredItems.Count == 0)
