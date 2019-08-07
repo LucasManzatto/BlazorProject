@@ -3,43 +3,58 @@
 @using BlazorProject.Shared;
 @inject IUriHelper UriHelper
 @inject HttpClient Http
+@inject IJSRuntime JsRuntime
 
-<ul class="nav">
-
-</ul>
-<div style="position: relative; height: 81vh; overflow-y: scroll;"
+<div style="position: relative; height: 91.5vh; overflow-y: scroll; overflow-x:hidden"
      data-spy="scroll"
      data-target="#navbar-generation"
      data-offset="0">
-    <h2 class="text-center">National Pokédex</h2>
-    <div class="row justify-content-around text-center" style="position: sticky; top: 0; z-index: 10; background: white">
-            @*<a href=@($"pokedex#gen-{genNumber}")>Generation @genNumber</a>*@
-            <NavLink href="pokedex#gen-1">Generation 1 </NavLink>
-            <NavLink href="pokedex#gen-2">Generation 2 </NavLink>
-            <NavLink href="pokedex#gen-3">Generation 3 </NavLink>
-            <NavLink href="pokedex#gen-4">Generation 4 </NavLink>
-            <NavLink href="pokedex#gen-5">Generation 5 </NavLink>
-            <NavLink href="pokedex#gen-6">Generation 6 </NavLink>
-            <NavLink href="pokedex#gen-7">Generation 7 </NavLink>
-            <NavLink href="pokedex#gen-8">Generation 8 </NavLink>
-            <div></div>
-    </div>
-    @foreach (var (gen, genNumber) in Pokemons.GroupBy(p => p.Generation).Select((value, i) => (value, i)))
-    {
-        //<h2 style="position: sticky; top: 0; z-index: 10; background: white" id="@($"gen-{genNumber + 1}")">@Format(gen.Key)</h2>
-        @foreach (var row in gen.DivideList(8))
-        {
-            <div id="@($"gen-{genNumber + 1}")" class="row justify-content-center text-center align-items-center mb-3">
-                @foreach (var pokemon in row)
+    <div class="row">
+        @*<div class="col-2">
+            <h2>Filters</h2>
+            <input bind-value-oninput="@searchInput" @oninput="@FilterPokemons" class="form-control" type="text" placeholder="Search..." />
+        </div>*@
+        <div class="col">
+            <h2 class="text-center">National Pokédex</h2>
+            <div class="row justify-content-around text-center" style="position: sticky; top: 0; z-index: 10; background: white">
+                <button class="btn btn-link" @onclick=@(() => ScrollToElementId(gen1))>Generation 1 </button>
+                <button class="btn btn-link" @onclick=@(() => ScrollToElementId(gen2))>Generation 2 </button>
+                <button class="btn btn-link" @onclick=@(() => ScrollToElementId(gen3))>Generation 3 </button>
+                <button class="btn btn-link" @onclick=@(() => ScrollToElementId(gen4))>Generation 4 </button>
+                <button class="btn btn-link" @onclick=@(() => ScrollToElementId(gen5))>Generation 5 </button>
+                <button class="btn btn-link" @onclick=@(() => ScrollToElementId(gen6))>Generation 6 </button>
+                <button class="btn btn-link" @onclick=@(() => ScrollToElementId(gen7))>Generation 7 </button>
+            </div>
+            @{
+                var generations = FilteredPokemons.GroupBy(p => p.Generation).ToList();
+                @if (generations.Count == 7)
                 {
-                    <div class="col">
-                        <PokemonImage PokemonId=@pokemon.Id PokemonName=@pokemon.Name IsSmall=true Gen=@pokemon.Generation Types=@pokemon.Types />
+                    <div @ref="gen1">
+                        <PokedexGen Generation=generations.ElementAt(0) />
+                    </div>
+                    <div @ref="gen2">
+                        <PokedexGen Generation=generations.ElementAt(1) />
+                    </div>
+                    <div @ref="gen3">
+                        <PokedexGen Generation=generations.ElementAt(2) />
+                    </div>
+                    <div @ref="gen4">
+                        <PokedexGen Generation=generations.ElementAt(3) />
+                    </div>
+                    <div @ref="gen5">
+                        <PokedexGen Generation=generations.ElementAt(4) />
+                    </div>
+                    <div @ref="gen6">
+                        <PokedexGen Generation=generations.ElementAt(5) />
+                    </div>
+                    <div @ref="gen7">
+                        <PokedexGen Generation=generations.ElementAt(6) />
                     </div>
                 }
-            </div>
-        }
-        <br />
-    }
+            }
+        </div>
+    </div>
+
 </div>
 
 @code {
@@ -47,22 +62,32 @@
     [Parameter]
     private ICollection<PokemonList> Pokemons { get; set; } = new List<PokemonList>();
 
+    private ElementRef gen1;
+    private ElementRef gen2;
+    private ElementRef gen3;
+    private ElementRef gen4;
+    private ElementRef gen5;
+    private ElementRef gen6;
+    private ElementRef gen7;
+    private ElementRef gen8;
+
+    private ICollection<PokemonList> FilteredPokemons { get; set; } = new List<PokemonList>();
+    private string searchInput = "b";
+
     protected override async Task OnInitAsync()
     {
         Pokemons = await Http.GetJsonAsync<List<PokemonList>>("api/Pokemons");
+        FilteredPokemons = Pokemons.Where(p => p.Name.ToLower().Contains(searchInput.ToLower())).ToList();
     }
 
-    private static string Format(string gen)
+    private async Task<bool> ScrollToElementId(ElementRef element)
     {
-        var formattedString = "";
-
-        var splitString = gen
-            .Replace("-", " ")
-            .Split(' ');
-        splitString
-            .ToList()
-            .ForEach(word => formattedString += word == splitString.First() ? word.FirstCharToUpper() + " " : word.ToUpper() + " ");
-        return formattedString;
+        return await JsRuntime.InvokeAsync<bool>("scrollToElementId", element);
     }
 
+    private void FilterPokemons()
+    {
+        Console.WriteLine(searchInput);
+        FilteredPokemons = Pokemons.Where(p => p.Name.ToLower().Contains(searchInput.ToLower())).ToList();
+    }
 }
